@@ -7,6 +7,37 @@
    <groupId>org.chiclepad</groupId>
    <artifactId>backend</artifactId>
    <version>1.0-SNAPSHOT</version>
+   <packaging>jar</packaging>
+
+   <name>ChiclePad</name>
+   <url>https://github.com/ChiclePad/backend</url>
+   <description>Backend with simple UI for testing and offline usage</description>
+
+   <issueManagement>
+      <system>github</system>
+      <url>https://github.com/ChiclePad/backend/issues</url>
+   </issueManagement>
+
+   <licenses>
+      <license>
+         <name>GNU General Public License, version 3</name>
+         <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+         <distribution>repo</distribution>
+      </license>
+   </licenses>
+
+   <developers>
+      <developer>
+         <name>Mária Babčankská</name>
+         <email>m.babcanska@gmail.com</email>
+         <url>https://github.com/SquattingPenguin</url>
+      </developer>
+      <developer>
+         <name>Šimon Kocúrek</name>
+         <email>simon.kocurek@gmail.com</email>
+         <url>https://github.com/justmesr</url>
+      </developer>
+   </developers>
 
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
