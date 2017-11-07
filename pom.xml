@@ -2,47 +2,55 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-   <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-   <groupId>org.chiclepad</groupId>
-   <artifactId>backend</artifactId>
-   <version>1.0-SNAPSHOT</version>
-   <packaging>jar</packaging>
+    <groupId>org.chiclepad</groupId>
+    <artifactId>backend</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-   <name>ChiclePad</name>
-   <url>https://github.com/ChiclePad/backend</url>
-   <description>Backend with simple UI for testing and offline usage</description>
+    <name>ChiclePad</name>
+    <url>https://github.com/ChiclePad/backend</url>
+    <description>Backend with simple UI for testing and offline usage</description>
 
-   <issueManagement>
-      <system>github</system>
-      <url>https://github.com/ChiclePad/backend/issues</url>
-   </issueManagement>
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/ChiclePad/backend/issues</url>
+    </issueManagement>
 
-   <licenses>
-      <license>
-         <name>GNU General Public License, version 3</name>
-         <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
-         <distribution>repo</distribution>
-      </license>
-   </licenses>
+    <licenses>
+        <license>
+            <name>GNU General Public License, version 3</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
-   <developers>
-      <developer>
-         <name>Mária Babčankská</name>
-         <email>m.babcanska@gmail.com</email>
-         <url>https://github.com/SquattingPenguin</url>
-      </developer>
-      <developer>
-         <name>Šimon Kocúrek</name>
-         <email>simon.kocurek@gmail.com</email>
-         <url>https://github.com/justmesr</url>
-      </developer>
-   </developers>
+    <developers>
+        <developer>
+            <name>Mária Babčankská</name>
+            <email>m.babcanska@gmail.com</email>
+            <url>https://github.com/SquattingPenguin</url>
+        </developer>
+        <developer>
+            <name>Šimon Kocúrek</name>
+            <email>simon.kocurek@gmail.com</email>
+            <url>https://github.com/justmesr</url>
+        </developer>
+    </developers>
 
-   <properties>
-      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <maven.compiler.source>9</maven.compiler.source>
-      <maven.compiler.target>9</maven.compiler.target>
-   </properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>9</maven.compiler.source>
+        <maven.compiler.target>9</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+    </dependencies>
 
 </project>
