@@ -29,6 +29,18 @@ $ sudo apt install maven
 PostgreSQL
 ```bash
 $ sudo apt install postgresql
+$ sudo -u postgres psql
+
+postgres=# CREATE USER <username> PASSWORD '<password>';
+postgres=# CREATE DATABASE chiclepad;
+postgres=# \connect chiclepad
+chiclepad=# CREATE SCHEMA model;
+chiclepad=# DROP SCHEMA new_schema;
+chiclepad=# SET search_path TO model;
+```
+Execute `schema.sql` script from `/backend/postgress` folder to initialize the newly created schema.
+```
+chiclepad=# \q
 ```
 
 ## How To Contribute
