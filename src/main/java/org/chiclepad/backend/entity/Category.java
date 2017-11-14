@@ -86,13 +86,9 @@ public class Category {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Category category = (Category) o;
-        return id == category.id &&
-                name.equals(category.name) &&
-                icon.equals(category.icon) &&
-                color.equals(category.color);
+        return this == o || o != null &&
+                getClass() == o.getClass() &&
+                id == ((Category) o).id;
     }
 
     @Override

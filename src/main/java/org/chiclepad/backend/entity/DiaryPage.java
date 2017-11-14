@@ -78,12 +78,10 @@ public class DiaryPage extends Entry {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        DiaryPage diaryPage = (DiaryPage) o;
-        return id == diaryPage.id &&
-                recordedDay.equals(diaryPage.recordedDay);
+        return this == o || o != null &&
+                getClass() == o.getClass() &&
+                id == ((DiaryPage) o).id &&
+                entryId == ((DiaryPage) o).entryId;
     }
 
     @Override

@@ -177,14 +177,10 @@ public class Todo extends Entry {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Todo todo = (Todo) o;
-        return id == todo.id &&
-                priority == todo.priority &&
-                deadline.equals(todo.deadline) &&
-                softDeadline.equals(todo.softDeadline);
+        return this == o || o != null &&
+                getClass() == o.getClass() &&
+                id == ((Todo) o).id &&
+                entryId == ((Todo) o).entryId;
     }
 
     @Override

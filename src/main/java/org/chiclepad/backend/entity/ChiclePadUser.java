@@ -244,10 +244,10 @@ public class ChiclePadUser {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ChiclePadUser that = (ChiclePadUser) o;
-        return id == that.id && email.equals(that.email);
+        return this == o || o != null &&
+                getClass() == o.getClass() &&
+                id == ((ChiclePadUser) o).id &&
+                email.equals(((ChiclePadUser) o).email);
     }
 
     @Override

@@ -185,12 +185,10 @@ public class Note extends Entry {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Note note = (Note) o;
-        return id == note.id &&
-                content.equals(note.content);
+        return this == o || o != null &&
+                getClass() == o.getClass() &&
+                id == ((Note) o).id &&
+                entryId == ((Note) o).entryId;
     }
 
     @Override

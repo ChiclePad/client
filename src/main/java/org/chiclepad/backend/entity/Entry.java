@@ -63,10 +63,9 @@ public abstract class Entry {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Entry entry = (Entry) o;
-        return entryId == entry.entryId && created.equals(entry.created);
+        return this == o || o != null &&
+                getClass() == o.getClass() &&
+                entryId == ((Entry) o).entryId;
     }
 
     @Override

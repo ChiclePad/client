@@ -103,11 +103,10 @@ public class Goal extends Entry {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Goal goal = (Goal) o;
-        return id == goal.id;
+        return this == o || o != null &&
+                getClass() == o.getClass() &&
+                id == ((Goal) o).id &&
+                entryId == ((Goal) o).entryId;
     }
 
     @Override

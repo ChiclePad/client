@@ -55,12 +55,9 @@ public class CompletedGoal {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CompletedGoal that = (CompletedGoal) o;
-        return id == that.id &&
-                date.equals(that.date) &&
-                time.equals(that.time);
+        return this == o || o != null &&
+                getClass() == o.getClass() &&
+                id == ((CompletedGoal) o).id;
     }
 
     @Override
