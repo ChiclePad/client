@@ -1,8 +1,11 @@
 package org.chiclepad.backend.entity;
 
+import org.springframework.lang.NonNull;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * One of the users added organization entries
@@ -25,6 +28,11 @@ public abstract class Entry {
     protected final List<Category> categories;
 
     /**
+     * Time the entry was deleted
+     */
+    protected Optional<LocalDateTime> deletionTime = Optional.empty();
+
+    /**
      * Basic constructor
      */
     public Entry(int entryId, LocalDateTime created, List<Category> categories) {
@@ -38,6 +46,32 @@ public abstract class Entry {
      */
     public Entry(int entryId, LocalDateTime created) {
         this(entryId, created, new ArrayList<>());
+    }
+
+    /**
+     * Constructor for deleted entries
+     */
+    public Entry(int entryId, LocalDateTime created, List<Category> categories, @NonNull LocalDateTime deletionTime) {
+        this(entryId, created, categories);
+
+        if (deletionTime == null) {
+            throw new RuntimeException("Provided deletion time to a entry " + entryId + " can't be null");
+        }
+
+        this.deletionTime = Optional.of(deletionTime);
+    }
+
+    /**
+     * Constructor for deleted entries
+     */
+    public Entry(int entryId, LocalDateTime created, @NonNull LocalDateTime deletionTime) {
+        this(entryId, created, new ArrayList<>());
+
+        if (deletionTime == null) {
+            throw new RuntimeException("Provided deletion time to a entry " + entryId + " can't be null");
+        }
+
+        this.deletionTime = Optional.of(deletionTime);
     }
 
     /**
@@ -59,6 +93,24 @@ public abstract class Entry {
      */
     public int getEntryId() {
         return entryId;
+    }
+
+    /**
+     * @return the time the entry was deleted
+     */
+    public Optional<LocalDateTime> getDeletionTime() {
+        return deletionTime;
+    }
+
+    /**
+     * @param deletionTime Set the time the entry was deleted
+     */
+    public void setDeletionTime(@NonNull LocalDateTime deletionTime) {
+        if (deletionTime == null) {
+            throw new RuntimeException("Provided deletion time to a entry " + entryId + " can't be null");
+        }
+
+        this.deletionTime = Optional.of(deletionTime);
     }
 
     @Override
