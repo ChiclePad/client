@@ -11,25 +11,22 @@ tertiary: #3E5641
 
 @font-face {
     font-family: 'Roboto';
-    src: url('Roboto-Regular.ttf');
+    src: url('org/chiclepad/frontend/Roboto-Regular.ttf');
 }
 
 .text {
     -fx-font-family: Roboto;
     -fx-text-fill: #19261D;
-    -fx-font-smoothing-type: grey;
 }
 
 .text-on-grey {
     -fx-font-family: Roboto;
     -fx-text-fill: #464947;
-    -fx-font-smoothing-type: grey;
 }
 
 .white-text {
     -fx-font-family: Roboto;
     -fx-text-fill: #fff;
-    -fx-font-smoothing-type: grey;
 }
 
 .form {
@@ -37,7 +34,6 @@ tertiary: #3E5641
     -fx-background-color: white;
     -fx-border-width: 1px;
     -fx-border-color: #e0e0e0;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.09804), 31, 0, 1, 1);
 }
 
 .link {
@@ -55,4 +51,21 @@ tertiary: #3E5641
 
 .green-background {
     -fx-background-color: #8DC44E;
+}
+
+.secondary-background {
+    -fx-background-color: #A24936;
+}
+
+.tertiary-background {
+    -fx-background-color: #3E5641;
+}
+
+.large-text {
+    -fx-font-size: 22px;
+    -fx-start-margin: 10px;
+}
+
+.raised {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.09804), 31, 0, 1, 1);
 }
