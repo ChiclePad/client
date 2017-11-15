@@ -25,6 +25,10 @@ Maven
 ```bash
 $ sudo apt install maven
 ```
+And then install dependencies in your project
+```bash
+$ mvn install
+```
 
 PostgreSQL
 ```bash
