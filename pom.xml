@@ -88,6 +88,8 @@
             <groupId>com.jfoenix</groupId>
             <artifactId>jfoenix</artifactId>
             <version>9.0.0</version>
+            <systemPath>${project.basedir}/src/main/resources/jfoenix-9.0.0.jar</systemPath>
+            <scope>system</scope>
         </dependency>
     </dependencies>
 </project>
