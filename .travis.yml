@@ -6,6 +6,5 @@ addons:
   apt:
     packages:
       - oracle-java9-installer
-script:
-- mvn install:install-file -Dfile=src/main/resources/jfoenix-9.0.0.jar -DgroupId=com.jfoenix -DartifactId=jfoenix -Dversion=9.0.0 -Dpackaging=jar -DgeneratePom=true
-- mvn clean verify
+before_script: mvn install:install-file -Dfile=src/main/resources/jfoenix-9.0.0.jar -DgroupId=com.jfoenix -DartifactId=jfoenix -Dversion=9.0.0 -Dpackaging=jar -DgeneratePom=true
+script: mvn clean verify
