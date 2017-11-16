@@ -40,28 +40,28 @@ public enum DatabaseManager {
             Class.forName("org.postgresql.Driver");
 
         } catch (ClassNotFoundException e) {
-            logger.error("Failed initializing postgresql driver. Check if you downloaded the driver using mvn install.");
-            e.printStackTrace();
+            throw new RuntimeException("Failed initializing postgresql driver. Check if you downloaded the driver " +
+                    "using mvn install.", e);
         }
     }
 
     /**
      * @param file Properties file to load connection data from
+     * @throws RuntimeException file not found or failed loading properties from
      */
-    public void connect(File file) {
+    public void connect(File file) throws RuntimeException {
         Properties properties = new Properties();
 
         try (FileInputStream inputStream = new FileInputStream(file)) {
             properties.load(inputStream);
 
         } catch (FileNotFoundException e) {
-            logger.error("Provided file " + file.getAbsolutePath() + " doesn't exist. Please check if you used correct path");
-            e.printStackTrace();
+            throw new RuntimeException("Provided file " + file.getAbsolutePath() + " doesn't exist. Please check if " +
+                    "you used correct path", e);
 
         } catch (IOException e) {
-            logger.error("Provided file " + file.getAbsolutePath() + " failed loading. The file should have .properties " +
-                    "format and contain host, port, database, username and password properties.");
-            e.printStackTrace();
+            throw new RuntimeException("Provided file " + file.getAbsolutePath() + " failed loading. The file should " +
+                    "have .properties format and contain host, port, database, username and password properties.");
         }
 
         connect(properties);
@@ -69,8 +69,9 @@ public enum DatabaseManager {
 
     /**
      * @param properties Properties with connection data
+     * @throws RuntimeException failed connecting to database
      */
-    public void connect(Properties properties) {
+    public void connect(Properties properties) throws RuntimeException {
         String host = properties.getProperty("host");
         String port = properties.getProperty("port");
         String database = properties.getProperty("database");
@@ -78,9 +79,8 @@ public enum DatabaseManager {
         String password = properties.getProperty("password");
 
         if (host == null || port == null || database == null || username == null || password == null) {
-            logger.error("Can't connect to database as not all needed properties were provided");
-            throw new NullPointerException("Host: " + host + "\nPort: " + port + "\nDatabase: " + database + "\nUsername: " +
-                    username + "\nPassword: " + password);
+            throw new RuntimeException("Host: " + host + "\nPort: " + port + "\nDatabase: " + database + "\nUsername: "
+                    + username + "\nPassword: " + password);
         }
 
         String url = "jdbc:postgresql://" + host + ":" + port + "/" + database;
@@ -89,20 +89,24 @@ public enum DatabaseManager {
             connection = DriverManager.getConnection(url, username, password);
 
         } catch (SQLException e) {
-            logger.error("Failed connecting to database using url: " + url + ". check if your authentification data is correct.");
-            e.printStackTrace();
+            throw new RuntimeException("Failed connecting to database using url: " + url + ". check if your " +
+                    "authentication data is correct.");
         }
     }
 
     /**
      * @return Connection to database
      * @throws NullPointerException No connection was established
-     * @throws SQLException database access error ocurred
+     * @throws RuntimeException     Connection doesnt't exist or error ocurred checking if it was closed
      */
-    public Connection getConnection() throws NullPointerException, SQLException {
-        if (connection == null || connection.isClosed()) {
-            throw new NullPointerException("No connection was established. Please run `void connect(Properties properties)`" +
-                    " of the DatabaseManager class to connect to database");
+    public Connection getConnection() throws RuntimeException {
+        try {
+            if (connection == null || connection.isClosed()) {
+                throw new RuntimeException("No connection was established. Please run `void connect(Properties " +
+                        "properties)` of the DatabaseManager class to connect to database");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed checking if connection " + connection + " to database was closed", e);
         }
 
         return connection;
@@ -110,15 +114,16 @@ public enum DatabaseManager {
 
     /**
      * Closes the connection if possible
+     *
+     * @throws RuntimeException failed closing connection
      */
-    public void close() {
+    public void close() throws RuntimeException {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
             }
         } catch (SQLException e) {
-            logger.error("Failed closing connection " + connection);
-            e.printStackTrace();
+            throw new RuntimeException("Failed closing connection " + connection, e);
         }
     }
 

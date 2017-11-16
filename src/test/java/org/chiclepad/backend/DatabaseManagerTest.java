@@ -3,11 +3,10 @@ package org.chiclepad.backend;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
+import java.sql.Connection;
 import java.util.Properties;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 class DatabaseManagerTest {
 
@@ -37,28 +36,41 @@ class DatabaseManagerTest {
     }
 
     @Test
-    void connect() throws SQLException {
-        DatabaseManager.INSTANCE.connect(badProperties);
-        assertThat(DatabaseManager.INSTANCE.getConnection()).isNotNull();
+    void connect() {
+        assertThatThrownBy(() -> DatabaseManager.INSTANCE.connect(badProperties))
+                .isInstanceOf(RuntimeException.class);
 
         assertThatThrownBy(() -> DatabaseManager.INSTANCE.connect(badInputProperties))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(RuntimeException.class);
 
-        try {
+        assertThatCode(() -> {
             DatabaseManager.INSTANCE.connect(goodProperties);
             DatabaseManager.INSTANCE.close();
-        } catch (Exception e) {
-            assertThat(false).isTrue();
-        }
+        }).doesNotThrowAnyException();
     }
 
     @Test
     void getConnection() {
-//        DatabaseManager.INSTANCE.getConnection();
+        assertThatThrownBy(DatabaseManager.INSTANCE::getConnection)
+                .isInstanceOf(RuntimeException.class);
+
+        DatabaseManager.INSTANCE.connect(goodProperties);
+        assertThat(DatabaseManager.INSTANCE.getConnection())
+                .isNotNull()
+                .isInstanceOf(Connection.class);
+
+        DatabaseManager.INSTANCE.close();
     }
 
     @Test
     void close() {
-        DatabaseManager.INSTANCE.close();
+        assertThatCode(() -> {
+            DatabaseManager.INSTANCE.close();
+            DatabaseManager.INSTANCE.connect(goodProperties);
+            DatabaseManager.INSTANCE.close();
+        }).doesNotThrowAnyException();
+
+        assertThatThrownBy(DatabaseManager.INSTANCE::getConnection)
+                .isInstanceOf(RuntimeException.class);
     }
 }
