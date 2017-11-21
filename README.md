@@ -52,6 +52,22 @@ Execute `schema.sql` script from `/backend/postgress` folder to initialize the n
 chiclepad=# \q
 ```
 
+### Running java
+- Until a new version of postgresql driver is out, the project has to be run with a `--illegal-access=warn` 
+VM flag to take reflection errors introduced in java 9 as warnings.
+- Configure `/postgress/connection.properties` file to match your database credentials.
+
+### Running tests
+- For database manager tests to pass a dummy database using default properties is needed. 
+(the properties are set to default for postgresql so no configuration should be needed)
+```properties
+host=localhost
+port=5432
+database=chiclepad
+username=postgres
+password=root
+```
+
 ## How To Contribute
 
 1. Fork the repository
@@ -60,3 +76,6 @@ chiclepad=# \q
 4. Make sure you're up to date `$ git pull -r upstream devel` (where upstream is the main repoitory)
 5. Upload to your fork `$ git push -u origin my_new_branch`
 6. Submit a Pull Request
+
+## Database model
+![Model](postgress/schema.png)

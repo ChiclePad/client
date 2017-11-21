@@ -69,7 +69,13 @@
             <scope>test</scope>
         </dependency>
 
-        <!--jdbc-->
+        <!--database-->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>LATEST</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
