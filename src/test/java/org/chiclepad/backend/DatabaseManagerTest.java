@@ -50,6 +50,18 @@ class DatabaseManagerTest {
     }
 
     @Test
+    void isConnected() {
+        assertThatCode(() -> {
+            assertThat(DatabaseManager.INSTANCE.isConnected()).isFalse();
+            DatabaseManager.INSTANCE.connect(goodProperties);
+            assertThat(DatabaseManager.INSTANCE.isConnected()).isTrue();
+            DatabaseManager.INSTANCE.close();
+            assertThat(DatabaseManager.INSTANCE.isConnected()).isFalse();
+
+        }).doesNotThrowAnyException();
+    }
+
+    @Test
     void getConnection() {
         assertThatThrownBy(DatabaseManager.INSTANCE::getConnection)
                 .isInstanceOf(RuntimeException.class);
@@ -73,4 +85,5 @@ class DatabaseManagerTest {
         assertThatThrownBy(DatabaseManager.INSTANCE::getConnection)
                 .isInstanceOf(RuntimeException.class);
     }
+
 }

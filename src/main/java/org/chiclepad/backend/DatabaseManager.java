@@ -95,6 +95,27 @@ public enum DatabaseManager {
     }
 
     /**
+     * Should be checked every time before `getConnection()`
+     *
+     * @return Database connection was established
+     */
+    public boolean isConnected() {
+        if (connection == null) {
+            return false;
+        }
+
+        try {
+            if (connection.isClosed()) {
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed checking if connection " + connection + " to database was closed", e);
+        }
+
+        return true;
+    }
+
+    /**
      * @return Connection to database
      * @throws NullPointerException No connection was established
      * @throws RuntimeException     Connection doesnt't exist or error ocurred checking if it was closed
