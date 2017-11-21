@@ -6,15 +6,31 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class ChiclePadApp extends Application {
-   public void start(final Stage primaryStage) throws Exception {
-      MainSceneController mainSceneController = new MainSceneController();
-      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MainScene.fxml"));
-      fxmlLoader.setController(mainSceneController);
-      Parent parentPane = fxmlLoader.load();
-      Scene scene = new Scene(parentPane);
-      primaryStage.setScene(scene);
-      primaryStage.setTitle("ChiclePad");
-      primaryStage.show();
-   }
+
+    private static Stage primaryStage;
+
+    public void start(final Stage primaryStage) throws Exception {
+        ChiclePadApp.primaryStage = primaryStage;
+
+        LoginSceneController loginSceneController = new LoginSceneController();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("loginScene.fxml"));
+        fxmlLoader.setController(loginSceneController);
+        Parent parentPane = fxmlLoader.load();
+
+        Scene scene = new Scene(parentPane);
+
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("ChiclePad");
+        primaryStage.show();
+    }
+
+    public static void switchScene(FXMLLoader fxmlLoader) throws IOException {
+        Parent parentPane = fxmlLoader.load();
+        Scene scene = new Scene(parentPane);
+        ChiclePadApp.primaryStage.setScene(scene);
+    }
+
 }

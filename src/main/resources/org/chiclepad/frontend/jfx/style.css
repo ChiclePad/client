@@ -1,0 +1,71 @@
+/*
+white: #fff
+grey: #eee
+black: #19261D
+grey-text: #464947
+border:  #e0e0e0
+primary: #8DC44E
+secondary: #A24936
+tertiary: #3E5641
+ */
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('org/chiclepad/frontend/Roboto-Regular.ttf');
+}
+
+.text {
+    -fx-font-family: Roboto;
+    -fx-text-fill: #19261D;
+}
+
+.text-on-grey {
+    -fx-font-family: Roboto;
+    -fx-text-fill: #464947;
+}
+
+.white-text {
+    -fx-font-family: Roboto;
+    -fx-text-fill: #fff;
+}
+
+.form {
+    -fx-border-radius: 3px;
+    -fx-background-color: white;
+    -fx-border-width: 1px;
+    -fx-border-color: #e0e0e0;
+}
+
+.link {
+    -fx-text-fill: #8DC44E;
+    -fx-cursor: hand;
+}
+
+.bold {
+    -fx-font-weight: bold;
+}
+
+.grey-background {
+    -fx-background-color: #eee;
+}
+
+.green-background {
+    -fx-background-color: #8DC44E;
+}
+
+.secondary-background {
+    -fx-background-color: #A24936;
+}
+
+.tertiary-background {
+    -fx-background-color: #3E5641;
+}
+
+.large-text {
+    -fx-font-size: 22px;
+    -fx-start-margin: 10px;
+}
+
+.raised {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.09804), 31, 0, 1, 1);
+}

@@ -25,6 +25,11 @@ Maven
 ```bash
 $ sudo apt install maven
 ```
+And then install dependencies in your project
+```bash
+$ mvn install:install-file -Dfile=src/main/resources/jfoenix-9.0.0.jar -DgroupId=com.jfoenix -DartifactId=jfoenix -Dversion=9.0.0 -Dpackaging=jar -DgeneratePom=true
+$ mvn install
+```
 
 PostgreSQL
 ```bash
