@@ -1,15 +1,14 @@
 package org.chiclepad.backend;
 
+import org.postgresql.ds.PGSimpleDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Properties;
 
 /**
@@ -30,20 +29,7 @@ public enum DatabaseManager {
     /**
      * Single connection
      */
-    private Connection connection;
-
-    /**
-     * Loads the driver on initialization
-     */
-    private DatabaseManager() {
-        try {
-            Class.forName("org.postgresql.Driver");
-
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Failed initializing postgresql driver. Check if you downloaded the driver " +
-                    "using mvn install.", e);
-        }
-    }
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * @param file Properties file to load connection data from
@@ -83,15 +69,14 @@ public enum DatabaseManager {
                     + username + "\nPassword: " + password);
         }
 
-        String url = "jdbc:postgresql://" + host + ":" + port + "/" + database;
+        PGSimpleDataSource dataSource = new PGSimpleDataSource();
+        dataSource.setServerName(host);
+        dataSource.setPortNumber(Integer.parseInt(port));
+        dataSource.setDatabaseName(database);
+        dataSource.setUser(username);
+        dataSource.setPassword(password);
 
-        try {
-            connection = DriverManager.getConnection(url, username, password);
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed connecting to database using url: " + url + ". check if your " +
-                    "authentication data is correct.");
-        }
+        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     /**
@@ -100,52 +85,20 @@ public enum DatabaseManager {
      * @return Database connection was established
      */
     public boolean isConnected() {
-        if (connection == null) {
-            return false;
-        }
-
-        try {
-            if (connection.isClosed()) {
-                return false;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed checking if connection " + connection + " to database was closed", e);
-        }
-
-        return true;
+        return jdbcTemplate != null;
     }
 
     /**
      * @return Connection to database
-     * @throws NullPointerException No connection was established
-     * @throws RuntimeException     Connection doesnt't exist or error ocurred checking if it was closed
+     * @throws RuntimeException Connection doesnt't exist or error ocurred checking if it was closed
      */
-    public Connection getConnection() throws RuntimeException {
-        try {
-            if (connection == null || connection.isClosed()) {
-                throw new RuntimeException("No connection was established. Please run `void connect(Properties " +
-                        "properties)` of the DatabaseManager class to connect to database");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed checking if connection " + connection + " to database was closed", e);
+    public JdbcTemplate getConnection() throws RuntimeException {
+        if (jdbcTemplate == null) {
+            throw new RuntimeException("No connection was established. Please run `void connect(Properties " +
+                    "properties)` of the DatabaseManager class to connect to database");
         }
 
-        return connection;
-    }
-
-    /**
-     * Closes the connection if possible
-     *
-     * @throws RuntimeException failed closing connection
-     */
-    public void close() throws RuntimeException {
-        try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed closing connection " + connection, e);
-        }
+        return jdbcTemplate;
     }
 
 }
