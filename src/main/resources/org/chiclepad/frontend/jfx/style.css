@@ -10,8 +10,8 @@ tertiary: #3E5641
  */
 
 @font-face {
-    font-family: 'Roboto';
-    src: url('org/chiclepad/frontend/Roboto-Regular.ttf');
+    font-family: Roboto;
+    src: url('../Roboto-Regular.ttf');
 }
 
 .text {
@@ -61,11 +61,18 @@ tertiary: #3E5641
     -fx-background-color: #3E5641;
 }
 
+.small-text {
+    -fx-font-size: 16px;
+}
+
 .large-text {
     -fx-font-size: 22px;
-    -fx-start-margin: 10px;
+}
+
+.huge-text {
+    -fx-font-size: 30px;
 }
 
 .raised {
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.09804), 31, 0, 1, 1);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.09804), 31, 0, 1, 1);
 }

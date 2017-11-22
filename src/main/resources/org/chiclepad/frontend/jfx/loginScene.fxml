@@ -63,15 +63,15 @@
                         <Font size="22.0"/>
                     </font>
                     <VBox.margin>
-                        <Insets bottom="20.0" top="10.0"/>
+                        <Insets bottom="30.0" top="15.0"/>
                     </VBox.margin>
                     <styleClass>
                         <String fx:value="text"/>
                         <String fx:value="large-text"/>
                     </styleClass>
                 </JFXPasswordField>
-                <JFXButton defaultButton="true" onMousePressed="#validitateLogin" prefWidth="400.0" ripplerFill="BLACK"
-                           text="Login">
+                <JFXButton fx:id="loginButton" defaultButton="true" disable="true" onMousePressed="#onLoginPressed"
+                           prefWidth="400.0" ripplerFill="BLACK" text="Login">
                     <font>
                         <Font size="22.0"/>
                     </font>
@@ -91,7 +91,7 @@
                             <Font size="16.0"/>
                         </font>
                     </Label>
-                    <Label onMousePressed="#switchToRegisterScene" text="Create account">
+                    <Label onMousePressed="#onRegisterPressed" text="Create account">
                         <styleClass>
                             <String fx:value="text"/>
                             <String fx:value="link"/>
