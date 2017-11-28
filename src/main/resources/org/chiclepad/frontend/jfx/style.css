@@ -27,6 +27,7 @@ tertiary: #3E5641
 .white-text {
     -fx-font-family: Roboto;
     -fx-text-fill: #fff;
+    -fx-font-weight: normal;
 }
 
 .form {
@@ -41,8 +42,23 @@ tertiary: #3E5641
     -fx-cursor: hand;
 }
 
+.grey-dark {
+    -fx-background-color: #cdcdcd;
+    -fx-text-fill: #cdcdcd;
+    -fx-border-color: #cdcdcd;
+    -fx-progress-color: #cdcdcd;
+}
+
 .bold {
     -fx-font-weight: bold;
+}
+
+.grey-dark-background-hover:hover {
+    -fx-background-color: #d0d0d0;
+}
+
+.grey-dark-background {
+    -fx-background-color: #e0e0e0;
 }
 
 .grey-background {
@@ -65,14 +81,52 @@ tertiary: #3E5641
     -fx-font-size: 16px;
 }
 
+.normal-text {
+    -fx-font-size: 20px;
+}
+
 .large-text {
     -fx-font-size: 22px;
 }
 
 .huge-text {
-    -fx-font-size: 30px;
+    -fx-font-size: 26px;
+}
+
+.raised-slight {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 5, 0, 1, 3)
+}
+
+.raised-slight:focused {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 15, 0, 1, 3)
 }
 
 .raised {
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.09804), 31, 0, 1, 1);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 1, 3)
 }
+
+.raised-left {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 1, -3)
+}
+
+.search-field {
+    -fx-background-color: #e0e0e0, #fff;
+    -fx-background-radius: 2;
+}
+
+.search-field:focused {
+    -fx-background-color: #3E5641, #fff;
+}
+
+.jfx-list-cell:selected {
+    -fx-background-color: #d0d0d0;
+}
+
+.jfx-list-cell {
+    -fx-background-insets: 0.0;
+}
+
+.jfx-list-cell .jfx-rippler {
+    -fx-ripple-fill: #3E5641;
+}
+

@@ -1,12 +1,18 @@
 package org.chiclepad.frontend.jfx;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDialogLayout;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.chiclepad.frontend.jfx.startup.LoginSceneController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,10 +23,6 @@ public class ChiclePadApp extends Application {
     private static Stage primaryStage;
 
     private static final Logger logger = LoggerFactory.getLogger(ChiclePadApp.class);
-
-    public static final Color PRIMARY_COLOR = Color.valueOf("#8DC44E");
-
-    public static final Color SECONDARY_COLOR = Color.valueOf("#A24936");
 
     public void start(final Stage primaryStage) throws Exception {
         ChiclePadApp.primaryStage = primaryStage;
@@ -49,6 +51,45 @@ public class ChiclePadApp extends Application {
         } catch (IOException e) {
             logger.error("Failed switching to scene: " + fxmlPath + "\n" + e.getMessage());
         }
+    }
+
+    /**
+     * @param header Header text
+     * @param body   Body text
+     * @param parent Invisible Stack Pane where the dialog should be displayed
+     */
+    public static void showDialog(String header, String body, StackPane parent) {
+        JFXDialogLayout dialogLayout = new JFXDialogLayout();
+
+        dialogLayout.setHeading(toText(header, 20));
+        dialogLayout.setBody(toText(body, 16));
+
+        JFXDialog dialog = new JFXDialog(parent, dialogLayout, JFXDialog.DialogTransition.TOP, true);
+
+        JFXButton closeButton = new JFXButton("Okay");
+        closeButton.setStyle("-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 1, 3);" +
+                "-fx-font-family: Roboto;" +
+                "-fx-text-fill: #fff;" +
+                "-fx-font-size: 16px;" +
+                "-fx-background-color: #3E5641");
+        closeButton.setPadding(new Insets(7, 18, 7, 18));
+        closeButton.setOnAction(event -> {
+            dialog.close();
+            parent.setVisible(false);
+        });
+        dialogLayout.setActions(closeButton);
+
+        parent.setVisible(true);
+        dialog.show();
+    }
+
+    private static Text toText(String string, int fontSize) {
+        Text result = new Text(string);
+        result.setStyle("-fx-font-family: Roboto;" +
+                "-fx-text-fill: #464947;" +
+                "-fx-font-size: " + fontSize + "px");
+
+        return result;
     }
 
 }
