@@ -8,7 +8,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.ChiclePadColor;
-import org.chiclepad.frontend.jfx.homepage.TodoSceneController;
+import org.chiclepad.frontend.jfx.HomepageSceneController;
 
 public class LoginSceneController {
 
@@ -55,7 +55,7 @@ public class LoginSceneController {
 
     @FXML
     public void onRegisterPressed() {
-        ChiclePadApp.switchScene(new RegisterSceneController(), "startup/registerScene.fxml");
+        ChiclePadApp.switchScene(new RegisterSceneController(), "registerScene.fxml");
     }
 
     @FXML
@@ -63,7 +63,7 @@ public class LoginSceneController {
         // TODO login user
         boolean loginSuccesfull = true;
         if (loginSuccesfull) {
-            ChiclePadApp.switchScene(new TodoSceneController(), "homepage/homeScene.fxml");
+            ChiclePadApp.switchScene(new HomepageSceneController(), "homepageScene.fxml");
         } else {
             ChiclePadApp.showDialog("Login Failed!", "Check if you entered correct email and password.", overlay);
         }

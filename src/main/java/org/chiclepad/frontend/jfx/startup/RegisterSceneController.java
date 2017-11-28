@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import org.chiclepad.backend.LocaleUtils;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.ChiclePadColor;
-import org.chiclepad.frontend.jfx.homepage.TodoSceneController;
+import org.chiclepad.frontend.jfx.HomepageSceneController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -73,7 +73,7 @@ public class RegisterSceneController {
 
     @FXML
     public void onBackPressed() {
-        ChiclePadApp.switchScene(new LoginSceneController(), "startup/loginScene.fxml");
+        ChiclePadApp.switchScene(new LoginSceneController(), "loginScene.fxml");
     }
 
     @FXML
@@ -81,7 +81,7 @@ public class RegisterSceneController {
         // TODO register user
         boolean registerSuccesfull = true;
         if (registerSuccesfull) {
-            ChiclePadApp.switchScene(new TodoSceneController(), "homepage/homeScene.fxml");
+            ChiclePadApp.switchScene(new HomepageSceneController(), "homepageScene.fxml");
         } else {
             ChiclePadApp.showDialog("Registration Failed!", "Email already in use.", overlay);
         }
