@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.chiclepad.frontend.jfx.homepage.HomeSceneController;
 import org.chiclepad.frontend.jfx.startup.LoginSceneController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,7 @@ public class ChiclePadApp extends Application {
         ChiclePadApp.primaryStage = primaryStage;
 
         LoginSceneController loginSceneController = new LoginSceneController();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("loginScene.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("startup/loginScene.fxml"));
         fxmlLoader.setController(loginSceneController);
         Parent parentPane = fxmlLoader.load();
 
@@ -38,6 +39,9 @@ public class ChiclePadApp extends Application {
         primaryStage.setTitle("ChiclePad");
         primaryStage.getIcons().add(new Image(ChiclePadApp.class.getResourceAsStream("../favicon.png")));
         primaryStage.show();
+
+        // TODO remove - only for testing
+        switchScene(new HomeSceneController(), "homepage/homeScene.fxml");
     }
 
     public static void switchScene(Object controller, String fxmlPath) {
@@ -46,10 +50,10 @@ public class ChiclePadApp extends Application {
             fxmlLoader.setController(controller);
 
             Parent parentPane = fxmlLoader.load();
-            Scene scene = new Scene(parentPane);
-            ChiclePadApp.primaryStage.setScene(scene);
+            primaryStage.getScene().setRoot(parentPane);
         } catch (IOException e) {
             logger.error("Failed switching to scene: " + fxmlPath + "\n" + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -79,8 +83,7 @@ public class ChiclePadApp extends Application {
 
     private static Text toText(String string, int fontSize) {
         Text result = new Text(string);
-        result.setStyle("-fx-font-family: Roboto;" +
-                "-fx-text-fill: #464947;" +
+        result.setStyle("-fx-text-fill: #464947;" +
                 "-fx-font-size: " + fontSize + "px");
 
         return result;
@@ -89,8 +92,7 @@ public class ChiclePadApp extends Application {
     private static JFXButton createCloseButton() {
         JFXButton closeButton = new JFXButton("Okay");
         closeButton.setStyle("-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 1, 3);" +
-                "-fx-font-family: Roboto;" +
-                "-fx-text-fill: #fff;" +
+                "-fx-text-fill: white;" +
                 "-fx-font-size: 16px;" +
                 "-fx-background-color: #3E5641");
         closeButton.setPadding(new Insets(7, 18, 7, 18));

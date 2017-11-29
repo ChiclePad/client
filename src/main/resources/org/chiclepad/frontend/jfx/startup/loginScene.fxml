@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
-<AnchorPane fx:id="root" prefHeight="800.0" prefWidth="1280.0" stylesheets="@style.css"
+<AnchorPane fx:id="root" prefHeight="800.0" prefWidth="1280.0" stylesheets="@../style.css"
             xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <HBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
@@ -30,7 +30,7 @@
                                 <HBox.margin>
                                     <Insets right="10.0"/>
                                 </HBox.margin>
-                                <Image url="@../white-logo.png"/>
+                                <Image url="@../../white-logo.png"/>
                             </ImageView>
                             <Label styleClass="white-text" text="Login" textFill="#464947">
                                 <font>

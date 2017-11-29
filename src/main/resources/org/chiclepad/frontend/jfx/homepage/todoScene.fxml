@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
 <?import de.jensd.fx.glyphs.fontawesome.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -9,15 +10,44 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import java.lang.*?>
-<AnchorPane prefHeight="800.0" prefWidth="1280.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/9"
+<AnchorPane prefHeight="800.0" prefWidth="1280.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/9"
             xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <VBox prefWidth="254.0" styleClass="grey-dark-background" AnchorPane.bottomAnchor="0.0"
               AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="45.0">
             <children>
-                <HBox alignment="CENTER_LEFT" onMousePressed="#switchToTodoScene">
+                <HBox alignment="CENTER_LEFT" onMousePressed="#switchToHomeScene">
                     <children>
-                        <FontAwesomeIcon fx:id="todoIcon" fill="#464947" iconName="LIST_UL" selectionEnd="1"
+                        <FontAwesomeIcon fx:id="todoIcon1" fill="#464947" iconName="HOME" selectionEnd="1"
+                                         selectionStart="1" size="1.5em">
+                            <HBox.margin>
+                                <Insets left="20.0"/>
+                            </HBox.margin>
+                        </FontAwesomeIcon>
+                        <Label fx:id="todoLabel1" text="Home" textFill="#dddddd">
+                            <styleClass>
+                                <String fx:value="text-on-grey"/>
+                                <String fx:value="normal-text"/>
+                            </styleClass>
+                            <HBox.margin>
+                                <Insets left="30.0"/>
+                            </HBox.margin>
+                            <font>
+                                <Font name="System Bold" size="26.0"/>
+                            </font>
+                        </Label>
+                    </children>
+                    <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                    </padding>
+                    <styleClass>
+                        <String fx:value="link"/>
+                        <String fx:value="grey-dark-background-hover"/>
+                    </styleClass>
+                </HBox>
+                <HBox alignment="CENTER_LEFT">
+                    <children>
+                        <FontAwesomeIcon fx:id="todoIcon" fill="#8dc44e" iconName="LIST_UL" selectionEnd="1"
                                          selectionStart="1" size="1.5em">
                             <HBox.margin>
                                 <Insets left="20.0"/>
@@ -42,11 +72,12 @@
                     <styleClass>
                         <String fx:value="link"/>
                         <String fx:value="grey-dark-background-hover"/>
+                        <String fx:value="bold"/>
                     </styleClass>
                 </HBox>
-                <HBox alignment="CENTER_LEFT">
+                <HBox alignment="CENTER_LEFT" onMousePressed="#switchToGoalScene">
                     <children>
-                        <FontAwesomeIcon fx:id="goalsIcon" fill="#8dc44e" iconName="TROPHY" size="1.5em" text="">
+                        <FontAwesomeIcon fx:id="goalsIcon" fill="#464947" iconName="TROPHY" size="1.5em" text="">
                             <HBox.margin>
                                 <Insets left="20.0"/>
                             </HBox.margin>
@@ -67,7 +98,6 @@
                     <styleClass>
                         <String fx:value="link"/>
                         <String fx:value="grey-dark-background-hover"/>
-                        <String fx:value="bold"/>
                     </styleClass>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" onMousePressed="#switchToDiaryScene">
@@ -121,7 +151,16 @@
                     </styleClass>
                 </HBox>
                 <Pane prefHeight="1.0" styleClass="grey-dark"/>
-                <JFXListView fx:id="tagList" styleClass="grey-dark-background" VBox.vgrow="ALWAYS"/>
+                <Label opacity="0.8" text="Categories">
+                    <VBox.margin>
+                        <Insets bottom="10.0" left="40.0" right="10.0" top="10.0"/>
+                    </VBox.margin>
+                    <styleClass>
+                        <String fx:value="large-text"/>
+                        <String fx:value="text-on-grey"/>
+                    </styleClass>
+                </Label>
+                <JFXListView fx:id="categories" styleClass="grey-dark-background" VBox.vgrow="ALWAYS"/>
             </children>
         </VBox>
         <AnchorPane layoutX="252.0" layoutY="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="254.0"
@@ -131,17 +170,46 @@
                 <String fx:value="grey-background"/>
             </styleClass>
             <children>
-                <Label layoutX="628.0" layoutY="396.0" text="Goals"/>
+                <AnchorPane layoutX="-70.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="50.0"
+                            AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="30.0">
+                    <children>
+                        <JFXTreeTableView editable="true" styleClass="borderless" AnchorPane.bottomAnchor="0.0"
+                                          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                          AnchorPane.topAnchor="75.0">
+                            <columns>
+                                <TreeTableColumn prefWidth="542.0" text="Description"/>
+                                <TreeTableColumn minWidth="0.0" prefWidth="125.0" sortType="DESCENDING"
+                                                 text="Deadline"/>
+                                <TreeTableColumn minWidth="0.0" prefWidth="112.0" sortType="DESCENDING"
+                                                 text="SoftDeadline"/>
+                                <TreeTableColumn prefWidth="146.0" sortType="DESCENDING" text="Priority"/>
+                            </columns>
+                        </JFXTreeTableView>
+                        <Label layoutX="14.0" layoutY="14.0" text="To-Do">
+                            <styleClass>
+                                <String fx:value="huge-text"/>
+                                <String fx:value="text-on-grey"/>
+                            </styleClass>
+                            <padding>
+                                <Insets bottom="10.0" left="20.0" right="10.0" top="10.0"/>
+                            </padding>
+                        </Label>
+                    </children>
+                    <styleClass>
+                        <String fx:value="form"/>
+                        <String fx:value="raised"/>
+                    </styleClass>
+                </AnchorPane>
             </children>
         </AnchorPane>
         <BorderPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <left>
-                <HBox alignment="CENTER_LEFT" onMousePressed="#switchToTodoScene" styleClass="link"
+                <HBox alignment="CENTER_LEFT" onMousePressed="#switchToHomeScene" styleClass="link"
                       BorderPane.alignment="CENTER">
                     <children>
                         <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../white-logo.png"/>
+                                <Image url="@../../white-logo.png"/>
                             </image>
                             <HBox.margin>
                                 <Insets bottom="5.0" right="5.0" top="5.0"/>
@@ -200,16 +268,18 @@
                 </HBox>
             </center>
             <right>
-                <HBox alignment="CENTER" styleClass="link" BorderPane.alignment="CENTER">
+                <HBox fx:id="userArea" alignment="CENTER" onMousePressed="#userClick" styleClass="link"
+                      BorderPane.alignment="CENTER">
                     <children>
-                        <Label text="Username">
+                        <Label fx:id="usernameLabel">
                             <styleClass>
                                 <String fx:value="large-text"/>
                                 <String fx:value="text"/>
                                 <String fx:value="white-text"/>
                             </styleClass>
                         </Label>
-                        <FontAwesomeIcon fill="WHITE" iconName="USER" selectionEnd="1" selectionStart="1" size="1.5em">
+                        <FontAwesomeIcon fx:id="userIcon" fill="WHITE" iconName="USER" selectionEnd="1"
+                                         selectionStart="1" size="1.5em">
                             <HBox.margin>
                                 <Insets left="15.0"/>
                             </HBox.margin>

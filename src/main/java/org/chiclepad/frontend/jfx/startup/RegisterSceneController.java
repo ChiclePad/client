@@ -73,7 +73,7 @@ public class RegisterSceneController {
 
     @FXML
     public void onBackPressed() {
-        ChiclePadApp.switchScene(new LoginSceneController(), "loginScene.fxml");
+        ChiclePadApp.switchScene(new LoginSceneController(), "startup/loginScene.fxml");
     }
 
     @FXML
@@ -81,7 +81,7 @@ public class RegisterSceneController {
         // TODO register user
         boolean registerSuccesfull = true;
         if (registerSuccesfull) {
-            ChiclePadApp.switchScene(new TodoSceneController(), "todoScene.fxml");
+            ChiclePadApp.switchScene(new TodoSceneController(), "homepage/homeScene.fxml");
         } else {
             ChiclePadApp.showDialog("Registration Failed!", "Email already in use.", overlay);
         }

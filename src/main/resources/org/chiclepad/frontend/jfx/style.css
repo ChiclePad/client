@@ -78,6 +78,10 @@ tertiary: #3E5641
     -fx-font-weight: bold;
 }
 
+.white-background {
+    -fx-background-color: white;
+}
+
 .grey-dark-background-hover:hover {
     -fx-background-color: #d0d0d0;
 }
@@ -87,7 +91,7 @@ tertiary: #3E5641
 }
 
 .grey-background {
-    -fx-background-color: #eee;
+    -fx-background-color: #eeeeee;
 }
 
 .green-background {
@@ -127,7 +131,7 @@ tertiary: #3E5641
 }
 
 .raised {
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 1, 3)
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 6, 0, 1, 3)
 }
 
 .raised-left {
@@ -143,15 +147,31 @@ tertiary: #3E5641
     -fx-background-color: #3E5641, #fff;
 }
 
-.jfx-list-cell:selected {
+.jfx-list-cell:hover, .jfx-list-cell:focused {
     -fx-background-color: #d0d0d0;
 }
 
 .jfx-list-cell {
-    -fx-background-insets: 0.0;
+    -fx-font-family: Roboto;
+    -fx-font-size: 16px;
+    -fx-text-fill: #464947;
+    -fx-background-color: #e0e0e0;
 }
 
-.jfx-list-cell .jfx-rippler {
-    -fx-ripple-fill: #3E5641;
+.jfx-rippler {
+    -jfx-rippler-fill: #3E5641;
+}
+
+.jfx-list-view {
+    -fx-background-color: #e0e0e0;
+}
+
+.jfx-popup .jfx-button {
+    -fx-font-size: 16px;
+    -fx-text-fill: #464947;
+}
+
+.jfx-button {
+    -fx-font-family: Roboto;
 }
 

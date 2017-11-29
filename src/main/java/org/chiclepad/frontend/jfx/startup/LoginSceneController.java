@@ -55,7 +55,7 @@ public class LoginSceneController {
 
     @FXML
     public void onRegisterPressed() {
-        ChiclePadApp.switchScene(new RegisterSceneController(), "registerScene.fxml");
+        ChiclePadApp.switchScene(new RegisterSceneController(), "startup/registerScene.fxml");
     }
 
     @FXML
@@ -63,7 +63,7 @@ public class LoginSceneController {
         // TODO login user
         boolean loginSuccesfull = true;
         if (loginSuccesfull) {
-            ChiclePadApp.switchScene(new TodoSceneController(), "todoScene.fxml");
+            ChiclePadApp.switchScene(new TodoSceneController(), "homepage/homeScene.fxml");
         } else {
             ChiclePadApp.showDialog("Login Failed!", "Check if you entered correct email and password.", overlay);
         }

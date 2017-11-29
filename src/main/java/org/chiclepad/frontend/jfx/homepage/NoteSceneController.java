@@ -1,36 +1,36 @@
 package org.chiclepad.frontend.jfx.homepage;
 
 import com.jfoenix.controls.JFXListView;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconName;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
+import org.chiclepad.frontend.jfx.MOCKUP;
 
 public class NoteSceneController {
+
+    @FXML
+    private HBox userArea;
+
+    @FXML
+    private Label usernameLabel;
 
     @FXML
     private TextField searchTextField;
 
     @FXML
-    private JFXListView tagList;
+    private JFXListView<Label> categories;
 
     private String filter = "";
 
     @FXML
     public void initialize() {
-        FontAwesomeIconName[] icons = FontAwesomeIconName.values();
+        // TODO get real user
+        MOCKUP.USER.getName().ifPresent(name -> usernameLabel.setText(name));
 
-        for (int i = 0; i < 4; i++) {
-            Label line = new Label("test");
-            FontAwesomeIcon icon = new FontAwesomeIcon();
-            icon.setIcon(icons[(int) (Math.random() * icons.length)]);
-            line.setGraphic(icon);
-
-            tagList.getItems().add(line);
-            //        FontAwesomeIconName.TROPHY
-        }
+        // TODO get real categories
+        MOCKUP.CATEGORIES.forEach(category -> HomeSceneController.addCategory(category, categories.getItems()));
     }
 
 
@@ -41,18 +41,28 @@ public class NoteSceneController {
     }
 
     @FXML
+    public void userClick() {
+        HomeSceneController.showUserPopup(userArea);
+    }
+
+    @FXML
+    public void switchToHomeScene() {
+        ChiclePadApp.switchScene(new HomeSceneController(), "homepage/homeScene.fxml");
+    }
+
+    @FXML
     public void switchToTodoScene() {
-        ChiclePadApp.switchScene(new TodoSceneController(), "todoScene.fxml");
+        ChiclePadApp.switchScene(new TodoSceneController(), "homepage/todoScene.fxml");
     }
 
     @FXML
     public void switchToGoalScene() {
-        ChiclePadApp.switchScene(new GoalSceneController(), "goalScene.fxml");
+        ChiclePadApp.switchScene(new GoalSceneController(), "homepage/goalScene.fxml");
     }
 
     @FXML
     public void switchToDiaryScene() {
-        ChiclePadApp.switchScene(new DiarySceneController(), "diaryScene.fxml");
+        ChiclePadApp.switchScene(new DiarySceneController(), "homepage/diaryScene.fxml");
     }
 
 }
