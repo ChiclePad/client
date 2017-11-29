@@ -36,7 +36,7 @@ public class ChiclePadApp extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("ChiclePad");
-        primaryStage.getIcons().add(new Image(ChiclePadApp.class.getResourceAsStream("../logo.png")));
+        primaryStage.getIcons().add(new Image(ChiclePadApp.class.getResourceAsStream("../favicon.png")));
         primaryStage.show();
     }
 
@@ -66,13 +66,7 @@ public class ChiclePadApp extends Application {
 
         JFXDialog dialog = new JFXDialog(parent, dialogLayout, JFXDialog.DialogTransition.TOP, true);
 
-        JFXButton closeButton = new JFXButton("Okay");
-        closeButton.setStyle("-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 1, 3);" +
-                "-fx-font-family: Roboto;" +
-                "-fx-text-fill: #fff;" +
-                "-fx-font-size: 16px;" +
-                "-fx-background-color: #3E5641");
-        closeButton.setPadding(new Insets(7, 18, 7, 18));
+        JFXButton closeButton = createCloseButton();
         closeButton.setOnAction(event -> {
             dialog.close();
             parent.setVisible(false);
@@ -90,6 +84,17 @@ public class ChiclePadApp extends Application {
                 "-fx-font-size: " + fontSize + "px");
 
         return result;
+    }
+
+    private static JFXButton createCloseButton() {
+        JFXButton closeButton = new JFXButton("Okay");
+        closeButton.setStyle("-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 1, 3);" +
+                "-fx-font-family: Roboto;" +
+                "-fx-text-fill: #fff;" +
+                "-fx-font-size: 16px;" +
+                "-fx-background-color: #3E5641");
+        closeButton.setPadding(new Insets(7, 18, 7, 18));
+        return closeButton;
     }
 
 }
