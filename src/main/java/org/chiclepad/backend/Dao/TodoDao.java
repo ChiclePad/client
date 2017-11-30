@@ -28,40 +28,29 @@ public class TodoDao extends EntryDao {
       String sqlInsert = "INSERT INTO todo(id, entry_id, description, deadline, soft_deadline, priority)"
             + " VALUES(DEFAULT ,?,?,?,?,?) RETURNING id ;";
 
-      Object id = null;
-      try {
-         id = jdbcTemplate
-               .queryForObject(sqlInsert, new Object[] { entryId, description, deadline, softDeadline.get(), priority },
-                     Integer.class);
-      } catch (DuplicateKeyException e) {
-         System.out.println("This user already exists.");
-      }
+      Object id = jdbcTemplate
+            .queryForObject(sqlInsert, new Object[] { entryId, description, deadline, softDeadline.get(), priority },
+                  Integer.class);
 
       return id == null ? null : new Todo(entryId, created, (int) id, description, deadline, priority);
    }
 
    //READ
-   public Todo get(int id) {
+   public Todo get(int id) throws EmptyResultDataAccessException {
       String sqlGet = "SELECT * FROM todo"
             + " INNER JOIN  entry ON todo.entry_id = entry.id"
             + " WHERE todo.id = " + id + ";";
 
-      try {
-         return jdbcTemplate.queryForObject(sqlGet,
-               (RowMapper<Todo>) (ResultSet resultSet, int rowNum) -> {
-                  return getTodo(resultSet);
-               }
-         );
-      } catch (EmptyResultDataAccessException e) {
-         System.out.println("User with this id: " + id + " does not exist.");
-      }
-      return null;
+      return jdbcTemplate.queryForObject(sqlGet,
+            (RowMapper<Todo>) (ResultSet resultSet, int rowNum) -> {
+               return getTodo(resultSet);
+            }
+      );
    }
 
    private Todo getTodo(final ResultSet resultSet) throws SQLException {
       int todoId = resultSet.getInt("id");
       int entryId = resultSet.getInt("entry_id");
-      int userId = resultSet.getInt("user_id");
       LocalDateTime created = (LocalDateTime) resultSet.getObject("created");
       LocalDateTime deadline = (LocalDateTime) resultSet.getObject("deadline");
       int priority = resultSet.getInt("priority");
@@ -76,7 +65,6 @@ public class TodoDao extends EntryDao {
       }
 
       return new Todo(entryId, created, todoId, description, deadline, realSoftDeadline.get(), priority);
-
    }
 
    public List<Todo> getAll() {
@@ -93,10 +81,11 @@ public class TodoDao extends EntryDao {
    //UPDATE
    public Todo update(Todo todo) throws DuplicateKeyException {
 
-      String sqlUpdatePassword = "UPDATE todo "
+      String sqlUpdateAll = "UPDATE todo "
             + "SET description = ?, deadline = ?, soft_deadline = ?, priority = ? WHERE id = "
             + todo.getId() + ";";
-      jdbcTemplate.update(sqlUpdatePassword, todo.getDescription(), todo.getDeadline(), todo.getSoftDeadline().get(), todo.getPriority());
+      jdbcTemplate.update(sqlUpdateAll, todo.getDescription(), todo.getDeadline(), todo.getSoftDeadline().get(),
+            todo.getPriority());
 
       return todo;
    }
@@ -106,9 +95,5 @@ public class TodoDao extends EntryDao {
       super.delete(todo.getEntryId());
       return todo;
    }
-
-   public static void main(String[] args) {
-
-   }
-
+   
 }
