@@ -54,7 +54,7 @@ public class Todo extends Entry {
     }
 
     /**
-     * Constructor with soft deadline user set himself for task completition
+     * Constructor with soft deadline user set himself for task completion
      */
     public Todo(int entryId,
                 LocalDateTime created,
@@ -90,7 +90,7 @@ public class Todo extends Entry {
     }
 
     /**
-     * Constructor with soft deadline user set himself for task completition
+     * Constructor with soft deadline user set himself for task completion
      */
     public Todo(int entryId,
                 LocalDateTime created,
@@ -144,7 +144,7 @@ public class Todo extends Entry {
     }
 
     /**
-     * @return Deadline user set himself for task completition
+     * @return Deadline user set himself for task completion
      */
     public Optional<LocalDateTime> getSoftDeadline() {
         return softDeadline;
