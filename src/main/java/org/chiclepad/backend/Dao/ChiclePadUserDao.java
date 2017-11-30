@@ -14,10 +14,10 @@ import java.util.Locale;
 
 public class ChiclePadUserDao {
 
-   // Dara source
+   // Data source
    private JdbcTemplate jdbcTemplate;
 
-   protected ChiclePadUserDao(JdbcTemplate jdbcTemplate) {
+   public ChiclePadUserDao(JdbcTemplate jdbcTemplate) {
       this.jdbcTemplate = jdbcTemplate;
    }
 
@@ -27,32 +27,21 @@ public class ChiclePadUserDao {
       String sqlInsert = "INSERT INTO chiclepad_user(id,email, password, salt)"
             + " VALUES(DEFAULT ,?,?,?) RETURNING id ;";
 
-      Object id = null;
-      try {
-         id = jdbcTemplate.queryForObject(sqlInsert, new Object[] { email, password, salt }, Integer.class);
-      } catch (DuplicateKeyException e) {
-         System.out.println("This user already exists.");
-      }
-
+      Object id = jdbcTemplate.queryForObject(sqlInsert, new Object[] { email, password, salt }, Integer.class);
       return id == null ? null : new ChiclePadUser((int) id, email, password, salt);
    }
 
    //READ
-   public ChiclePadUser get(int id) {
+   public ChiclePadUser get(int id) throws EmptyResultDataAccessException {
       String sqlGet = "SELECT * FROM chiclepad_user"
             + " LEFT OUTER JOIN chiclepad_user_details ON chiclepad_user_details.user_id = " + id
             + " WHERE chiclepad_user.id =" + id + ";";
 
-      try {
-         return jdbcTemplate.queryForObject(sqlGet,
-               (RowMapper<ChiclePadUser>) (ResultSet resultSet, int rowNum) -> {
-                  return getChiclePadUser(resultSet);
-               }
-         );
-      } catch (EmptyResultDataAccessException e) {
-         System.out.println("User with this id: " + id + " does not exist.");
-      }
-      return null;
+      return jdbcTemplate.queryForObject(sqlGet,
+            (RowMapper<ChiclePadUser>) (ResultSet resultSet, int rowNum) -> {
+               return getChiclePadUser(resultSet);
+            }
+      );
    }
 
    private ChiclePadUser getChiclePadUser(final ResultSet resultSet) throws SQLException {
@@ -142,16 +131,6 @@ public class ChiclePadUserDao {
       String sqlDelete = "DELETE  FROM chiclepad_user WHERE  id = " + chiclePadUser.getId();
       jdbcTemplate.update(sqlDelete);
       return chiclePadUser;
-   }
-
-   public static void main(String[] args) {
-      ChiclePadUserDao dao = DaoFactory.INSTANCE.getChiclePadUserDao();
-
-      dao.create("maria@babcanska.sk", "badpassword", "saltie");
-      ChiclePadUser chiclePadUser = dao.get(39);
-      chiclePadUser.setPassword("Christmas");
-      chiclePadUser.setName("Maria");
-      dao.update(chiclePadUser);
    }
 
 }
