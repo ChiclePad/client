@@ -45,7 +45,7 @@ public enum DaoFactory {
       }
 
       // TODO get dao instances.. or use Singletons
-      //this.categoryDao = new CategoryDao(this.jdbcTemplate);
+      this.categoryDao = new CategoryDao(this.jdbcTemplate);
       this.chiclePadUserDao = new ChiclePadUserDao(this.jdbcTemplate);
       this.diaryPageDao = new DiaryPageDao(this.jdbcTemplate);
       this.goalDao = new GoalDao(this.jdbcTemplate);
