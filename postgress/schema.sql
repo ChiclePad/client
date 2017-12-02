@@ -24,13 +24,14 @@ CREATE TABLE entry (
 
 -- Category for tagging entries
 CREATE TABLE category (
-  id    SERIAL PRIMARY KEY,
-  name  VARCHAR(100) NOT NULL,
-  icon  VARCHAR(50) DEFAULT 'fa-circle-o',
-  color CHAR(7) DEFAULT '#cccccc'
+  id      SERIAL PRIMARY KEY,
+  user_id INT REFERENCES chiclepad_user ON DELETE CASCADE,
+  name    VARCHAR(100) NOT NULL,
+  icon    VARCHAR(50) DEFAULT 'CIRCLE',
+  color   CHAR(7)     DEFAULT '#cccccc'
 );
 
--- N : M table connecting catiegories to entries
+-- N : M table connecting categories to entries
 CREATE TABLE registered_category (
   entry_id INT REFERENCES entry ON DELETE CASCADE,
   category_id INT REFERENCES category ON DELETE CASCADE,
