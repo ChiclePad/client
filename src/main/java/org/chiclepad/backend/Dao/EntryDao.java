@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.time.LocalDateTime;
 
 abstract class EntryDao {
-   // Dara source
+   // Data source
    protected JdbcTemplate jdbcTemplate;
 
    protected EntryDao(JdbcTemplate jdbcTemplate) {
@@ -37,7 +37,4 @@ abstract class EntryDao {
       return id == null ? -1 : (int) id;
    }
 
-   public static void main(String[] args) {
-
-   }
 }

@@ -19,6 +19,14 @@ public enum DaoFactory {
 
    private JdbcTemplate jdbcTemplate;
 
+   // DAOs
+   private CategoryDao categoryDao;
+   private ChiclePadUserDao chiclePadUserDao;
+   private DiaryPageDao diaryPageDao;
+   private GoalDao goalDao;
+   private NoteDao noteDao;
+   private TodoDao todoDao;
+
    /**
     * Logger for reporting errors, and important events
     */
@@ -37,10 +45,36 @@ public enum DaoFactory {
       }
 
       // TODO get dao instances.. or use Singletons
+      this.categoryDao = new CategoryDao(this.jdbcTemplate);
+      this.chiclePadUserDao = new ChiclePadUserDao(this.jdbcTemplate);
+      this.diaryPageDao = new DiaryPageDao(this.jdbcTemplate);
+      this.goalDao = new GoalDao(this.jdbcTemplate);
+      this.noteDao = new NoteDao(this.jdbcTemplate);
+      this.todoDao = new TodoDao(this.jdbcTemplate);
+   }
+
+   public CategoryDao getCategoryDao() {
+      return this.categoryDao;
    }
 
    public ChiclePadUserDao getChiclePadUserDao() {
-      return new ChiclePadUserDao(this.jdbcTemplate);
+      return this.chiclePadUserDao;
+   }
+
+   public DiaryPageDao getDiaryPageDao() {
+      return this.diaryPageDao;
+   }
+
+   public GoalDao getGoalDao() {
+      return this.goalDao;
+   }
+
+   public NoteDao getNoteDao() {
+      return this.noteDao;
+   }
+
+   public TodoDao getTodoDao() {
+      return this.todoDao;
    }
 
 }
