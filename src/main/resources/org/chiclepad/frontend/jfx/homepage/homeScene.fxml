@@ -159,7 +159,7 @@
                         <String fx:value="text-on-grey"/>
                     </styleClass>
                 </Label>
-                <JFXListView fx:id="categories" styleClass="grey-dark-background" VBox.vgrow="ALWAYS"/>
+                <JFXListView fx:id="categories" editable="true" styleClass="grey-dark-background" VBox.vgrow="ALWAYS"/>
             </children>
         </VBox>
         <AnchorPane layoutX="252.0" layoutY="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="254.0"
@@ -172,50 +172,21 @@
                 <VBox layoutX="-21.0" layoutY="20.0" spacing="30.0" AnchorPane.bottomAnchor="30.0"
                       AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="30.0">
                     <children>
-                        <HBox>
-                            <children>
-                                <Label text="Welcome">
-                                    <styleClass>
-                                        <String fx:value="huge-text"/>
-                                        <String fx:value="text-on-grey"/>
-                                    </styleClass>
-                                    <padding>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                                    </padding>
-                                    <HBox.margin>
-                                        <Insets left="20.0"/>
-                                    </HBox.margin>
-                                </Label>
-                                <Label fx:id="welcomeUsernameLabel">
-                                    <styleClass>
-                                        <String fx:value="huge-text"/>
-                                        <String fx:value="text-on-grey"/>
-                                    </styleClass>
-                                    <padding>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                                    </padding>
-                                </Label>
-                            </children>
-                            <styleClass>
-                                <String fx:value="form"/>
-                                <String fx:value="raised"/>
-                            </styleClass>
-                        </HBox>
                         <VBox>
                             <children>
                                 <HBox>
                                     <children>
-                                        <Label text="Upcomming">
-                                            <styleClass>
-                                                <String fx:value="huge-text"/>
-                                                <String fx:value="text-on-grey"/>
-                                            </styleClass>
+                                        <Label text="Upcomming" textFill="#8dc44e">
                                             <padding>
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                                             </padding>
                                             <HBox.margin>
                                                 <Insets left="20.0"/>
                                             </HBox.margin>
+                                            <styleClass>
+                                                <String fx:value="huge-text"/>
+                                                <String fx:value="bold"/>
+                                            </styleClass>
                                         </Label>
                                     </children>
                                 </HBox>
@@ -225,22 +196,25 @@
                                 <String fx:value="form"/>
                                 <String fx:value="raised"/>
                             </styleClass>
+                            <padding>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                            </padding>
                         </VBox>
                         <VBox>
                             <children>
                                 <HBox>
                                     <children>
-                                        <Label text="Notifications">
-                                            <styleClass>
-                                                <String fx:value="huge-text"/>
-                                                <String fx:value="text-on-grey"/>
-                                            </styleClass>
+                                        <Label text="Notifications" textFill="#8dc44e">
                                             <padding>
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                                             </padding>
                                             <HBox.margin>
                                                 <Insets left="20.0"/>
                                             </HBox.margin>
+                                            <styleClass>
+                                                <String fx:value="huge-text"/>
+                                                <String fx:value="bold"/>
+                                            </styleClass>
                                         </Label>
                                     </children>
                                 </HBox>
@@ -250,6 +224,9 @@
                                 <String fx:value="form"/>
                                 <String fx:value="raised"/>
                             </styleClass>
+                            <padding>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                            </padding>
                         </VBox>
                     </children>
                 </VBox>

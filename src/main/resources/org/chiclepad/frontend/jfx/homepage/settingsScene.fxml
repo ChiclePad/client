@@ -157,83 +157,136 @@
                 <String fx:value="grey-background"/>
             </styleClass>
             <children>
-                <VBox alignment="CENTER_LEFT" prefHeight="350.0" AnchorPane.bottomAnchor="210.0"
+                <VBox alignment="CENTER_LEFT" spacing="20.0" AnchorPane.bottomAnchor="30.0"
                       AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="30.0">
                     <opaqueInsets>
                         <Insets/>
                     </opaqueInsets>
-                    <styleClass>
-                        <String fx:value="form"/>
-                        <String fx:value="raised"/>
-                    </styleClass>
                     <children>
-                        <Label styleClass="huge-text" text="Settings">
-                            <VBox.margin>
-                                <Insets left="20.0"/>
-                            </VBox.margin>
-                            <padding>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                            </padding>
+                        <VBox alignment="CENTER_LEFT">
+                            <opaqueInsets>
+                                <Insets/>
+                            </opaqueInsets>
+                            <styleClass>
+                                <String fx:value="form"/>
+                                <String fx:value="raised"/>
+                            </styleClass>
+                            <children>
+                                <Label text="Change Password" textFill="#8dc44e">
+                                    <VBox.margin>
+                                        <Insets bottom="5.0"/>
+                                    </VBox.margin>
+                                    <padding>
+                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                    </padding>
+                                    <styleClass>
+                                        <String fx:value="huge-text"/>
+                                        <String fx:value="bold"/>
+                                    </styleClass>
                         </Label>
-                        <JFXPasswordField fx:id="passwordField" focusColor="#8DC44E" labelFloat="true"
-                                          promptText="Password" unFocusColor="#464947">
-                            <font>
-                                <Font size="22.0"/>
-                            </font>
-                            <VBox.margin>
-                                <Insets bottom="25.0" top="15.0"/>
-                            </VBox.margin>
-                            <styleClass>
-                                <String fx:value="text"/>
-                                <String fx:value="large-text"/>
-                            </styleClass>
+                                <JFXPasswordField fx:id="passwordField" focusColor="#8DC44E" labelFloat="true"
+                                                  promptText="Password" unFocusColor="#464947">
+                                    <font>
+                                        <Font size="22.0"/>
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets bottom="25.0" top="15.0"/>
+                                    </VBox.margin>
+                                    <styleClass>
+                                        <String fx:value="text"/>
+                                        <String fx:value="large-text"/>
+                                    </styleClass>
                         </JFXPasswordField>
-                        <JFXPasswordField fx:id="passwordField1" focusColor="#8DC44E" labelFloat="true"
-                                          promptText="Verify Password" unFocusColor="#464947">
-                            <font>
-                                <Font size="22.0"/>
-                            </font>
-                            <styleClass>
-                                <String fx:value="text"/>
-                                <String fx:value="large-text"/>
-                            </styleClass>
-                            <VBox.margin>
-                                <Insets bottom="25.0" top="15.0"/>
-                            </VBox.margin>
+                                <JFXPasswordField fx:id="verifyPasswordField" focusColor="#8DC44E" labelFloat="true"
+                                                  promptText="Verify Password" unFocusColor="#464947">
+                                    <font>
+                                        <Font size="22.0"/>
+                                    </font>
+                                    <styleClass>
+                                        <String fx:value="text"/>
+                                        <String fx:value="large-text"/>
+                                    </styleClass>
+                                    <VBox.margin>
+                                        <Insets bottom="25.0" top="15.0"/>
+                                    </VBox.margin>
                         </JFXPasswordField>
-                        <JFXTextField fx:id="nameTextField" focusColor="#8DC44E" labelFloat="true" promptText="Name"
-                                      unFocusColor="#464947">
-                            <font>
-                                <Font size="22.0"/>
-                            </font>
+                                <HBox alignment="CENTER_RIGHT">
+                                    <children>
+                                        <JFXButton fx:id="passwordButton" buttonType="RAISED" disable="true"
+                                                   onAction="#changePassword" ripplerFill="#151f80" text="Save">
+                                            <font>
+                                                <Font size="16.0"/>
+                                            </font>
+                                            <styleClass>
+                                                <String fx:value="normal-text"/>
+                                                <String fx:value="green-background"/>
+                                                <String fx:value="white-text"/>
+                                            </styleClass>
+                                            <padding>
+                                                <Insets bottom="10.0" left="20.0" right="20.0" top="10.0"/>
+                                            </padding>
+                                        </JFXButton>
+                                    </children>
+                                </HBox>
+                            </children>
+                            <padding>
+                                <Insets bottom="50.0" left="50.0" right="50.0" top="30.0"/>
+                            </padding>
+                        </VBox>
+                        <VBox alignment="CENTER_LEFT">
+                            <opaqueInsets>
+                                <Insets/>
+                            </opaqueInsets>
                             <styleClass>
-                                <String fx:value="text"/>
-                                <String fx:value="large-text"/>
+                                <String fx:value="form"/>
+                                <String fx:value="raised"/>
                             </styleClass>
-                            <VBox.margin>
-                                <Insets bottom="25.0" top="15.0"/>
-                            </VBox.margin>
+                            <children>
+                                <Label text="User Details" textFill="#8dc44e">
+                                    <VBox.margin>
+                                        <Insets bottom="5.0"/>
+                                    </VBox.margin>
+                                    <padding>
+                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                    </padding>
+                                    <styleClass>
+                                        <String fx:value="huge-text"/>
+                                        <String fx:value="bold"/>
+                                    </styleClass>
+                                </Label>
+                                <JFXTextField fx:id="nameTextField" focusColor="#8DC44E" promptText="Name"
+                                              unFocusColor="#464947">
+                                    <font>
+                                        <Font size="22.0"/>
+                                    </font>
+                                    <styleClass>
+                                        <String fx:value="text"/>
+                                        <String fx:value="large-text"/>
+                                    </styleClass>
+                                    <VBox.margin>
+                                        <Insets bottom="25.0" top="15.0"/>
+                                    </VBox.margin>
                         </JFXTextField>
-                        <JFXComboBox fx:id="languageComboBox" focusColor="#8dc44e" labelFloat="true" prefWidth="10000.0"
-                                     promptText="Language" unFocusColor="#464947">
-                            <VBox.margin>
-                                <Insets bottom="30.0" top="15.0"/>
-                            </VBox.margin>
-                            <styleClass>
-                                <String fx:value="text"/>
-                                <String fx:value="large-text"/>
-                            </styleClass>
+                                <JFXComboBox fx:id="languageComboBox" focusColor="#8dc44e" labelFloat="true"
+                                             prefWidth="10000.0" promptText="Language" unFocusColor="#464947">
+                                    <VBox.margin>
+                                        <Insets bottom="30.0" top="15.0"/>
+                                    </VBox.margin>
+                                    <styleClass>
+                                        <String fx:value="text"/>
+                                        <String fx:value="large-text"/>
+                                    </styleClass>
                         </JFXComboBox>
-                        <JFXButton buttonType="RAISED" ripplerFill="#151f80" text="Save">
-                            <font>
-                                <Font size="36.0"/>
-                            </font>
-                        </JFXButton>
+                            </children>
+                            <padding>
+                                <Insets bottom="50.0" left="50.0" right="50.0" top="30.0"/>
+                            </padding>
+                        </VBox>
                     </children>
-                    <padding>
-                        <Insets bottom="50.0" left="50.0" right="50.0" top="30.0"/>
-                    </padding>
                 </VBox>
+                <StackPane fx:id="stackPane" layoutX="-31.0" layoutY="30.0" visible="false"
+                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                           AnchorPane.topAnchor="0.0"/>
             </children>
         </AnchorPane>
         <BorderPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

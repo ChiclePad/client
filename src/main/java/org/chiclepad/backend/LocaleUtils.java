@@ -38,6 +38,13 @@ public class LocaleUtils {
     }
 
     /**
+     * @return Locales supported by ChiclePad as Strings
+     */
+    public static List<String> getAllLocalsAsStrings() {
+        return List.of(availableLocales);
+    }
+
+    /**
      * @return LocaleObject -> "English (Canada)"
      */
     public static String localeName(Locale locale) {

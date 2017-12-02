@@ -185,20 +185,23 @@
                                 <TreeTableColumn prefWidth="146.0" sortType="DESCENDING" text="Priority"/>
                             </columns>
                         </JFXTreeTableView>
-                        <Label layoutX="14.0" layoutY="14.0" text="To-Do">
-                            <styleClass>
-                                <String fx:value="huge-text"/>
-                                <String fx:value="text-on-grey"/>
-                            </styleClass>
+                        <Label layoutX="14.0" layoutY="14.0" text="To-Do" textFill="#8dc44e">
                             <padding>
                                 <Insets bottom="10.0" left="20.0" right="10.0" top="10.0"/>
                             </padding>
+                            <styleClass>
+                                <String fx:value="huge-text"/>
+                                <String fx:value="bold"/>
+                            </styleClass>
                         </Label>
                     </children>
                     <styleClass>
                         <String fx:value="form"/>
                         <String fx:value="raised"/>
                     </styleClass>
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                    </padding>
                 </AnchorPane>
             </children>
         </AnchorPane>
