@@ -44,6 +44,18 @@ public class ChiclePadUserDao {
       );
    }
 
+   public ChiclePadUser get(String email) throws EmptyResultDataAccessException {
+      String sqlGet = "SELECT * FROM chiclepad_user"
+            + " LEFT OUTER JOIN chiclepad_user_details ON chiclepad_user_details.user_id = chiclepad_user.id "
+            + "WHERE  chiclepad_user.email = \'" + email + "\' ;";
+
+      return jdbcTemplate.queryForObject(sqlGet,
+            (RowMapper<ChiclePadUser>) (ResultSet resultSet, int rowNum) -> {
+               return getChiclePadUser(resultSet);
+            }
+      );
+   }
+
    private ChiclePadUser getChiclePadUser(final ResultSet resultSet) throws SQLException {
       int userId = resultSet.getInt("id");
       String email = resultSet.getString("email");

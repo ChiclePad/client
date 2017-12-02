@@ -2,109 +2,117 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+   <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.chiclepad</groupId>
-    <artifactId>backend</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+   <groupId>org.chiclepad</groupId>
+   <artifactId>backend</artifactId>
+   <version>1.0-SNAPSHOT</version>
+   <packaging>jar</packaging>
 
-    <name>ChiclePad</name>
-    <url>https://github.com/ChiclePad/backend</url>
-    <description>Backend with simple UI for testing and offline usage</description>
+   <name>ChiclePad</name>
+   <url>https://github.com/ChiclePad/backend</url>
+   <description>Backend with simple UI for testing and offline usage</description>
 
-    <issueManagement>
-        <system>github</system>
-        <url>https://github.com/ChiclePad/backend/issues</url>
-    </issueManagement>
+   <issueManagement>
+      <system>github</system>
+      <url>https://github.com/ChiclePad/backend/issues</url>
+   </issueManagement>
 
-    <licenses>
-        <license>
-            <name>GNU General Public License, version 3</name>
-            <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+   <licenses>
+      <license>
+         <name>GNU General Public License, version 3</name>
+         <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+         <distribution>repo</distribution>
+      </license>
+   </licenses>
 
-    <developers>
-        <developer>
-            <name>Mária Babčankská</name>
-            <email>m.babcanska@gmail.com</email>
-            <url>https://github.com/SquattingPenguin</url>
-        </developer>
-        <developer>
-            <name>Šimon Kocúrek</name>
-            <email>simon.kocurek@gmail.com</email>
-            <url>https://github.com/justmesr</url>
-        </developer>
-    </developers>
+   <developers>
+      <developer>
+         <name>Mária Babčankská</name>
+         <email>m.babcanska@gmail.com</email>
+         <url>https://github.com/SquattingPenguin</url>
+      </developer>
+      <developer>
+         <name>Šimon Kocúrek</name>
+         <email>simon.kocurek@gmail.com</email>
+         <url>https://github.com/justmesr</url>
+      </developer>
+   </developers>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>9</maven.compiler.source>
-        <maven.compiler.target>9</maven.compiler.target>
-    </properties>
+   <properties>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <maven.compiler.source>9</maven.compiler.source>
+      <maven.compiler.target>9</maven.compiler.target>
+   </properties>
 
-    <dependencies>
-        <!--logging-->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>RELEASE</version>
-        </dependency>
+   <dependencies>
+      <!--logging-->
+      <dependency>
+         <groupId>ch.qos.logback</groupId>
+         <artifactId>logback-classic</artifactId>
+         <version>RELEASE</version>
+      </dependency>
 
-        <!--testing-->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
-        </dependency>
+      <!--testing-->
+      <dependency>
+         <groupId>org.junit.jupiter</groupId>
+         <artifactId>junit-jupiter-api</artifactId>
+         <version>RELEASE</version>
+         <scope>test</scope>
+      </dependency>
 
-        <!--easier asserts-->
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>3.8.0</version>
-            <scope>test</scope>
-        </dependency>
+      <!--easier asserts-->
+      <dependency>
+         <groupId>org.assertj</groupId>
+         <artifactId>assertj-core</artifactId>
+         <version>3.8.0</version>
+         <scope>test</scope>
+      </dependency>
 
-        <!--database-->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>LATEST</version>
-        </dependency>
+      <!--database-->
+      <dependency>
+         <groupId>org.postgresql</groupId>
+         <artifactId>postgresql</artifactId>
+         <version>LATEST</version>
+      </dependency>
 
-        <!--better jdbc-->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>RELEASE</version>
-        </dependency>
+      <!--better jdbc-->
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-jdbc</artifactId>
+         <version>RELEASE</version>
+      </dependency>
 
-        <!--hashing and salting-->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>RELEASE</version>
-        </dependency>
+      <!--hashing and salting-->
+      <dependency>
+         <groupId>org.springframework.security</groupId>
+         <artifactId>spring-security-core</artifactId>
+         <version>RELEASE</version>
+      </dependency>
 
-        <!--material theme-->
-        <dependency>
-            <groupId>com.jfoenix</groupId>
-            <artifactId>jfoenix</artifactId>
-            <version>9.0.0</version>
-            <systemPath>${project.basedir}/src/main/resources/jfoenix-9.0.0.jar</systemPath>
-            <scope>system</scope>
-        </dependency>
+      <!--material theme-->
+      <dependency>
+         <groupId>com.jfoenix</groupId>
+         <artifactId>jfoenix</artifactId>
+         <version>9.0.0</version>
+         <systemPath>${project.basedir}/src/main/resources/jfoenix-9.0.0.jar</systemPath>
+         <scope>system</scope>
+      </dependency>
 
-        <!--Font-Awesome-->
-        <dependency>
-            <groupId>de.jensd</groupId>
-            <artifactId>fontawesomefx</artifactId>
-            <version>8.1</version>
-        </dependency>
+      <!--Font-Awesome-->
+      <dependency>
+         <groupId>de.jensd</groupId>
+         <artifactId>fontawesomefx</artifactId>
+         <version>8.1</version>
+      </dependency>
 
-    </dependencies>
+      <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-crypto -->
+      <dependency>
+         <groupId>org.springframework.security</groupId>
+         <artifactId>spring-security-crypto</artifactId>
+         <version>5.0.0.RELEASE</version>
+      </dependency>
+
+
+   </dependencies>
 </project>
