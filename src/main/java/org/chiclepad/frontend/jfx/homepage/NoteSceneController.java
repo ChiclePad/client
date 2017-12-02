@@ -1,5 +1,6 @@
 package org.chiclepad.frontend.jfx.homepage;
 
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXListView;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -20,7 +21,7 @@ public class NoteSceneController {
     private TextField searchTextField;
 
     @FXML
-    private JFXListView<Label> categories;
+    private JFXListView<JFXCheckBox> categories;
 
     private String filter = "";
 

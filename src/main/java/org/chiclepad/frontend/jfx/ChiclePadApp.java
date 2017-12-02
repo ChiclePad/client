@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.chiclepad.frontend.jfx.homepage.HomeSceneController;
 import org.chiclepad.frontend.jfx.startup.LoginSceneController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,12 +33,16 @@ public class ChiclePadApp extends Application {
         fxmlLoader.setController(loginSceneController);
         Parent parentPane = fxmlLoader.load();
 
+//        FontAwesomeIconName.CIRCLE_ALT
         Scene scene = new Scene(parentPane);
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("ChiclePad");
         primaryStage.getIcons().add(new Image(ChiclePadApp.class.getResourceAsStream("../favicon.png")));
         primaryStage.show();
+
+        // TODO remove - only for testing
+        switchScene(new HomeSceneController(), "homepage/homeScene.fxml");
     }
 
     public static void switchScene(Object controller, String fxmlPath) {

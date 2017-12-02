@@ -10,10 +10,7 @@ import javafx.scene.paint.Color;
 import org.chiclepad.backend.LocaleUtils;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.ChiclePadColor;
-import org.chiclepad.frontend.jfx.homepage.TodoSceneController;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import org.chiclepad.frontend.jfx.homepage.HomeSceneController;
 
 public class RegisterSceneController {
 
@@ -53,12 +50,7 @@ public class RegisterSceneController {
             registerButton.setDisable(!(passwordValid && emailValid));
         });
 
-        List<String> locales = LocaleUtils.getAllLocals()
-                .stream()
-                .map(LocaleUtils::localeName)
-                .collect(Collectors.toList());
-
-        languageComboBox.getItems().addAll(locales);
+        languageComboBox.getItems().addAll(LocaleUtils.getAllLocalsAsStrings());
     }
 
     private void setTextFieldColor(JFXTextField textField, Color color) {
@@ -81,7 +73,7 @@ public class RegisterSceneController {
         // TODO register user
         boolean registerSuccesfull = true;
         if (registerSuccesfull) {
-            ChiclePadApp.switchScene(new TodoSceneController(), "homepage/homeScene.fxml");
+            ChiclePadApp.switchScene(new HomeSceneController(), "homepage/homeScene.fxml");
         } else {
             ChiclePadApp.showDialog("Registration Failed!", "Email already in use.", overlay);
         }
