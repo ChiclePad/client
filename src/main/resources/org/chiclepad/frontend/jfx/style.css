@@ -10,8 +10,33 @@ tertiary: #3E5641
  */
 
 @font-face {
-    font-family: 'Roboto';
-    src: url('org/chiclepad/frontend/Roboto-Regular.ttf');
+    font-family: Roboto;
+    src: url('../fonts/Roboto-Regular.ttf');
+}
+
+@font-face {
+    font-family: Roboto bold;
+    src: url('../fonts/Roboto-Bold.ttf');
+}
+
+@font-face {
+    font-family: Roboto medium;
+    src: url('../fonts/Roboto-Medium.ttf');
+}
+
+@font-face {
+    font-family: Roboto italic;
+    src: url('../fonts/Roboto-Italic.ttf');
+}
+
+@font-face {
+    font-family: Roboto light;
+    src: url('../fonts/Roboto-Light.ttf');
+}
+
+@font-face {
+    font-family: Roboto thin;
+    src: url('../fonts/Roboto-Thin.ttf');
 }
 
 .text {
@@ -27,6 +52,7 @@ tertiary: #3E5641
 .white-text {
     -fx-font-family: Roboto;
     -fx-text-fill: #fff;
+    -fx-font-weight: normal;
 }
 
 .form {
@@ -41,12 +67,31 @@ tertiary: #3E5641
     -fx-cursor: hand;
 }
 
+.grey-dark {
+    -fx-background-color: #cdcdcd;
+    -fx-text-fill: #cdcdcd;
+    -fx-border-color: #cdcdcd;
+    -fx-progress-color: #cdcdcd;
+}
+
 .bold {
     -fx-font-weight: bold;
 }
 
+.white-background {
+    -fx-background-color: white;
+}
+
+.grey-dark-background-hover:hover {
+    -fx-background-color: #d0d0d0;
+}
+
+.grey-dark-background {
+    -fx-background-color: #e0e0e0;
+}
+
 .grey-background {
-    -fx-background-color: #eee;
+    -fx-background-color: #eeeeee;
 }
 
 .green-background {
@@ -61,11 +106,72 @@ tertiary: #3E5641
     -fx-background-color: #3E5641;
 }
 
+.small-text {
+    -fx-font-size: 16px;
+}
+
+.normal-text {
+    -fx-font-size: 20px;
+}
+
 .large-text {
     -fx-font-size: 22px;
-    -fx-start-margin: 10px;
+}
+
+.huge-text {
+    -fx-font-size: 26px;
+}
+
+.raised-slight {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 5, 0, 1, 3)
+}
+
+.raised-slight:focused {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 15, 0, 1, 3)
 }
 
 .raised {
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.09804), 31, 0, 1, 1);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 6, 0, 1, 3)
 }
+
+.raised-left {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 1, -3)
+}
+
+.search-field {
+    -fx-background-color: #e0e0e0, #fff;
+    -fx-background-radius: 2;
+}
+
+.search-field:focused {
+    -fx-background-color: #3E5641, #fff;
+}
+
+.jfx-list-cell:hover, .jfx-list-cell:focused {
+    -fx-background-color: #d0d0d0;
+}
+
+.jfx-list-cell {
+    -fx-font-family: Roboto;
+    -fx-font-size: 16px;
+    -fx-text-fill: #464947;
+    -fx-background-color: #e0e0e0;
+}
+
+.jfx-rippler {
+    -jfx-rippler-fill: #3E5641;
+}
+
+.jfx-list-view {
+    -fx-background-color: #e0e0e0;
+}
+
+.jfx-popup .jfx-button {
+    -fx-font-size: 16px;
+    -fx-text-fill: #464947;
+}
+
+.jfx-button {
+    -fx-font-family: Roboto;
+}
+

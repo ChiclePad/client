@@ -9,10 +9,10 @@ CREATE UNIQUE INDEX email_id on chiclepad_user (lower(email));
 
 -- Optional details about user
 CREATE TABLE chiclepad_user_details (
-  id SERIAL PRIMARY KEY,
+  id      SERIAL PRIMARY KEY,
   user_id INT REFERENCES chiclepad_user ON DELETE CASCADE,
-  name VARCHAR(100) NOT NULL,
-  locale VARCHAR(50) NOT NULL
+  name    VARCHAR(100),
+  locale  VARCHAR(50)
 );
 
 -- One 'organization object' added to the user's profile

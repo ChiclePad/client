@@ -98,5 +98,13 @@
             <systemPath>${project.basedir}/src/main/resources/jfoenix-9.0.0.jar</systemPath>
             <scope>system</scope>
         </dependency>
+
+        <!--Font-Awesome-->
+        <dependency>
+            <groupId>de.jensd</groupId>
+            <artifactId>fontawesomefx</artifactId>
+            <version>8.1</version>
+        </dependency>
+
     </dependencies>
 </project>

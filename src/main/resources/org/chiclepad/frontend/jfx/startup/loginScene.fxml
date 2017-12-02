@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<AnchorPane fx:id="root" prefHeight="800.0" prefWidth="1280.0" stylesheets="@../style.css"
+            xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <HBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+              AnchorPane.topAnchor="0.0">
+            <children>
+                <VBox fx:id="loginContent" alignment="CENTER" prefWidth="400.0">
+                    <VBox alignment="TOP_CENTER">
+                        <opaqueInsets>
+                            <Insets/>
+                        </opaqueInsets>
+                        <HBox alignment="CENTER" styleClass="green-background">
+                            <padding>
+                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                            </padding>
+                            <ImageView blendMode="LIGHTEN" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true"
+                                       preserveRatio="true">
+                                <HBox.margin>
+                                    <Insets right="10.0"/>
+                                </HBox.margin>
+                                <Image url="@../../white-logo.png"/>
+                            </ImageView>
+                            <Label styleClass="white-text" text="Login" textFill="#464947">
+                                <font>
+                                    <Font size="34.0"/>
+                                </font>
+                                <HBox.margin>
+                                    <Insets right="30.0"/>
+                                </HBox.margin>
+                            </Label>
+                        </HBox>
+                        <VBox>
+                            <padding>
+                                <Insets bottom="20.0" left="25.0" right="25.0" top="20.0"/>
+                            </padding>
+                            <JFXTextField fx:id="emailTextField" focusColor="#8DC44E" labelFloat="true"
+                                          promptText="Email" unFocusColor="#464947">
+                                <font>
+                                    <Font size="22.0"/>
+                                </font>
+                                <VBox.margin>
+                                    <Insets bottom="25.0" top="15.0"/>
+                                </VBox.margin>
+                                <styleClass>
+                                    <String fx:value="text"/>
+                                    <String fx:value="large-text"/>
+                                </styleClass>
+                            </JFXTextField>
+                            <JFXPasswordField fx:id="passwordField" focusColor="#8DC44E" labelFloat="true"
+                                              promptText="Password" unFocusColor="#464947">
+                                <font>
+                                    <Font size="22.0"/>
+                                </font>
+                                <VBox.margin>
+                                    <Insets bottom="30.0" top="15.0"/>
+                                </VBox.margin>
+                                <styleClass>
+                                    <String fx:value="text"/>
+                                    <String fx:value="large-text"/>
+                                </styleClass>
+                            </JFXPasswordField>
+                            <JFXButton fx:id="loginButton" defaultButton="true" disable="true"
+                                       onMousePressed="#onLoginPressed" prefWidth="400.0" ripplerFill="BLACK"
+                                       text="Login">
+                                <font>
+                                    <Font size="22.0"/>
+                                </font>
+                                <styleClass>
+                                    <String fx:value="form"/>
+                                    <String fx:value="green-background"/>
+                                    <String fx:value="white-text"/>
+                                    <String fx:value="large-text"/>
+                                </styleClass>
+                            </JFXButton>
+                            <HBox styleClass="text">
+                                <VBox.margin>
+                                    <Insets top="20.0"/>
+                                </VBox.margin>
+                                <Label styleClass="text" text="Don't have an account?">
+                                    <font>
+                                        <Font size="16.0"/>
+                                    </font>
+                                </Label>
+                                <Label onMousePressed="#onRegisterPressed" text="Create account">
+                                    <styleClass>
+                                        <String fx:value="text"/>
+                                        <String fx:value="link"/>
+                                        <String fx:value="bold"/>
+                                    </styleClass>
+                                    <font>
+                                        <Font size="16.0"/>
+                                    </font>
+                                    <HBox.margin>
+                                        <Insets left="10.0"/>
+                                    </HBox.margin>
+                                </Label>
+                            </HBox>
+                        </VBox>
+                        <styleClass>
+                            <String fx:value="form"/>
+                            <String fx:value="raised"/>
+                        </styleClass>
+                    </VBox>
+                    <Label styleClass="text-on-grey" text="Made with love from Paz-team">
+                        <font>
+                            <Font size="15.0"/>
+                        </font>
+                        <VBox.margin>
+                            <Insets top="20.0"/>
+                        </VBox.margin>
+                    </Label>
+                </VBox>
+            </children>
+        </HBox>
+        <StackPane fx:id="overlay" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+    </children>
+</AnchorPane>
