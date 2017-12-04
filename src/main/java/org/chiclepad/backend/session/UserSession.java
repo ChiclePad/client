@@ -1,22 +1,22 @@
-package org.chiclepad.backend.usermanagement;
+package org.chiclepad.backend.session;
 
 import org.chiclepad.backend.entity.ChiclePadUser;
 
 import java.time.LocalDateTime;
 
 public class UserSession {
+
    private ChiclePadUser loggedUser;
    private int userId;
    private LocalDateTime registrationDate;
    private LocalDateTime lastLogInDate;
 
-   public UserSession(final ChiclePadUser loggedUser, final int userId) {
+   UserSession(final ChiclePadUser loggedUser, final int userId) {
       this.loggedUser = loggedUser;
       this.userId = userId;
    }
 
    public LocalDateTime getRegistrationDate() {
-
       return registrationDate;
    }
 
@@ -33,7 +33,6 @@ public class UserSession {
    }
 
    public ChiclePadUser getLoggedUser() {
-
       return loggedUser;
    }
 

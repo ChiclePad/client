@@ -8,6 +8,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.ChiclePadColor;
+import org.chiclepad.frontend.jfx.ChiclePadDialog;
 import org.chiclepad.frontend.jfx.homepage.HomeSceneController;
 
 public class LoginSceneController {
@@ -31,7 +32,7 @@ public class LoginSceneController {
     @FXML
     public void initialize() {
         emailTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            emailValid = EmailValiditator.INSTANCE.validitate(newValue);
+            emailValid = EmailValiditator.INSTANCE.validEmail(newValue);
             setTextFieldColor(emailTextField, emailValid ? ChiclePadColor.PRIMARY : ChiclePadColor.SECONDARY);
             loginButton.setDisable(!(passwordValid && emailValid));
         });
@@ -65,7 +66,7 @@ public class LoginSceneController {
         if (loginSuccesfull) {
             ChiclePadApp.switchScene(new HomeSceneController(), "homepage/homeScene.fxml");
         } else {
-            ChiclePadApp.showDialog("Login Failed!", "Check if you entered correct email and password.", overlay);
+            ChiclePadDialog.show("Login Failed!", "Check if you entered correct email and password.", overlay);
         }
     }
 

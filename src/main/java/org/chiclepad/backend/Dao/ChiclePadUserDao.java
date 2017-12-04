@@ -17,7 +17,7 @@ public class ChiclePadUserDao {
    // Data source
    private JdbcTemplate jdbcTemplate;
 
-   public ChiclePadUserDao(JdbcTemplate jdbcTemplate) {
+   ChiclePadUserDao(JdbcTemplate jdbcTemplate) {
       this.jdbcTemplate = jdbcTemplate;
    }
 
@@ -37,11 +37,7 @@ public class ChiclePadUserDao {
             + " LEFT OUTER JOIN chiclepad_user_details ON chiclepad_user_details.user_id = " + id
             + " WHERE chiclepad_user.id =" + id + ";";
 
-      return jdbcTemplate.queryForObject(sqlGet,
-            (RowMapper<ChiclePadUser>) (ResultSet resultSet, int rowNum) -> {
-               return getChiclePadUser(resultSet);
-            }
-      );
+      return jdbcTemplate.queryForObject(sqlGet, (ResultSet resultSet, int rowNum) -> getChiclePadUser(resultSet));
    }
 
    public ChiclePadUser get(String email) throws EmptyResultDataAccessException {

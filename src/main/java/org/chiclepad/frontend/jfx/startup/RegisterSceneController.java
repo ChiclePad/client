@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import org.chiclepad.backend.LocaleUtils;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.ChiclePadColor;
+import org.chiclepad.frontend.jfx.ChiclePadDialog;
 import org.chiclepad.frontend.jfx.homepage.HomeSceneController;
 
 public class RegisterSceneController {
@@ -39,7 +40,7 @@ public class RegisterSceneController {
     @FXML
     public void initialize() {
         emailTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            emailValid = EmailValiditator.INSTANCE.validitate(newValue);
+            emailValid = EmailValiditator.INSTANCE.validEmail(newValue);
             setTextFieldColor(emailTextField, emailValid ? ChiclePadColor.PRIMARY : ChiclePadColor.SECONDARY);
             registerButton.setDisable(!(passwordValid && emailValid));
         });
@@ -75,7 +76,7 @@ public class RegisterSceneController {
         if (registerSuccesfull) {
             ChiclePadApp.switchScene(new HomeSceneController(), "homepage/homeScene.fxml");
         } else {
-            ChiclePadApp.showDialog("Registration Failed!", "Email already in use.", overlay);
+            ChiclePadDialog.show("Registration Failed!", "Email already in use.", overlay);
         }
     }
 

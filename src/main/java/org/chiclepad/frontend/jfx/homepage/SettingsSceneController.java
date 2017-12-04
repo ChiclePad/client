@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import org.chiclepad.backend.LocaleUtils;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.ChiclePadColor;
+import org.chiclepad.frontend.jfx.ChiclePadDialog;
 import org.chiclepad.frontend.jfx.MOCKUP;
 
 public class SettingsSceneController {
@@ -100,17 +101,17 @@ public class SettingsSceneController {
         // TODO send
         boolean passwordChanged = true;
         if (passwordChanged) {
-            ChiclePadApp.showDialog("Success!", "Password changed", stackPane);
+            ChiclePadDialog.show("Success!", "Password changed", stackPane);
             passwordField.setText("");
             verifyPasswordField.setText("");
         } else {
-            ChiclePadApp.showDialog("Error!", "Password failed to change", stackPane);
+            ChiclePadDialog.show("Error!", "Password failed to change", stackPane);
         }
     }
 
     @FXML
     public void userClick() {
-        HomeSceneController.showUserPopup(userArea);
+        UserPopup.showUnderParent(userArea);
     }
 
     @FXML
