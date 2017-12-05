@@ -46,8 +46,6 @@ public class Authentificator {
       ChiclePadUser createdUser = chiclePadUserDao.create(email, hash, salt);
 
       UserSession userSession = new UserSession(createdUser, createdUser.getId());
-      userSession.setRegistrationDate(LocalDateTime.now());
-
       return userSession;
    }
 }
