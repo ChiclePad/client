@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class DiaryPageDao extends EntryDao {
-   protected DiaryPageDao(JdbcTemplate jdbcTemplate) {
+
+   DiaryPageDao(JdbcTemplate jdbcTemplate) {
       super(jdbcTemplate);
    }
 

@@ -7,19 +7,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.File;
 
-/**
- * Factory providing data access objects for manipulation with entities
- */
 public enum DaoFactory {
 
-   /**
-    * Singleton instance of the factory
-    */
    INSTANCE;
 
    private JdbcTemplate jdbcTemplate;
 
-   // DAOs
    private CategoryDao categoryDao;
    private ChiclePadUserDao chiclePadUserDao;
    private DiaryPageDao diaryPageDao;
@@ -27,14 +20,8 @@ public enum DaoFactory {
    private NoteDao noteDao;
    private TodoDao todoDao;
 
-   /**
-    * Logger for reporting errors, and important events
-    */
    private final Logger logger = LoggerFactory.getLogger(DaoFactory.class);
 
-   /**
-    *
-    */
    private DaoFactory() {
       if (!DatabaseManager.INSTANCE.isConnected()) {
          DatabaseManager.INSTANCE.connect(new File("postgress/connection.properties"));
@@ -44,7 +31,6 @@ public enum DaoFactory {
          this.jdbcTemplate = DatabaseManager.INSTANCE.getConnection();
       }
 
-      // TODO get dao instances.. or use Singletons
       this.categoryDao = new CategoryDao(this.jdbcTemplate);
       this.chiclePadUserDao = new ChiclePadUserDao(this.jdbcTemplate);
       this.diaryPageDao = new DiaryPageDao(this.jdbcTemplate);

@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.MOCKUP;
+import org.chiclepad.frontend.jfx.model.CategoryListModel;
 
 public class TodoSceneController {
 
@@ -21,17 +22,21 @@ public class TodoSceneController {
     private TextField searchTextField;
 
     @FXML
-    private JFXListView<JFXCheckBox> categories;
+    private JFXListView<JFXCheckBox> categoriesListView;
+
+    private CategoryListModel categories;
 
     private String filter = "";
 
     @FXML
     public void initialize() {
+        this.categories = new CategoryListModel(categoriesListView);
+
         // TODO get real user
         MOCKUP.USER.getName().ifPresent(name -> usernameLabel.setText(name));
 
         // TODO get real categories
-        MOCKUP.CATEGORIES.forEach(category -> HomeSceneController.addCategory(category, categories.getItems()));
+        MOCKUP.CATEGORIES.forEach(category -> categories.add(category));
     }
 
 
@@ -43,7 +48,7 @@ public class TodoSceneController {
 
     @FXML
     public void userClick() {
-        HomeSceneController.showUserPopup(userArea);
+        UserPopup.showUnderParent(userArea);
     }
 
     @FXML

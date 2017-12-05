@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class TodoDao extends EntryDao {
 
-   protected TodoDao(JdbcTemplate jdbcTemplate) {
+   TodoDao(JdbcTemplate jdbcTemplate) {
       super(jdbcTemplate);
    }
 

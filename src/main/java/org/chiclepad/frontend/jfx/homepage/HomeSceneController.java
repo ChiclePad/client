@@ -1,25 +1,14 @@
 package org.chiclepad.frontend.jfx.homepage;
 
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXListView;
-import com.jfoenix.controls.JFXPopup;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconName;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import org.chiclepad.backend.entity.Category;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
-import org.chiclepad.frontend.jfx.ChiclePadColor;
 import org.chiclepad.frontend.jfx.MOCKUP;
-import org.chiclepad.frontend.jfx.startup.LoginSceneController;
-
-import java.util.List;
+import org.chiclepad.frontend.jfx.model.CategoryListModel;
 
 public class HomeSceneController {
 
@@ -33,17 +22,27 @@ public class HomeSceneController {
     private TextField searchTextField;
 
     @FXML
-    private JFXListView<JFXCheckBox> categories;
+    private JFXListView upcommingListView;
+
+    @FXML
+    private JFXListView notificationsListView;
+
+    @FXML
+    private JFXListView<JFXCheckBox> categoriesListView;
+
+    private CategoryListModel categories;
 
     private String filter = "";
 
     @FXML
     public void initialize() {
+        this.categories = new CategoryListModel(categoriesListView);
+
         // TODO get real user
         MOCKUP.USER.getName().ifPresent(name -> usernameLabel.setText(name));
 
         // TODO get real categories
-        MOCKUP.CATEGORIES.forEach(category -> HomeSceneController.addCategory(category, categories.getItems()));
+        MOCKUP.CATEGORIES.forEach(category -> categories.add(category));
     }
 
     @FXML
@@ -54,7 +53,7 @@ public class HomeSceneController {
 
     @FXML
     public void userClick() {
-        HomeSceneController.showUserPopup(userArea);
+        UserPopup.showUnderParent(userArea);
     }
 
     @FXML
@@ -75,70 +74,6 @@ public class HomeSceneController {
     @FXML
     public void switchToNoteScene() {
         ChiclePadApp.switchScene(new NoteSceneController(), "homepage/noteScene.fxml");
-    }
-
-
-    public static void showUserPopup(Node parent) {
-        JFXPopup popup = new JFXPopup();
-        VBox layout = createPopupLayout(popup);
-        popup.setPopupContent(layout);
-        popup.show(parent, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.RIGHT, 0, 40);
-    }
-
-    private static VBox createPopupLayout(JFXPopup popup) {
-        JFXButton settingsButton = createSettingsButton(popup);
-        JFXButton logoutButton = createLogoutButton(popup);
-
-        VBox layout = new VBox(settingsButton, logoutButton);
-        layout.setPadding(new Insets(15, 10, 15, 10));
-        layout.setSpacing(10);
-        layout.setStyle("-fx-border-color: #e0e0e0");
-
-        return layout;
-    }
-
-    private static JFXButton createSettingsButton(JFXPopup parent) {
-        JFXButton settingsButton = new JFXButton("Settings");
-        settingsButton.setPadding(new Insets(10, 10, 10, 10));
-
-        FontAwesomeIcon settingsIcon = new FontAwesomeIcon();
-        settingsIcon.setIcon(FontAwesomeIconName.GEAR);
-        settingsButton.setGraphic(settingsIcon);
-
-        settingsButton.setOnAction(event -> {
-            ChiclePadApp.switchScene(new SettingsSceneController(), "homepage/settingsScene.fxml");
-            parent.hide();
-        });
-
-        return settingsButton;
-    }
-
-    private static JFXButton createLogoutButton(JFXPopup parent) {
-        JFXButton logoutButton = new JFXButton("Log Out");
-        logoutButton.setPadding(new Insets(10, 10, 10, 10));
-
-        FontAwesomeIcon logoutIcon = new FontAwesomeIcon();
-        logoutIcon.setIcon(FontAwesomeIconName.SIGN_OUT);
-        logoutButton.setGraphic(logoutIcon);
-
-        logoutButton.setOnAction(event -> {
-            ChiclePadApp.switchScene(new LoginSceneController(), "startup/loginScene.fxml");
-            parent.hide();
-        });
-
-        return logoutButton;
-    }
-
-    public static void addCategory(Category category, List<JFXCheckBox> categoryItems) {
-        JFXCheckBox line = new JFXCheckBox();
-        line.setText(category.getName());
-        line.setCheckedColor(ChiclePadColor.PRIMARY);
-
-        FontAwesomeIcon icon = new FontAwesomeIcon();
-        icon.setIconName(category.getIcon());
-        line.setGraphic(icon);
-
-        categoryItems.add(line);
     }
 
 }

@@ -1,4 +1,4 @@
-package org.chiclepad.backend.usermanagement;
+package org.chiclepad.backend.session;
 
 import org.chiclepad.backend.Dao.ChiclePadUserDao;
 import org.chiclepad.backend.Dao.DaoFactory;
@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import java.time.LocalDateTime;
 
 public class Authentificator {
+
    ChiclePadUserDao chiclePadUserDao = DaoFactory.INSTANCE.getChiclePadUserDao();
 
    private UserSession logIn(String email, String password) {

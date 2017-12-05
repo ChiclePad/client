@@ -8,12 +8,12 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class GoalDao extends EntryDao {
-   protected GoalDao(JdbcTemplate jdbcTemplate) {
+
+   GoalDao(JdbcTemplate jdbcTemplate) {
       super(jdbcTemplate);
    }
 
@@ -53,7 +53,6 @@ public class GoalDao extends EntryDao {
       LocalDateTime created = (LocalDateTime) resultSet.getObject("created");
 
       String description = resultSet.getString("description");
-
 
       return new Goal(entryId, created, goalId, description);
    }

@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class NoteDao extends EntryDao {
-   protected NoteDao(JdbcTemplate jdbcTemplate) {
+
+   NoteDao(JdbcTemplate jdbcTemplate) {
       super(jdbcTemplate);
    }
 

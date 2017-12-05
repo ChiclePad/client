@@ -1,16 +1,16 @@
 package org.chiclepad.backend.Dao;
 
-import org.chiclepad.backend.entity.Entry;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDateTime;
 
 abstract class EntryDao {
+
    // Data source
    protected JdbcTemplate jdbcTemplate;
 
-   protected EntryDao(JdbcTemplate jdbcTemplate) {
+   EntryDao(JdbcTemplate jdbcTemplate) {
       this.jdbcTemplate = jdbcTemplate;
    }
 

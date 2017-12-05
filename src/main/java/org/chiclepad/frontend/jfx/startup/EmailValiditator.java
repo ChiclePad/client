@@ -8,9 +8,6 @@ public enum EmailValiditator {
 
     private final Pattern pattern;
 
-    /**
-     * Compiles regex pattern
-     */
     private EmailValiditator() {
         String emailRegex = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08" +
                 "\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:" +
@@ -21,10 +18,7 @@ public enum EmailValiditator {
         pattern = Pattern.compile(emailRegex);
     }
 
-    /**
-     * @return Provided string is email
-     */
-    public boolean validitate(String email) {
+    public boolean validEmail(String email) {
         return pattern.matcher(email).matches();
     }
 

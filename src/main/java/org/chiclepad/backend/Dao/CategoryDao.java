@@ -4,17 +4,17 @@ import org.chiclepad.backend.entity.Category;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 public class CategoryDao {
+
    // Data source
    private JdbcTemplate jdbcTemplate;
 
-   public CategoryDao(JdbcTemplate jdbcTemplate) {
+   CategoryDao(JdbcTemplate jdbcTemplate) {
       this.jdbcTemplate = jdbcTemplate;
    }
 
@@ -33,11 +33,7 @@ public class CategoryDao {
       String sqlGet = "SELECT * FROM category"
             + " WHERE category.id =" + id + ";";
 
-      return jdbcTemplate.queryForObject(sqlGet,
-            (RowMapper<Category>) (ResultSet resultSet, int rowNum) -> {
-               return getCategory(resultSet);
-            }
-      );
+      return jdbcTemplate.queryForObject(sqlGet, (ResultSet resultSet, int rowNum) -> getCategory(resultSet));
    }
 
    private Category getCategory(final ResultSet resultSet) throws SQLException {
@@ -53,11 +49,7 @@ public class CategoryDao {
       String sqlGetAll = "SELECT * FROM category"
             + " LEFT OUTER JOIN category_details ON category_details.user_id = category.id;";
 
-      return jdbcTemplate.query(sqlGetAll,
-            (RowMapper<Category>) (resultSet, rowNum) -> {
-               return getCategory(resultSet);
-            }
-      );
+      return jdbcTemplate.query(sqlGetAll, (resultSet, rowNum) -> getCategory(resultSet));
    }
 
    //UPDATE
