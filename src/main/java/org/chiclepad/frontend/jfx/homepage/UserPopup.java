@@ -24,11 +24,14 @@ public class UserPopup {
         JFXButton logoutButton = createLogoutButton(popup);
 
         VBox layout = new VBox(settingsButton, logoutButton);
-        layout.setPadding(new Insets(15, 10, 15, 10));
-        layout.setSpacing(10);
-        layout.setStyle("-fx-border-color: #e0e0e0");
+        styleLayout(layout);
 
         return layout;
+    }
+
+    private static void styleLayout(VBox layout) {
+        layout.setPadding(new Insets(15, 10, 15, 10));
+        layout.setSpacing(10);
     }
 
     private static JFXButton createSettingsButton(JFXPopup parent) {

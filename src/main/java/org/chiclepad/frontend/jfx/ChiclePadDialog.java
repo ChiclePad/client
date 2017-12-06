@@ -16,38 +16,42 @@ public class ChiclePadDialog {
      */
     public static void show(String header, String body, StackPane parent) {
         JFXDialogLayout dialogLayout = new JFXDialogLayout();
+        setHeaderTexxt(header, dialogLayout);
+        setBodyText(body, dialogLayout);
 
-        dialogLayout.setHeading(toText(header, 20));
-        dialogLayout.setBody(toText(body, 16));
+        JFXDialog dialog = new JFXDialog(parent, dialogLayout, JFXDialog.DialogTransition.CENTER, true);
+        addCloseButton(parent, dialogLayout, dialog);
 
-        JFXDialog dialog = new JFXDialog(parent, dialogLayout, JFXDialog.DialogTransition.TOP, true);
+        parent.setVisible(true);
+        dialog.show();
+    }
 
+    private static void addCloseButton(StackPane parent, JFXDialogLayout dialogLayout, JFXDialog dialog) {
         JFXButton closeButton = createCloseButton();
         closeButton.setOnAction(event -> {
             dialog.close();
             parent.setVisible(false);
         });
         dialogLayout.setActions(closeButton);
-
-        parent.setVisible(true);
-        dialog.show();
     }
 
-    private static Text toText(String string, int fontSize) {
-        Text result = new Text(string);
-        result.setStyle("-fx-text-fill: #464947;" +
-                "-fx-font-size: " + fontSize + "px");
+    private static void setBodyText(String body, JFXDialogLayout dialogLayout) {
+        Text bodyText = new Text(body);
+        bodyText.getStyleClass().addAll("text", "normal-text");
+        dialogLayout.setBody(bodyText);
+    }
 
-        return result;
+    private static void setHeaderTexxt(String header, JFXDialogLayout dialogLayout) {
+        Text headerText = new Text(header);
+        headerText.getStyleClass().addAll("text", "large-text", "red-text");
+        dialogLayout.setHeading(headerText);
     }
 
     private static JFXButton createCloseButton() {
         JFXButton closeButton = new JFXButton("Okay");
-        closeButton.setStyle("-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 1, 3);" +
-                "-fx-text-fill: white;" +
-                "-fx-font-size: 16px;" +
-                "-fx-background-color: #3E5641");
-        closeButton.setPadding(new Insets(7, 18, 7, 18));
+        closeButton.getStyleClass().addAll("white-text", "normal-text", "secondary-background");
+        closeButton.setButtonType(JFXButton.ButtonType.RAISED);
+        closeButton.setPadding(new Insets(10, 25, 10, 25));
         return closeButton;
     }
 

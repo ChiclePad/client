@@ -21,6 +21,8 @@ public class DiaryPage extends Entry {
 
     /**
      * Day the user wrote diary entry
+     * This time is different from the time of creation of entry, as this one is a client-side time of creation
+     * as opposed to database time of writing entry
      */
     private final LocalDate recordedDay;
 

@@ -86,8 +86,8 @@
       <!--hashing and salting-->
       <dependency>
          <groupId>org.springframework.security</groupId>
-         <artifactId>spring-security-core</artifactId>
-         <version>RELEASE</version>
+         <artifactId>spring-security-crypto</artifactId>
+         <version>5.0.0.RELEASE</version>
       </dependency>
 
       <!--material theme-->
@@ -105,14 +105,6 @@
          <artifactId>fontawesomefx</artifactId>
          <version>8.1</version>
       </dependency>
-
-      <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-crypto -->
-      <dependency>
-         <groupId>org.springframework.security</groupId>
-         <artifactId>spring-security-crypto</artifactId>
-         <version>5.0.0.RELEASE</version>
-      </dependency>
-
 
    </dependencies>
 </project>

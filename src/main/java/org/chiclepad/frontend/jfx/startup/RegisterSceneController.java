@@ -4,8 +4,10 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.effects.JFXDepthManager;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.chiclepad.backend.LocaleUtils;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
@@ -17,6 +19,9 @@ public class RegisterSceneController {
 
     @FXML
     private StackPane overlay;
+
+    @FXML
+    private VBox formLayout;
 
     @FXML
     private JFXTextField emailTextField;
@@ -39,19 +44,34 @@ public class RegisterSceneController {
 
     @FXML
     public void initialize() {
+        initializeAdditionalStyles();
+        addEmailValiditator();
+        addPasswordValiditator();
+        initializeLocaleChooser();
+    }
+
+    private void initializeAdditionalStyles() {
+        JFXDepthManager.setDepth(formLayout, 3);
+    }
+
+    private void addEmailValiditator() {
         emailTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             emailValid = EmailValiditator.INSTANCE.validEmail(newValue);
             setTextFieldColor(emailTextField, emailValid ? ChiclePadColor.PRIMARY : ChiclePadColor.SECONDARY);
             registerButton.setDisable(!(passwordValid && emailValid));
         });
+    }
 
+    private void addPasswordValiditator() {
         passwordField.textProperty().addListener((observable, oldValue, newValue) -> {
             passwordValid = !newValue.isEmpty();
             setTextFieldColor(passwordField, passwordValid ? ChiclePadColor.PRIMARY : ChiclePadColor.SECONDARY);
             registerButton.setDisable(!(passwordValid && emailValid));
         });
+    }
 
-        languageComboBox.getItems().addAll(LocaleUtils.getAllLocalsAsStrings());
+    private void initializeLocaleChooser() {
+        languageComboBox.getItems().addAll(LocaleUtils.getReadableLocales());
     }
 
     private void setTextFieldColor(JFXTextField textField, Color color) {
@@ -64,6 +84,11 @@ public class RegisterSceneController {
         textField.setUnFocusColor(color);
     }
 
+    private String getSelectedLocaleCode() {
+        String readableLocale = languageComboBox.getSelectionModel().selectedItemProperty().getValue();
+        return LocaleUtils.getCodeFromReadableLocale(readableLocale);
+    }
+
     @FXML
     public void onBackPressed() {
         ChiclePadApp.switchScene(new LoginSceneController(), "startup/loginScene.fxml");
@@ -71,6 +96,8 @@ public class RegisterSceneController {
 
     @FXML
     public void onRegisterPressed() {
+        String selectedLocaleCode = getSelectedLocaleCode();
+
         // TODO register user
         boolean registerSuccesfull = true;
         if (registerSuccesfull) {
