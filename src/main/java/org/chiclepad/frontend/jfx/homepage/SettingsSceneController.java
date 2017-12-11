@@ -4,10 +4,10 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.effects.JFXDepthManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import org.chiclepad.backend.LocaleUtils;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
@@ -16,6 +16,18 @@ import org.chiclepad.frontend.jfx.ChiclePadDialog;
 import org.chiclepad.frontend.jfx.MOCKUP;
 
 public class SettingsSceneController {
+
+    @FXML
+    private AnchorPane content;
+
+    @FXML
+    private BorderPane header;
+
+    @FXML
+    private VBox passwodPanel;
+
+    @FXML
+    private VBox detailsPanel;
 
     @FXML
     private HBox userArea;
@@ -47,9 +59,14 @@ public class SettingsSceneController {
 
     @FXML
     public void initialize() {
+        initializeAdditionalStyles();
         initializeUserName();
         initializePasswordVerifiaction();
         initializeLanguagePicker();
+    }
+
+    private void initializeAdditionalStyles() {
+        JFXDepthManager.setDepth(header, 1);
     }
 
     private void initializePasswordVerifiaction() {
@@ -81,9 +98,10 @@ public class SettingsSceneController {
     }
 
     private void initializeLanguagePicker() {
-        languageComboBox.getItems().addAll(LocaleUtils.getAllLocalsAsStrings());
+        languageComboBox.getItems().addAll(LocaleUtils.getReadableLocales());
         languageComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            MOCKUP.USER.setLocale(LocaleUtils.localeFromCode(newValue));
+            String localeCode = LocaleUtils.getCodeFromReadableLocale(newValue);
+            MOCKUP.USER.setLocale(LocaleUtils.localeFromCode(localeCode));
             // TODO send
         });
     }

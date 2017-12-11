@@ -9,335 +9,309 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
-<AnchorPane prefHeight="800.0" prefWidth="1280.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/9"
-            xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="800.0" prefWidth="1280.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <VBox prefWidth="254.0" styleClass="grey-dark-background" AnchorPane.bottomAnchor="0.0"
-              AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="45.0">
+        <VBox prefWidth="254.0" styleClass="grey-dark-background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="45.0">
             <children>
                 <HBox alignment="CENTER_LEFT" onMousePressed="#switchToHomeScene">
                     <children>
-                        <FontAwesomeIcon fx:id="todoIcon1" fill="#464947" iconName="HOME" selectionEnd="1"
-                                         selectionStart="1" size="1.5em">
+                        <FontAwesomeIcon fx:id="todoIcon1" fill="#464947" iconName="HOME" selectionEnd="1" selectionStart="1" size="1.5em">
                             <HBox.margin>
-                                <Insets left="20.0"/>
+                                <Insets left="20.0" />
                             </HBox.margin>
                         </FontAwesomeIcon>
                         <Label fx:id="todoLabel1" text="Home" textFill="#dddddd">
                             <styleClass>
-                                <String fx:value="text-on-grey"/>
-                                <String fx:value="normal-text"/>
+                                <String fx:value="text-on-grey" />
+                                <String fx:value="normal-text" />
                             </styleClass>
                             <HBox.margin>
-                                <Insets left="30.0"/>
+                                <Insets left="30.0" />
                             </HBox.margin>
                             <font>
-                                <Font name="System Bold" size="26.0"/>
+                                <Font name="System Bold" size="26.0" />
                             </font>
                         </Label>
                     </children>
                     <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                     </padding>
                     <styleClass>
-                        <String fx:value="link"/>
-                        <String fx:value="grey-dark-background-hover"/>
+                        <String fx:value="link" />
+                        <String fx:value="grey-dark-background-hover" />
                     </styleClass>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" onMousePressed="#switchToTodoScene">
                     <children>
-                        <FontAwesomeIcon fx:id="todoIcon" fill="#464947" iconName="LIST_UL" selectionEnd="1"
-                                         selectionStart="1" size="1.5em">
+                        <FontAwesomeIcon fx:id="todoIcon" fill="#464947" iconName="LIST_UL" selectionEnd="1" selectionStart="1" size="1.5em">
                             <HBox.margin>
-                                <Insets left="20.0"/>
+                                <Insets left="20.0" />
                             </HBox.margin>
                         </FontAwesomeIcon>
                         <Label fx:id="todoLabel" text="To-Dos" textFill="#dddddd">
                             <styleClass>
-                                <String fx:value="text-on-grey"/>
-                                <String fx:value="normal-text"/>
+                                <String fx:value="text-on-grey" />
+                                <String fx:value="normal-text" />
                             </styleClass>
                             <HBox.margin>
-                                <Insets left="30.0"/>
+                                <Insets left="30.0" />
                             </HBox.margin>
                             <font>
-                                <Font name="System Bold" size="26.0"/>
+                                <Font name="System Bold" size="26.0" />
                             </font>
                         </Label>
                     </children>
                     <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                     </padding>
                     <styleClass>
-                        <String fx:value="link"/>
-                        <String fx:value="grey-dark-background-hover"/>
+                        <String fx:value="link" />
+                        <String fx:value="grey-dark-background-hover" />
                     </styleClass>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" onMousePressed="#switchToGoalScene">
                     <children>
                         <FontAwesomeIcon fx:id="goalsIcon" fill="#464947" iconName="TROPHY" size="1.5em" text="">
                             <HBox.margin>
-                                <Insets left="20.0"/>
+                                <Insets left="20.0" />
                             </HBox.margin>
                         </FontAwesomeIcon>
                         <Label fx:id="goalsLabel" text="Goals">
                             <HBox.margin>
-                                <Insets left="30.0"/>
+                                <Insets left="30.0" />
                             </HBox.margin>
                             <styleClass>
-                                <String fx:value="text-on-grey"/>
-                                <String fx:value="normal-text"/>
+                                <String fx:value="text-on-grey" />
+                                <String fx:value="normal-text" />
                             </styleClass>
                         </Label>
                     </children>
                     <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                     </padding>
                     <styleClass>
-                        <String fx:value="link"/>
-                        <String fx:value="grey-dark-background-hover"/>
+                        <String fx:value="link" />
+                        <String fx:value="grey-dark-background-hover" />
                     </styleClass>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" onMousePressed="#switchToDiaryScene">
                     <children>
                         <FontAwesomeIcon fx:id="diaryIcon" fill="#464947" iconName="CALENDAR_ALT" size="1.5em">
                             <HBox.margin>
-                                <Insets left="20.0"/>
+                                <Insets left="20.0" />
                             </HBox.margin>
                         </FontAwesomeIcon>
                         <Label fx:id="diaryLabel" text="Diary">
                             <styleClass>
-                                <String fx:value="text-on-grey"/>
-                                <String fx:value="normal-text"/>
+                                <String fx:value="text-on-grey" />
+                                <String fx:value="normal-text" />
                             </styleClass>
                             <HBox.margin>
-                                <Insets left="30.0"/>
+                                <Insets left="30.0" />
                             </HBox.margin>
                         </Label>
                     </children>
                     <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                     </padding>
                     <styleClass>
-                        <String fx:value="link"/>
-                        <String fx:value="grey-dark-background-hover"/>
+                        <String fx:value="link" />
+                        <String fx:value="grey-dark-background-hover" />
                     </styleClass>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" onMousePressed="#switchToNoteScene">
                     <children>
                         <FontAwesomeIcon fx:id="notesIcon" fill="#464947" iconName="FILE_TEXT_ALT" size="1.5em">
                             <HBox.margin>
-                                <Insets left="20.0"/>
+                                <Insets left="20.0" />
                             </HBox.margin>
                         </FontAwesomeIcon>
                         <Label fx:id="notesLabel" text="Notes">
                             <styleClass>
-                                <String fx:value="normal-text"/>
-                                <String fx:value="text-on-grey"/>
+                                <String fx:value="normal-text" />
+                                <String fx:value="text-on-grey" />
                             </styleClass>
                             <HBox.margin>
-                                <Insets left="30.0"/>
+                                <Insets left="30.0" />
                             </HBox.margin>
                         </Label>
                     </children>
                     <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                     </padding>
                     <styleClass>
-                        <String fx:value="link"/>
-                        <String fx:value="grey-dark-background-hover"/>
+                        <String fx:value="link" />
+                        <String fx:value="grey-dark-background-hover" />
                     </styleClass>
                 </HBox>
             </children>
         </VBox>
-        <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="254.0" AnchorPane.rightAnchor="0.0"
-                    AnchorPane.topAnchor="45.0">
+        <AnchorPane fx:id="content" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="254.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
             <styleClass>
-                <String fx:value="raised-left"/>
-                <String fx:value="grey-background"/>
+                <String fx:value="grey-background" />
             </styleClass>
             <children>
-                <VBox alignment="CENTER_LEFT" spacing="20.0" AnchorPane.bottomAnchor="30.0"
-                      AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="30.0">
+                <VBox alignment="TOP_CENTER" spacing="5.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="30.0">
                     <opaqueInsets>
-                        <Insets/>
+                        <Insets />
                     </opaqueInsets>
                     <children>
-                        <VBox alignment="CENTER_LEFT">
+                        <VBox fx:id="passwodPanel" alignment="CENTER_LEFT">
                             <opaqueInsets>
-                                <Insets/>
+                                <Insets />
                             </opaqueInsets>
-                            <styleClass>
-                                <String fx:value="form"/>
-                                <String fx:value="raised"/>
-                            </styleClass>
                             <children>
                                 <Label text="Change Password" textFill="#8dc44e">
                                     <VBox.margin>
-                                        <Insets bottom="5.0"/>
+                                        <Insets bottom="5.0" />
                                     </VBox.margin>
                                     <padding>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                     </padding>
                                     <styleClass>
-                                        <String fx:value="huge-text"/>
-                                        <String fx:value="bold"/>
+                                        <String fx:value="huge-text" />
+                                        <String fx:value="bold" />
                                     </styleClass>
                         </Label>
-                                <JFXPasswordField fx:id="passwordField" focusColor="#8DC44E" labelFloat="true"
-                                                  promptText="Password" unFocusColor="#464947">
+                                <JFXPasswordField fx:id="passwordField" focusColor="#8DC44E" labelFloat="true" promptText="Password" unFocusColor="#464947">
                                     <font>
-                                        <Font size="22.0"/>
+                                        <Font size="22.0" />
                                     </font>
                                     <VBox.margin>
-                                        <Insets bottom="25.0" top="15.0"/>
+                                        <Insets bottom="25.0" top="15.0" />
                                     </VBox.margin>
                                     <styleClass>
-                                        <String fx:value="text"/>
-                                        <String fx:value="large-text"/>
+                                        <String fx:value="text" />
+                                        <String fx:value="large-text" />
                                     </styleClass>
                         </JFXPasswordField>
-                                <JFXPasswordField fx:id="verifyPasswordField" focusColor="#8DC44E" labelFloat="true"
-                                                  promptText="Verify Password" unFocusColor="#464947">
+                                <JFXPasswordField fx:id="verifyPasswordField" focusColor="#8DC44E" labelFloat="true" promptText="Verify Password" unFocusColor="#464947">
                                     <font>
-                                        <Font size="22.0"/>
+                                        <Font size="22.0" />
                                     </font>
                                     <styleClass>
-                                        <String fx:value="text"/>
-                                        <String fx:value="large-text"/>
+                                        <String fx:value="text" />
+                                        <String fx:value="large-text" />
                                     </styleClass>
                                     <VBox.margin>
-                                        <Insets bottom="25.0" top="15.0"/>
+                                        <Insets bottom="25.0" top="15.0" />
                                     </VBox.margin>
                         </JFXPasswordField>
                                 <HBox alignment="CENTER_RIGHT">
                                     <children>
-                                        <JFXButton fx:id="passwordButton" buttonType="RAISED" disable="true"
-                                                   onAction="#changePassword" ripplerFill="#151f80" text="Save">
+                                        <JFXButton fx:id="passwordButton" disable="true" onAction="#changePassword" ripplerFill="#151f80" text="Save">
                                             <font>
-                                                <Font size="16.0"/>
+                                                <Font size="16.0" />
                                             </font>
                                             <styleClass>
-                                                <String fx:value="normal-text"/>
-                                                <String fx:value="green-background"/>
-                                                <String fx:value="white-text"/>
+                                                <String fx:value="normal-text" />
+                                                <String fx:value="green-background" />
+                                                <String fx:value="white-text" />
                                             </styleClass>
                                             <padding>
-                                                <Insets bottom="10.0" left="20.0" right="20.0" top="10.0"/>
+                                                <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                                             </padding>
                                         </JFXButton>
                                     </children>
                                 </HBox>
                             </children>
                             <padding>
-                                <Insets bottom="50.0" left="50.0" right="50.0" top="30.0"/>
+                                <Insets bottom="50.0" left="50.0" right="50.0" top="30.0" />
                             </padding>
                         </VBox>
-                        <VBox alignment="CENTER_LEFT">
+                  <Pane maxHeight="1.5" minHeight="1.5" prefHeight="1.5" styleClass="grey-dark-background" />
+                        <VBox fx:id="detailsPanel" alignment="CENTER_LEFT">
                             <opaqueInsets>
-                                <Insets/>
+                                <Insets />
                             </opaqueInsets>
-                            <styleClass>
-                                <String fx:value="form"/>
-                                <String fx:value="raised"/>
-                            </styleClass>
                             <children>
                                 <Label text="User Details" textFill="#8dc44e">
                                     <VBox.margin>
-                                        <Insets bottom="5.0"/>
+                                        <Insets bottom="5.0" />
                                     </VBox.margin>
                                     <padding>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                     </padding>
                                     <styleClass>
-                                        <String fx:value="huge-text"/>
-                                        <String fx:value="bold"/>
+                                        <String fx:value="huge-text" />
+                                        <String fx:value="bold" />
                                     </styleClass>
                                 </Label>
-                                <JFXTextField fx:id="nameTextField" focusColor="#8DC44E" promptText="Name"
-                                              unFocusColor="#464947">
+                                <JFXTextField fx:id="nameTextField" focusColor="#8DC44E" promptText="Name" unFocusColor="#464947">
                                     <font>
-                                        <Font size="22.0"/>
+                                        <Font size="22.0" />
                                     </font>
                                     <styleClass>
-                                        <String fx:value="text"/>
-                                        <String fx:value="large-text"/>
+                                        <String fx:value="text" />
+                                        <String fx:value="large-text" />
                                     </styleClass>
                                     <VBox.margin>
-                                        <Insets bottom="25.0" top="15.0"/>
+                                        <Insets bottom="25.0" top="15.0" />
                                     </VBox.margin>
                         </JFXTextField>
-                                <JFXComboBox fx:id="languageComboBox" focusColor="#8dc44e" labelFloat="true"
-                                             prefWidth="10000.0" promptText="Language" unFocusColor="#464947">
+                                <JFXComboBox fx:id="languageComboBox" focusColor="#8dc44e" labelFloat="true" prefWidth="10000.0" promptText="Language" unFocusColor="#464947">
                                     <VBox.margin>
-                                        <Insets bottom="30.0" top="15.0"/>
+                                        <Insets bottom="30.0" top="15.0" />
                                     </VBox.margin>
                                     <styleClass>
-                                        <String fx:value="text"/>
-                                        <String fx:value="large-text"/>
+                                        <String fx:value="text" />
+                                        <String fx:value="large-text" />
                                     </styleClass>
                         </JFXComboBox>
                             </children>
                             <padding>
-                                <Insets bottom="50.0" left="50.0" right="50.0" top="30.0"/>
+                                <Insets bottom="50.0" left="50.0" right="50.0" top="30.0" />
                             </padding>
                         </VBox>
                     </children>
                 </VBox>
-                <StackPane fx:id="stackPane" layoutX="-31.0" layoutY="30.0" visible="false"
-                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                           AnchorPane.topAnchor="0.0"/>
+                <StackPane fx:id="stackPane" layoutX="-31.0" layoutY="30.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </children>
         </AnchorPane>
-        <BorderPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <BorderPane fx:id="header" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <left>
-                <HBox alignment="CENTER_LEFT" onMousePressed="#switchToHomeScene" styleClass="link"
-                      BorderPane.alignment="CENTER">
+                <HBox alignment="CENTER_LEFT" onMousePressed="#switchToHomeScene" styleClass="link" BorderPane.alignment="CENTER">
                     <children>
                         <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../../white-logo.png"/>
+                                <Image url="@../../white-logo.png" />
                             </image>
                             <HBox.margin>
-                                <Insets bottom="5.0" right="5.0" top="5.0"/>
+                                <Insets bottom="5.0" right="5.0" top="5.0" />
                             </HBox.margin>
                         </ImageView>
                         <Label text="ChiclePad">
                             <styleClass>
-                                <String fx:value="huge-text"/>
-                                <String fx:value="text"/>
-                                <String fx:value="white-text"/>
-                                <String fx:value="raised"/>
+                                <String fx:value="huge-text" />
+                                <String fx:value="text" />
+                                <String fx:value="white-text" />
                             </styleClass>
                             <font>
-                                <Font size="10.0"/>
+                                <Font size="10.0" />
                             </font>
                         </Label>
                     </children>
                 </HBox>
             </left>
             <styleClass>
-                <String fx:value="raised"/>
-                <String fx:value="green-background"/>
+                <String fx:value="green-background" />
             </styleClass>
             <padding>
-                <Insets bottom="5.0" left="260.0" right="45.0" top="5.0"/>
+                <Insets bottom="5.0" left="260.0" right="45.0" top="5.0" />
             </padding>
             <right>
-                <HBox fx:id="userArea" alignment="CENTER" onMousePressed="#userClick" styleClass="link"
-                      BorderPane.alignment="CENTER">
+                <HBox fx:id="userArea" alignment="CENTER" onMousePressed="#userClick" styleClass="link" BorderPane.alignment="CENTER">
                     <children>
                         <Label fx:id="usernameLabel">
                             <styleClass>
-                                <String fx:value="large-text"/>
-                                <String fx:value="text"/>
-                                <String fx:value="white-text"/>
+                                <String fx:value="large-text" />
+                                <String fx:value="text" />
+                                <String fx:value="white-text" />
                             </styleClass>
                         </Label>
-                        <FontAwesomeIcon fx:id="userIcon" fill="WHITE" iconName="USER" selectionEnd="1"
-                                         selectionStart="1" size="1.5em">
+                        <FontAwesomeIcon fx:id="userIcon" fill="WHITE" iconName="USER" selectionEnd="1" selectionStart="1" size="1.5em">
                             <HBox.margin>
-                                <Insets left="15.0"/>
+                                <Insets left="15.0" />
                             </HBox.margin>
                         </FontAwesomeIcon>
                     </children>

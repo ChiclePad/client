@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXMasonryPane?>
 <?import de.jensd.fx.glyphs.fontawesome.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -148,23 +148,22 @@
                 <Pane prefHeight="1.0" styleClass="grey-dark" />
                 <Label opacity="0.8" text="Categories">
                     <VBox.margin>
-                        <Insets bottom="10.0" left="40.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="50.0" right="10.0" top="10.0" />
                     </VBox.margin>
                     <styleClass>
                         <String fx:value="large-text" />
                         <String fx:value="text-on-grey" />
                     </styleClass>
                 </Label>
-                <JFXListView fx:id="categoriesListView" styleClass="grey-dark-background" VBox.vgrow="ALWAYS" />
+            <VBox fx:id="categoryList" VBox.vgrow="ALWAYS" />
             </children>
         </VBox>
-        <AnchorPane layoutX="252.0" layoutY="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="254.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
+        <AnchorPane fx:id="content" layoutX="252.0" layoutY="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="254.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
             <styleClass>
-                <String fx:value="raised-left" />
                 <String fx:value="grey-background" />
             </styleClass>
             <children>
-            <VBox layoutX="10.0" layoutY="10.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="30.0">
+            <VBox fx:id="contentPanel" layoutX="10.0" layoutY="10.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="30.0">
                <children>
                   <HBox>
                      <children>
@@ -182,19 +181,15 @@
                         </Label>
                      </children>
                   </HBox>
-                  <JFXListView fx:id="upcommingListView" style="-fx-background-color: white;" />
+                  <JFXMasonryPane fx:id="noteMasonry" cellHeight="10.0" cellWidth="10.0" VBox.vgrow="ALWAYS" />
                </children>
-               <styleClass>
-                  <String fx:value="form" />
-                  <String fx:value="raised" />
-               </styleClass>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </VBox>
             </children>
         </AnchorPane>
-        <BorderPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <BorderPane fx:id="header" styleClass="green-background" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <left>
                 <HBox alignment="CENTER_LEFT" onMousePressed="#switchToHomeScene" styleClass="link" BorderPane.alignment="CENTER">
                     <children>
@@ -211,7 +206,6 @@
                                 <String fx:value="huge-text" />
                                 <String fx:value="text" />
                                 <String fx:value="white-text" />
-                                <String fx:value="raised" />
                             </styleClass>
                             <font>
                                 <Font size="10.0" />
@@ -220,10 +214,6 @@
                     </children>
                 </HBox>
             </left>
-            <styleClass>
-                <String fx:value="raised" />
-                <String fx:value="green-background" />
-            </styleClass>
             <padding>
                 <Insets bottom="5.0" left="260.0" right="45.0" top="5.0" />
             </padding>
@@ -276,5 +266,6 @@
                 </HBox>
             </right>
         </BorderPane>
+      <VBox fx:id="categoriesRippler" disable="true" prefWidth="254.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="415.0" />
     </children>
 </AnchorPane>

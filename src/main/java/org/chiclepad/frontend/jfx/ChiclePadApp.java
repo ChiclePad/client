@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import org.chiclepad.frontend.jfx.homepage.NoteSceneController;
 import org.chiclepad.frontend.jfx.startup.LoginSceneController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,18 +21,27 @@ public class ChiclePadApp extends Application {
 
     public void start(final Stage primaryStage) throws Exception {
         ChiclePadApp.primaryStage = primaryStage;
+        Scene scene = loadStartupScene();
 
+        primaryStage.setScene(scene);
+        configurePrimaryStage(primaryStage);
+        primaryStage.show();
+
+        switchScene(new NoteSceneController(), "homepage/noteScene.fxml");
+    }
+
+    private Scene loadStartupScene() throws IOException {
         LoginSceneController loginSceneController = new LoginSceneController();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("startup/loginScene.fxml"));
         fxmlLoader.setController(loginSceneController);
         Parent parentPane = fxmlLoader.load();
 
-        Scene scene = new Scene(parentPane);
+        return new Scene(parentPane);
+    }
 
-        primaryStage.setScene(scene);
+    private void configurePrimaryStage(Stage primaryStage) {
         primaryStage.setTitle("ChiclePad");
         primaryStage.getIcons().add(new Image(ChiclePadApp.class.getResourceAsStream("../favicon.png")));
-        primaryStage.show();
     }
 
     public static void switchScene(Object controller, String fxmlPath) {

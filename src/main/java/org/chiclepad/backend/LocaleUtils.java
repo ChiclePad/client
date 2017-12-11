@@ -44,6 +44,22 @@ public class LocaleUtils {
         return List.of(availableLocales);
     }
 
+    public static List<String> getReadableLocales() {
+        return Arrays.stream(availableLocales)
+                .map(LocaleUtils::localeName)
+                .collect(Collectors.toList());
+    }
+
+    public static String getCodeFromReadableLocale(String readableLocale) {
+        List<String> readableLocales = getReadableLocales();
+        for (int i = 0; i < readableLocales.size(); i++) {
+            if (readableLocales.get(i).equals(readableLocale)) {
+                return availableLocales[i];
+            }
+        }
+        return null;
+    }
+
     /**
      * @return LocaleObject -> "English (Canada)"
      */

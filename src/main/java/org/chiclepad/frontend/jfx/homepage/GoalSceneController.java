@@ -1,16 +1,23 @@
 package org.chiclepad.frontend.jfx.homepage;
 
-import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXListView;
+import com.jfoenix.effects.JFXDepthManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import org.chiclepad.backend.entity.Goal;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.MOCKUP;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
+import org.chiclepad.frontend.jfx.model.GoalListModel;
 
 public class GoalSceneController {
+
+    @FXML
+    private BorderPane header;
 
     @FXML
     private HBox userArea;
@@ -22,7 +29,15 @@ public class GoalSceneController {
     private TextField searchTextField;
 
     @FXML
-    private JFXListView<JFXCheckBox> categoriesListView;
+    private VBox categoryList;
+
+    @FXML
+    private JFXListView goalList;
+
+    @FXML
+    private VBox categoriesRippler;
+
+    private GoalListModel goals;
 
     private CategoryListModel categories;
 
@@ -30,15 +45,35 @@ public class GoalSceneController {
 
     @FXML
     public void initialize() {
-        this.categories = new CategoryListModel(categoriesListView);
+        initializeAdditionalStyles();
+        initializeUser();
+        initializeCategories();
+        initializeGoals();
+    }
 
+    private void initializeAdditionalStyles() {
+        JFXDepthManager.setDepth(header, 1);
+    }
+
+    private void initializeUser() {
         // TODO get real user
         MOCKUP.USER.getName().ifPresent(name -> usernameLabel.setText(name));
+    }
 
+    private void initializeCategories() {
+        this.categories = new CategoryListModel(categoryList, categoriesRippler);
         // TODO get real categories
         MOCKUP.CATEGORIES.forEach(category -> categories.add(category));
     }
 
+    private void initializeGoals() {
+        goals = new GoalListModel(goalList);
+        // TODO get real todos
+        MOCKUP.USER.getEntries().stream()
+                .filter(entry -> entry instanceof Goal)
+                .map(entry -> (Goal) entry)
+                .forEach(goal -> goals.add(goal));
+    }
 
     @FXML
     public void refreshFilter() {

@@ -3,8 +3,10 @@ package org.chiclepad.frontend.jfx.startup;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.effects.JFXDepthManager;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.ChiclePadColor;
@@ -15,6 +17,9 @@ public class LoginSceneController {
 
     @FXML
     private StackPane overlay;
+
+    @FXML
+    private VBox formLayout;
 
     @FXML
     private JFXTextField emailTextField;
@@ -31,12 +36,24 @@ public class LoginSceneController {
 
     @FXML
     public void initialize() {
+        initializeAdditionalStyles();
+        addEmailValiditator();
+        addPasswordValiditator();
+    }
+
+    private void initializeAdditionalStyles() {
+        JFXDepthManager.setDepth(formLayout, 3);
+    }
+
+    private void addEmailValiditator() {
         emailTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             emailValid = EmailValiditator.INSTANCE.validEmail(newValue);
             setTextFieldColor(emailTextField, emailValid ? ChiclePadColor.PRIMARY : ChiclePadColor.SECONDARY);
             loginButton.setDisable(!(passwordValid && emailValid));
         });
+    }
 
+    private void addPasswordValiditator() {
         passwordField.textProperty().addListener((observable, oldValue, newValue) -> {
             passwordValid = !newValue.isEmpty();
             setTextFieldColor(passwordField, passwordValid ? ChiclePadColor.PRIMARY : ChiclePadColor.SECONDARY);

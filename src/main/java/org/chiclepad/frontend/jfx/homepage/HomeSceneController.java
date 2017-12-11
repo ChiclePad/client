@@ -1,16 +1,21 @@
 package org.chiclepad.frontend.jfx.homepage;
 
-import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXListView;
+import com.jfoenix.effects.JFXDepthManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.MOCKUP;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 
 public class HomeSceneController {
+
+    @FXML
+    private BorderPane header;
 
     @FXML
     private HBox userArea;
@@ -28,7 +33,10 @@ public class HomeSceneController {
     private JFXListView notificationsListView;
 
     @FXML
-    private JFXListView<JFXCheckBox> categoriesListView;
+    private VBox categoryList;
+
+    @FXML
+    private VBox categoriesRippler;
 
     private CategoryListModel categories;
 
@@ -36,11 +44,22 @@ public class HomeSceneController {
 
     @FXML
     public void initialize() {
-        this.categories = new CategoryListModel(categoriesListView);
+        initializeAdditionalStyles();
+        initializeUser();
+        initializeCategories();
+    }
 
+    private void initializeAdditionalStyles() {
+        JFXDepthManager.setDepth(header, 1);
+    }
+
+    private void initializeUser() {
         // TODO get real user
         MOCKUP.USER.getName().ifPresent(name -> usernameLabel.setText(name));
+    }
 
+    private void initializeCategories() {
+        this.categories = new CategoryListModel(categoryList, categoriesRippler);
         // TODO get real categories
         MOCKUP.CATEGORIES.forEach(category -> categories.add(category));
     }
