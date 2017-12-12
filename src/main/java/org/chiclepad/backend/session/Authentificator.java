@@ -6,49 +6,43 @@ import org.chiclepad.backend.entity.ChiclePadUser;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-import java.time.LocalDateTime;
+public enum  Authentificator {
 
-public class Authentificator {
+    INSTANCE;
 
-   ChiclePadUserDao chiclePadUserDao = DaoFactory.INSTANCE.getChiclePadUserDao();
+    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
 
-   private UserSession logIn(String email, String password) {
+    public UserSession logIn(String email, String password) throws BadPasswordException, EmptyResultDataAccessException {
+        ChiclePadUser user = userDao.get(email);
 
-      ChiclePadUser user = chiclePadUserDao.get(email);
-      int id = user.getId();
+        if (!BCrypt.checkpw(password, user.getPassword())) {
+            throw new BadPasswordException();
+        }
 
-      // Check password
-      String hashFromGivenPassword = BCrypt.hashpw(password, user.getSalt());
-      if (!hashFromGivenPassword.equals(user.getPassword())) {
-         throw new BadPasswordException();
-      }
-      UserSession userSession = new UserSession(user, user.getId());
-      userSession.setLastLogInDate(LocalDateTime.now());
-      return userSession;
-   }
+        return new UserSession(user, user.getId());
+    }
 
-   private UserSession register(String email, String password) {
+    public UserSession register(String email, String password) throws UserAlreadyExistsException {
+        if (userExists(email)) {
+            throw new UserAlreadyExistsException();
+        }
 
-      // Check that user does not exist
-      try {
-         chiclePadUserDao.get(email);
-         throw new UserAlreadyExistsException();
-      } catch (EmptyResultDataAccessException e) {
+        String salt = BCrypt.gensalt();
+        String hashedPassword = BCrypt.hashpw(password, salt);
 
-      }
+        ChiclePadUser createdUser = userDao.create(email, hashedPassword);
 
-      // Generate salt for the user
-      String salt = BCrypt.gensalt();
+        return new UserSession(createdUser, createdUser.getId());
+    }
 
-      // Hash password with SHA-256 algorithm
-      String hash = BCrypt.hashpw(password, salt);
+    private boolean userExists(String email) {
+        try {
+            userDao.get(email);
+            return true;
 
-      // Save the user in the DB
-      ChiclePadUser createdUser = chiclePadUserDao.create(email, hash, salt);
+        } catch (EmptyResultDataAccessException ignored) {
+            return false;
+        }
+    }
 
-      UserSession userSession = new UserSession(createdUser, createdUser.getId());
-      userSession.setRegistrationDate(LocalDateTime.now());
-
-      return userSession;
-   }
 }

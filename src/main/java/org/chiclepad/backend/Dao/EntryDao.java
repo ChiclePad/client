@@ -1,40 +1,73 @@
 package org.chiclepad.backend.Dao;
 
+import org.chiclepad.backend.entity.Entry;
+import org.chiclepad.backend.entity.Note;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 abstract class EntryDao {
 
-   // Data source
-   protected JdbcTemplate jdbcTemplate;
+    private final String CREATE_ENTRY_SQL = "INSERT INTO entry(user_id, created) VALUES (?, NOW()) RETURNING id";
 
-   EntryDao(JdbcTemplate jdbcTemplate) {
-      this.jdbcTemplate = jdbcTemplate;
-   }
+    private final String GET_ALL_ENTRY_SQL = "SELECT entry.id, entry.user_id, entry.created " +
+            "FROM entry " +
+            "LEFT OUTER JOIN deleted_entry ON entry_id = entry.id " +
+            "WHERE deleted_entry.deleted_time IS NULL AND entry.user_id = ? ;";
 
-   //CREATE
-   public int create(int userId, LocalDateTime created) throws DuplicateKeyException {
+    private final String GET_ALL_WITH_DELETED_ENTRY_SQL = "SELECT entry.id, entry.user_id, entry.created " +
+            "FROM entry " +
+            "WHERE entry.user_id = ? ;";
 
-      String sqlInsert = "INSERT INTO entry(id,user_id, created)"
-            + " VALUES(DEFAULT ,?,?) RETURNING id ;";
+    private final String MARK_DELETED_ENTRY_SQL = "INSERT INTO deleted_entry(entry_id, deleted_time) " +
+            "VALUES (?, NOW());";
 
-      Object id = jdbcTemplate.queryForObject(sqlInsert, new Object[] { userId, created }, Integer.class);
+    private final String DELETE_ENTRY_SQL = "DELETE FROM entry WHERE id = ? ;";
 
-      return id == null ? -1 : (int) id;
-   }
+    private final String DELETE_ALL_ENTRY_SQL = "DELETE FROM entry";
 
-   //DELETE
-   // Deletion by user, entry is not deleted for real, only put to deleted entries.
-   // Returns deleted_entry.id
-   public int delete(int entryId) {
-      String sqlAddToDeletedEntries = "INSERT INTO deleted_entry(id,entry_id, deleted_time)"
-            + " VALUES(DEFAULT ,?,?) RETURNING id ;";
+    JdbcTemplate jdbcTemplate;
 
-      Object id = jdbcTemplate
-            .queryForObject(sqlAddToDeletedEntries, new Object[] { entryId, LocalDateTime.now() }, Integer.class);
-      return id == null ? -1 : (int) id;
-   }
+    EntryDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    int create(int userId) throws DuplicateKeyException {
+        return jdbcTemplate.queryForObject(
+                CREATE_ENTRY_SQL,
+                new Object[]{userId},
+                Integer.class
+        );
+    }
+
+    List<Entry> getAllEntries(int userId) throws EmptyResultDataAccessException {
+        return jdbcTemplate.query(
+                GET_ALL_ENTRY_SQL,
+                new Object[]{userId},
+                (resultSet, row) -> new Note(resultSet.getInt("id"), resultSet.getInt("id"), "")
+        );
+    }
+
+    List<Entry> getAllEntriesWithDeleted(int userId) throws EmptyResultDataAccessException {
+        return jdbcTemplate.query(
+                GET_ALL_WITH_DELETED_ENTRY_SQL,
+                new Object[]{userId},
+                (resultSet, row) -> new Note(resultSet.getInt("id"), resultSet.getInt("id"), "")
+        );
+    }
+
+    public void markDeleted(int entryId) {
+        jdbcTemplate.update(MARK_DELETED_ENTRY_SQL, entryId);
+    }
+
+    void delete(int entryId) {
+        jdbcTemplate.update(DELETE_ENTRY_SQL, entryId);
+    }
+
+    void deleteAllEntries() {
+        jdbcTemplate.update(DELETE_ALL_ENTRY_SQL);
+    }
 
 }

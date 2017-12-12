@@ -2,10 +2,9 @@
 CREATE TABLE chiclepad_user (
   id       SERIAL PRIMARY KEY,
   email    VARCHAR(150) NOT NULL, -- unique will not do, as emails don't depend on casing
-  password VARCHAR(60)  NOT NULL CHECK (password != ''),
-  salt     CHAR(29)     NOT NULL
+  password VARCHAR(60)  NOT NULL CHECK (password != '')
 );
-CREATE UNIQUE INDEX email_id on chiclepad_user (lower(email));
+CREATE UNIQUE INDEX email_id ON chiclepad_user (lower(email));
 
 -- Optional details about user
 CREATE TABLE chiclepad_user_details (
@@ -65,8 +64,6 @@ CREATE TABLE diary_page (
 CREATE TABLE note (
   id            SERIAL PRIMARY KEY,
   entry_id      INT REFERENCES entry ON DELETE CASCADE,
-  position_x    INT           NOT NULL DEFAULT 0,
-  position_y    INT           NOT NULL DEFAULT 0,
   content       VARCHAR(1000) NOT NULL,
   reminder_time TIMESTAMP
 );

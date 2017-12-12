@@ -1,8 +1,6 @@
 package org.chiclepad.backend;
 
 import org.postgresql.ds.PGSimpleDataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.File;
@@ -20,11 +18,6 @@ public enum DatabaseManager {
      * Singleton instance of the manager, to prevent multiple connections from 1 instance of the application
      */
     INSTANCE;
-
-    /**
-     * Logger for reporting errors, and important events
-     */
-    private final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
 
     /**
      * Single connection
@@ -61,18 +54,20 @@ public enum DatabaseManager {
         String host = properties.getProperty("host");
         String port = properties.getProperty("port");
         String database = properties.getProperty("database");
+        String schema = properties.getProperty("schema");
         String username = properties.getProperty("username");
         String password = properties.getProperty("password");
 
-        if (host == null || port == null || database == null || username == null || password == null) {
+        if (host == null || port == null || database == null || username == null || password == null || schema == null) {
             throw new RuntimeException("Host: " + host + "\nPort: " + port + "\nDatabase: " + database + "\nUsername: "
-                    + username + "\nPassword: " + password);
+                    + username + "\nPassword: " + password + "\nschema: " + schema);
         }
 
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         dataSource.setServerName(host);
         dataSource.setPortNumber(Integer.parseInt(port));
         dataSource.setDatabaseName(database);
+        dataSource.setCurrentSchema(schema);
         dataSource.setUser(username);
         dataSource.setPassword(password);
 

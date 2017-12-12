@@ -1,8 +1,6 @@
 package org.chiclepad.backend.Dao;
 
 import org.chiclepad.backend.DatabaseManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.File;
@@ -12,7 +10,6 @@ public enum DaoFactory {
    INSTANCE;
 
    private JdbcTemplate jdbcTemplate;
-
    private CategoryDao categoryDao;
    private ChiclePadUserDao chiclePadUserDao;
    private DiaryPageDao diaryPageDao;
@@ -20,9 +17,7 @@ public enum DaoFactory {
    private NoteDao noteDao;
    private TodoDao todoDao;
 
-   private final Logger logger = LoggerFactory.getLogger(DaoFactory.class);
-
-   private DaoFactory() {
+   DaoFactory() {
       if (!DatabaseManager.INSTANCE.isConnected()) {
          DatabaseManager.INSTANCE.connect(new File("postgress/connection.properties"));
       }

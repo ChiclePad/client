@@ -7,7 +7,9 @@ import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.effects.JFXDepthManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.chiclepad.backend.LocaleUtils;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
@@ -18,16 +20,7 @@ import org.chiclepad.frontend.jfx.MOCKUP;
 public class SettingsSceneController {
 
     @FXML
-    private AnchorPane content;
-
-    @FXML
     private BorderPane header;
-
-    @FXML
-    private VBox passwodPanel;
-
-    @FXML
-    private VBox detailsPanel;
 
     @FXML
     private HBox userArea;
@@ -51,7 +44,7 @@ public class SettingsSceneController {
     private JFXComboBox<String> languageComboBox;
 
     @FXML
-    private StackPane stackPane;
+    private StackPane dialogArea;
 
     private boolean passwordValid;
 
@@ -119,11 +112,11 @@ public class SettingsSceneController {
         // TODO send
         boolean passwordChanged = true;
         if (passwordChanged) {
-            ChiclePadDialog.show("Success!", "Password changed", stackPane);
+            ChiclePadDialog.show("Success!", "Password changed", dialogArea);
             passwordField.setText("");
             verifyPasswordField.setText("");
         } else {
-            ChiclePadDialog.show("Error!", "Password failed to change", stackPane);
+            ChiclePadDialog.show("Error!", "Password failed to change", dialogArea);
         }
     }
 

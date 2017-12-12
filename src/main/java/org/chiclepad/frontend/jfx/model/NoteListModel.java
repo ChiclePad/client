@@ -2,9 +2,11 @@ package org.chiclepad.frontend.jfx.model;
 
 import com.jfoenix.controls.JFXMasonryPane;
 import com.jfoenix.effects.JFXDepthManager;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import org.chiclepad.backend.entity.Note;
 import org.chiclepad.frontend.jfx.ChiclePadColor;
@@ -18,39 +20,47 @@ public class NoteListModel {
     }
 
     public void add(Note note) {
-        StackPane postIt = new StackPane();
+        VBox postIt = new VBox();
 
-        JFXDepthManager.setDepth(postIt, 1);
-        postIt.getStyleClass().addAll("form");
+        setPostItStyle(note, postIt);
 
-//        StackPane header = createNoteHeader(note);
-
-        StackPane body = new StackPane();
-//        body.setMinHeight(Math.random() * 20 + 50);
         Label bodyText = new Label(note.getContent());
-        bodyText.setPadding(new Insets(8, 8, 8, 8));
         bodyText.getStyleClass().addAll("normal-text");
-        body.getChildren().add(bodyText);
-        VBox content = new VBox();
-//        content.getChildren().addAll(header, body);
-        content.getChildren().add(body);
-        body.setStyle("-fx-background-radius: 0 0 2 2; -fx-background-color: rgb(255,255,255,0.87);");
 
-        postIt.getChildren().add(content);
+        Pane divider = new Pane();
+        divider.minHeight(1.5);
+        divider.prefHeight(1.5);
+        divider.maxHeight(1.5);
+        divider.setPrefWidth(100);
+        divider.getStyleClass().add("grey-dark-background");
+
+        HBox category = new HBox();
+        FontAwesomeIcon icon = new FontAwesomeIcon();
+        icon.setIconName(categoryIconOfNote(note));
+
+        Label name = new Label(categoryNameOfNote(note));
+        name.getStyleClass().addAll("small-text");
+
+        category.getChildren().addAll(icon, name);
+
+        postIt.getChildren().addAll(bodyText, divider, category);
+
         layout.getChildren().add(postIt);
     }
 
-    private StackPane createNoteHeader(Note note) {
-        StackPane header = new StackPane();
-        header.setPadding(new Insets(8, 8, 8, 8));
-        header.setStyle("-fx-background-color: " + categoryColorOfNote(note) + ";");
+    private void setPostItStyle(Note note, VBox postIt) {
+        JFXDepthManager.setDepth(postIt, 1);
+        postIt.getStyleClass().addAll("form");
+        postIt.setStyle("-fx-background-color: " + categoryColorOfNote(note));
+        postIt.setPadding(new Insets(10, 10, 10, 10));
+    }
 
-
-        Label text = new Label(categoryNameOfNote(note));
-        text.getStyleClass().add("normal-text");
-        header.getChildren().add(text);
-
-        return header;
+    private String categoryIconOfNote(Note note) {
+        if (!note.getCategories().isEmpty()) {
+            return note.getCategories().get(0).getIcon();
+        } else {
+            return "CIRCLE";
+        }
     }
 
     private String categoryNameOfNote(Note note) {
@@ -67,6 +77,10 @@ public class NoteListModel {
         } else {
             return ChiclePadColor.toHex(ChiclePadColor.CATEGORY_DEFAULT);
         }
+    }
+
+    public void setNewFilter(String filter) {
+
     }
 
 }

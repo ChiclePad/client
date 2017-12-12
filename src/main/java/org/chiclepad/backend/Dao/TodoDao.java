@@ -4,96 +4,136 @@ import org.chiclepad.backend.entity.Todo;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public class TodoDao extends EntryDao {
 
-   TodoDao(JdbcTemplate jdbcTemplate) {
-      super(jdbcTemplate);
-   }
+    private final String CREATE_TODO_SQL = "INSERT INTO todo(entry_id, description, deadline, soft_deadline, priority) " +
+            "VALUES (?, ?, ?, ?, ?) " +
+            "RETURNING id ;";
 
-   //CREATE
-   public Todo create(int userId, LocalDateTime created, String description, LocalDateTime deadline,
-         Optional<LocalDateTime> softDeadline, int priority) throws DuplicateKeyException {
+    private final String GET_TODO_SQL = "SELECT * " +
+            "FROM todo " +
+            "INNER JOIN entry ON todo.entry_id = entry.id " +
+            "WHERE todo.id = ? ;";
 
-      // First it is needed to create an entry and take its id
-      int entryId = super.create(userId, created);
+    private final String GET_ALL_TODO_PAGE_SQL = "SELECT * " +
+            "FROM todo " +
+            "INNER JOIN entry ON todo.entry_id = entry.id " +
+            "LEFT OUTER JOIN deleted_entry ON deleted_entry.entry_id = entry.id " +
+            "WHERE deleted_entry.deleted_time IS NULL AND user_id = ? ;";
 
-      String sqlInsert = "INSERT INTO todo(id, entry_id, description, deadline, soft_deadline, priority)"
-            + " VALUES(DEFAULT ,?,?,?,?,?) RETURNING id ;";
+    private final String GET_ALL_WITH_DELETED_DIARY_PAGE_SQL = "SELECT * " +
+            "FROM todo " +
+            "INNER JOIN entry ON entry_id = entry.id " +
+            "WHERE user_id = ? ;";
 
-      Object id = jdbcTemplate
-            .queryForObject(sqlInsert, new Object[] { entryId, description, deadline, softDeadline.get(), priority },
-                  Integer.class);
+    private final String UPDATE_DIARY_PAGE_SQL = "UPDATE todo " +
+            "SET description = ?, deadline = ?, soft_deadline = ?, priority = ? " +
+            "WHERE id = ?;";
 
-      return id == null ? null : new Todo(entryId, created, (int) id, description, deadline, priority);
-   }
+    private final String DELETE_ALL_DIARY_PAGE_SQL = "DELETE FROM todo;";
 
-   //READ
-   public Todo get(int id) throws EmptyResultDataAccessException {
-      String sqlGet = "SELECT * FROM todo"
-            + " INNER JOIN  entry ON todo.entry_id = entry.id"
-            + " WHERE todo.id = " + id + ";";
+    TodoDao(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
+    }
 
-      return jdbcTemplate.queryForObject(sqlGet,
-            (RowMapper<Todo>) (ResultSet resultSet, int rowNum) -> {
-               return getTodo(resultSet);
-            }
-      );
-   }
+    public Todo create(int userId, String description, LocalDateTime deadline, int priority)
+            throws DuplicateKeyException {
+        int entryId = super.create(userId);
 
-   private Todo getTodo(final ResultSet resultSet) throws SQLException {
-      int todoId = resultSet.getInt("id");
-      int entryId = resultSet.getInt("entry_id");
-      LocalDateTime created = (LocalDateTime) resultSet.getObject("created");
-      LocalDateTime deadline = (LocalDateTime) resultSet.getObject("deadline");
-      int priority = resultSet.getInt("priority");
-      String description = resultSet.getString("description");
-      LocalDateTime softDeadline = (LocalDateTime) resultSet.getObject("soft_deadline");
+        int id = jdbcTemplate.queryForObject(
+                CREATE_TODO_SQL,
+                new Object[]{entryId, description, Timestamp.valueOf(deadline), null, priority},
+                Integer.class
+        );
 
-      Optional<LocalDateTime> realSoftDeadline;
-      if (softDeadline == null) {
-         realSoftDeadline = Optional.empty();
-      } else {
-         realSoftDeadline = Optional.of(softDeadline);
-      }
+        return new Todo(entryId, id, description, deadline, priority);
+    }
 
-      return new Todo(entryId, created, todoId, description, deadline, realSoftDeadline.get(), priority);
-   }
+    public Todo create(int userId, String description, LocalDateTime deadline, LocalDateTime softDeadline, int priority)
+            throws DuplicateKeyException {
+        int entryId = super.create(userId);
 
-   public List<Todo> getAll() {
-      String sqlGetAll = "SELECT * FROM todo"
-            + " INNER JOIN  entry ON todo.entry_id = entry.id;";
+        int id = jdbcTemplate.queryForObject(
+                CREATE_TODO_SQL,
+                new Object[]{entryId, description, Timestamp.valueOf(deadline), Timestamp.valueOf(softDeadline), priority},
+                Integer.class
+        );
+        return new Todo(entryId, id, description, deadline, softDeadline, priority);
+    }
 
-      return jdbcTemplate.query(sqlGetAll,
-            (RowMapper<Todo>) (resultSet, rowNum) -> {
-               return getTodo(resultSet);
-            }
-      );
-   }
+    public Todo get(int id) throws EmptyResultDataAccessException {
+        return jdbcTemplate.queryForObject(
+                GET_TODO_SQL,
+                new Object[]{id},
+                (resultSet, row) -> readTodo(resultSet)
+        );
+    }
 
-   //UPDATE
-   public Todo update(Todo todo) throws DuplicateKeyException {
+    public List<Todo> getAll(int userId) {
+        return jdbcTemplate.query(
+                GET_ALL_TODO_PAGE_SQL,
+                new Object[]{userId},
+                (resultSet, row) -> readTodo(resultSet)
+        );
+    }
 
-      String sqlUpdateAll = "UPDATE todo "
-            + "SET description = ?, deadline = ?, soft_deadline = ?, priority = ? WHERE id = "
-            + todo.getId() + ";";
-      jdbcTemplate.update(sqlUpdateAll, todo.getDescription(), todo.getDeadline(), todo.getSoftDeadline().get(),
-            todo.getPriority());
+    public List<Todo> getAllWithDeleted(int userId) {
+        return jdbcTemplate.query(
+                GET_ALL_WITH_DELETED_DIARY_PAGE_SQL,
+                new Object[]{userId},
+                (resultSet, row) -> readTodo(resultSet)
+        );
+    }
 
-      return todo;
-   }
+    public Todo update(Todo todo) throws DuplicateKeyException {
+        Timestamp softDeadline = localDateTimeToTimestamp(todo.getSoftDeadline());
+        jdbcTemplate.update(
+                UPDATE_DIARY_PAGE_SQL,
+                todo.getDescription(),
+                Timestamp.valueOf(todo.getDeadline()),
+                softDeadline,
+                todo.getPriority(),
+                todo.getId()
+        );
+        return todo;
+    }
 
-   //DELETE
-   public Todo delete(Todo todo) {
-      super.delete(todo.getEntryId());
-      return todo;
-   }
-   
+    private Timestamp localDateTimeToTimestamp(Optional<LocalDateTime> softDeadline) {
+        return softDeadline
+                .map(Timestamp::valueOf)
+                .orElse(null);
+    }
+
+    public Todo delete(Todo todo) {
+        super.delete(todo.getEntryId());
+        return todo;
+    }
+
+    public void deleteAll() {
+        jdbcTemplate.update(DELETE_ALL_DIARY_PAGE_SQL);
+    }
+
+    private Todo readTodo(final ResultSet resultSet) throws SQLException {
+        int todoId = resultSet.getInt("id");
+        int entryId = resultSet.getInt("entry_id");
+        Timestamp deadline = resultSet.getTimestamp("deadline");
+        Timestamp softDeadline = resultSet.getTimestamp("soft_deadline");
+        int priority = resultSet.getInt("priority");
+        String description = resultSet.getString("description");
+
+        if (softDeadline == null) {
+            return new Todo(entryId, todoId, description, deadline.toLocalDateTime(), priority);
+        } else {
+            return new Todo(entryId, todoId, description, deadline.toLocalDateTime(), softDeadline.toLocalDateTime(), priority);
+        }
+    }
+
 }

@@ -1,7 +1,6 @@
 package org.chiclepad.backend.entity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -30,11 +29,10 @@ public class DiaryPage extends Entry {
      * Basic constructor
      */
     public DiaryPage(int entryId,
-                     LocalDateTime created,
                      List<Category> categories,
                      int id, String text,
                      LocalDate recordedDay) {
-        super(entryId, created, categories);
+        super(entryId, categories);
         this.id = id;
         this.text = text;
         this.recordedDay = recordedDay;
@@ -43,8 +41,8 @@ public class DiaryPage extends Entry {
     /**
      * Basic constructor
      */
-    public DiaryPage(int entryId, LocalDateTime created, int id, String text, LocalDate recordedDay) {
-        super(entryId, created);
+    public DiaryPage(int entryId, int id, String text, LocalDate recordedDay) {
+        super(entryId);
         this.id = id;
         this.text = text;
         this.recordedDay = recordedDay;
@@ -100,4 +98,5 @@ public class DiaryPage extends Entry {
                 ", entryId=" + entryId +
                 '}';
     }
+
 }
