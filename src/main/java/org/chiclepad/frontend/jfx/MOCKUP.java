@@ -48,15 +48,15 @@ public class MOCKUP {
         Note note3 = new Note(entryId++, LocalDateTime.of(1990, 2, 1, 4, 56), noteId++, -1, -1, "Don't be a lazy !@#$");
         Note note4 = new Note(entryId++, LocalDateTime.of(1990, 2, 1, 4, 56), List.of(CATEGORIES.get(4)), noteId++, -1, -1, "And buy some milk");
 
-        Goal goal1 = new Goal(entryId++, LocalDateTime.now(), goalId++, "Stretch for 10 minutes");
-        Goal goal2 = new Goal(entryId++, LocalDateTime.now(), List.of(CATEGORIES.get(0), CATEGORIES.get(1)), goalId++, "Wake up on time", List.of(new CompletedGoal(1, LocalDate.now().plusDays(10), LocalTime.now()), new CompletedGoal(2, LocalDate.now().plusDays(11), LocalTime.now().plusHours(2))));
-        Goal goal3 = new Goal(entryId++, LocalDateTime.of(1990, 2, 1, 4, 56), goalId++, "Eat 1 roll less each week");
-        Goal goal4 = new Goal(entryId++, LocalDateTime.of(1990, 2, 1, 4, 56), List.of(CATEGORIES.get(4)), goalId++, "Read at least 20 pages of a book", List.of(new CompletedGoal(3, LocalDate.of(1990, 2, 1).plusDays(3), LocalTime.now())));
+        Goal goal1 = new Goal(entryId++, goalId++, "Stretch for 10 minutes");
+        Goal goal2 = new Goal(entryId++, List.of(CATEGORIES.get(0), CATEGORIES.get(1)), goalId++, "Wake up on time", List.of(new CompletedGoal(1, LocalDate.now().plusDays(10), LocalTime.now()), new CompletedGoal(2, LocalDate.now().plusDays(11), LocalTime.now().plusHours(2))));
+        Goal goal3 = new Goal(entryId++, goalId++, "Eat 1 roll less each week");
+        Goal goal4 = new Goal(entryId++, List.of(CATEGORIES.get(4)), goalId++, "Read at least 20 pages of a book", List.of(new CompletedGoal(3, LocalDate.of(1990, 2, 1).plusDays(3), LocalTime.now())));
 
-        DiaryPage diaryPage1 = new DiaryPage(entryId++, LocalDateTime.now(), diaryPageId++, "Dear diary, today I slept well.", LocalDate.now());
-        DiaryPage diaryPage2 = new DiaryPage(entryId++, LocalDateTime.now(), List.of(CATEGORIES.get(0), CATEGORIES.get(1)), diaryPageId++, "My dear reader have a great day.", LocalDate.now());
-        DiaryPage diaryPage3 = new DiaryPage(entryId++, LocalDateTime.of(1990, 2, 1, 4, 56), diaryPageId++, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.", LocalDate.of(1990, 2, 1));
-        DiaryPage diaryPage4 = new DiaryPage(entryId++, LocalDateTime.of(1990, 2, 1, 4, 56), List.of(CATEGORIES.get(4)), diaryPageId++, "Dear diary, today I !@#$%^ up Lorem Ipsum", LocalDate.of(1990, 2, 1));
+        DiaryPage diaryPage1 = new DiaryPage(entryId++, diaryPageId++, "Dear diary, today I slept well.", LocalDate.now());
+        DiaryPage diaryPage2 = new DiaryPage(entryId++, diaryPageId++, "My dear reader have a great day.", LocalDate.now());
+        DiaryPage diaryPage3 = new DiaryPage(entryId++, diaryPageId++, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.", LocalDate.of(1990, 2, 1));
+        DiaryPage diaryPage4 = new DiaryPage(entryId++, List.of(CATEGORIES.get(4)), diaryPageId++, "Dear diary, today I !@#$%^ up Lorem Ipsum", LocalDate.of(1990, 2, 1));
 
 
         USER.getEntries().add(todo1);

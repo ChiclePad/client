@@ -1,6 +1,5 @@
 package org.chiclepad.backend.entity;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,13 +26,8 @@ public class Goal extends Entry {
     /**
      * Basic constructor
      */
-    public Goal(int entryId,
-                LocalDateTime created,
-                List<Category> categories,
-                int id,
-                String description,
-                List<CompletedGoal> completedGoals) {
-        super(entryId, created, categories);
+    public Goal(int entryId, List<Category> categories, int id, String description, List<CompletedGoal> completedGoals) {
+        super(entryId, categories);
         this.id = id;
         this.description = description;
         this.completedGoals = completedGoals;
@@ -42,22 +36,15 @@ public class Goal extends Entry {
     /**
      * Basic constructor
      */
-    public Goal(int entryId,
-                LocalDateTime created,
-                List<Category> categories,
-                int id,
-                String description) {
-        this(entryId, created, categories, id, description, new ArrayList<>());
+    public Goal(int entryId, List<Category> categories, int id, String description) {
+        this(entryId, categories, id, description, new ArrayList<>());
     }
 
     /**
      * Basic constructor
      */
-    public Goal(int entryId,
-                LocalDateTime created,
-                int id, String description,
-                List<CompletedGoal> completedGoals) {
-        super(entryId, created);
+    public Goal(int entryId, int id, String description, List<CompletedGoal> completedGoals) {
+        super(entryId);
         this.id = id;
         this.description = description;
         this.completedGoals = completedGoals;
@@ -66,11 +53,8 @@ public class Goal extends Entry {
     /**
      * Basic constructor
      */
-    public Goal(int entryId,
-                LocalDateTime created,
-                int id,
-                String description) {
-        this(entryId, created, id, description, new ArrayList<>());
+    public Goal(int entryId, int id, String description) {
+        this(entryId, id, description, new ArrayList<>());
     }
 
     /**

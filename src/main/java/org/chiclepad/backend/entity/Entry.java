@@ -20,7 +20,7 @@ public abstract class Entry {
     /**
      * Date the entry was created
      */
-    protected final LocalDateTime created;
+    protected LocalDateTime created;
 
     /**
      * Categories the entry belongs to
@@ -44,8 +44,23 @@ public abstract class Entry {
     /**
      * Basic constructor
      */
+    public Entry(int entryId, List<Category> categories) {
+        this.entryId = entryId;
+        this.categories = categories;
+    }
+
+    /**
+     * Basic constructor
+     */
     public Entry(int entryId, LocalDateTime created) {
         this(entryId, created, new ArrayList<>());
+    }
+
+    /**
+     * Basic constructor
+     */
+    public Entry(int entryId) {
+        this(entryId, new ArrayList<>());
     }
 
     /**

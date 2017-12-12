@@ -4,97 +4,106 @@ import org.chiclepad.backend.entity.Note;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public class NoteDao extends EntryDao {
 
-   NoteDao(JdbcTemplate jdbcTemplate) {
-      super(jdbcTemplate);
-   }
+    private final String CREATE_NOTE_SQL = "INSERT INTO note(id, entry_id, content, reminder_time) " +
+            "VALUES (DEFAULT, ?, ?, ?) " +
+            "RETURNING id;";
 
-   public Note create(int userId, LocalDateTime created, int positionX, int positionY, String content,
-         LocalDateTime reminderTime) throws DuplicateKeyException {
+    private final String GET_NOTE_SQL = "SELECT * " +
+            "FROM note " +
+            "INNER JOIN entry ON note.entry_id = entry.id " +
+            "WHERE note.id = ? ;";
 
-      // First it is needed to create an entry and take its id
-      int entryId = super.create(userId);
+    private final String GET_ALL_NOTE_SQL = "SELECT * " +
+            "FROM note " +
+            "INNER JOIN entry ON note.entry_id = entry.id " +
+            "LEFT OUTER JOIN deleted_entry ON deleted_entry.entry_id = entry.id " +
+            "WHERE deleted_entry.deleted_time IS NULL AND entry.user_id = ? ;";
 
-      String sqlInsert = "INSERT INTO note(id, entry_id, position_x, position_y, content, reminder_time)"
-            + " VALUES(DEFAULT ,?,?,?,?,?) RETURNING id ;";
+    private final String GET_ALL_WITH_DELETED_NOTE_SQL = "SELECT * " +
+            "FROM note " +
+            "INNER JOIN entry ON note.entry_id = entry.id " +
+            "WHERE entry.user_id = ? ;";
 
-      Object id = jdbcTemplate
-            .queryForObject(sqlInsert, new Object[] { entryId, positionX, positionY, content, reminderTime },
-                  Integer.class);
+    private final String UPDATE_NOTE_SQL = "UPDATE note " +
+            "SET content = ?, reminder_time = ? " +
+            "WHERE id = ?;";
 
-      return id == null ? null : new Note(entryId, created, (int) id, positionX, positionY, content, reminderTime);
-   }
+    private final String DELETE_NOTE_SQL = "DELETE FROM note WHERE id = ?;";
 
-   //READ
-   public Note get(int id) throws EmptyResultDataAccessException {
-      String sqlGet = "SELECT * FROM note"
-            + " INNER JOIN  entry ON note.entry_id = entry.id"
-            + " WHERE note.id = " + id + ";";
+    private final String DELETE_ALL_NOTE_SQL = "DELETE FROM note;";
 
-      return jdbcTemplate.queryForObject(sqlGet,
-            (RowMapper<Note>) (ResultSet resultSet, int rowNum) -> {
-               return getNote(resultSet);
-            }
-      );
-   }
+    NoteDao(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
+    }
 
-   private Note getNote(final ResultSet resultSet) throws SQLException {
-      int noteId = resultSet.getInt("id");
-      int entryId = resultSet.getInt("entry_id");
-      LocalDateTime created = (LocalDateTime) resultSet.getObject("created");
+    public Note create(int userId, String content, LocalDateTime reminderTime) throws DuplicateKeyException {
+        int entryId = super.create(userId);
+        int id = jdbcTemplate.queryForObject(
+                CREATE_NOTE_SQL,
+                new Object[]{entryId, content, reminderTime},
+                Integer.class
+        );
 
-      int positionX = resultSet.getInt("position_x");
-      int positionY = resultSet.getInt("position_y");
-      String content = resultSet.getString("content");
+        return new Note(entryId, id, content, reminderTime);
+    }
 
-      LocalDateTime reminderTime = (LocalDateTime) resultSet.getObject("reminder_time");
+    public Note get(int id) throws EmptyResultDataAccessException {
+        return jdbcTemplate.queryForObject(
+                GET_NOTE_SQL,
+                new Object[]{id},
+                (resultSet, row) -> readNote(resultSet)
+        );
+    }
 
-      Optional<LocalDateTime> realReminderTime;
-      if (reminderTime == null) {
-         realReminderTime = Optional.empty();
-      } else {
-         realReminderTime = Optional.of(reminderTime);
-      }
+    public List<Note> getAll(int userId) throws EmptyResultDataAccessException {
+        return jdbcTemplate.query(
+                GET_ALL_NOTE_SQL,
+                new Object[]{userId},
+                (resultSet, row) -> readNote(resultSet)
+        );
+    }
 
-      return new Note(entryId, created, noteId, positionX, positionY, content, realReminderTime.get());
-   }
+    public List<Note> getAllWithDeleted(int userId) throws EmptyResultDataAccessException {
+        return jdbcTemplate.query(
+                GET_ALL_WITH_DELETED_NOTE_SQL,
+                new Object[]{userId},
+                (resultSet, row) -> readNote(resultSet)
+        );
+    }
 
-   public List<Note> getAll() {
-      String sqlGetAll = "SELECT * FROM note"
-            + " INNER JOIN  entry ON note.entry_id = entry.id;";
+    public Note update(Note note) throws DuplicateKeyException {
+        jdbcTemplate.update(UPDATE_NOTE_SQL, note.getContent(), note.getReminderTime().orElse(null), note.getId());
+        return note;
+    }
 
-      return jdbcTemplate.query(sqlGetAll,
-            (RowMapper<Note>) (resultSet, rowNum) -> {
-               return getNote(resultSet);
-            }
-      );
-   }
+    public Note delete(Note note) {
+        jdbcTemplate.update(DELETE_NOTE_SQL, note.getId());
+        return note;
+    }
 
-   //UPDATE
-   public Note update(Note note) throws DuplicateKeyException {
+    public void deleteAll() {
+        jdbcTemplate.update(DELETE_ALL_NOTE_SQL);
+    }
 
-      String sqlUpdateAll = "UPDATE note "
-            + "SET position_x = ?, position_y = ?, content = ?, reminder_time = ? WHERE id = "
-            + note.getId() + ";";
-      jdbcTemplate.update(sqlUpdateAll, note.getPositionX(), note.getPositionY(), note.getContent(),
-            note.getReminderTime().get());
+    private Note readNote(final ResultSet resultSet) throws SQLException {
+        int noteId = resultSet.getInt("id");
+        int entryId = resultSet.getInt("entry_id");
+        String content = resultSet.getString("content");
+        LocalDateTime reminderTime = (LocalDateTime) resultSet.getObject("reminder_time");
 
-      return note;
-   }
+        if (reminderTime != null) {
+            return new Note(entryId, noteId, content, reminderTime);
+        } else {
+            return new Note(entryId, noteId, content);
+        }
+    }
 
-   //DELETE
-   public Note delete(Note note) {
-      String sqlDelete = "DELETE FROM note WHERE id = "+note.getId();
-      jdbcTemplate.update(sqlDelete);
-      return note;
-   }
 }

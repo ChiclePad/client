@@ -1,88 +1,145 @@
 package org.chiclepad.backend.Dao;
 
+import org.chiclepad.backend.entity.CompletedGoal;
 import org.chiclepad.backend.entity.Goal;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public class GoalDao extends EntryDao {
 
-   GoalDao(JdbcTemplate jdbcTemplate) {
-      super(jdbcTemplate);
-   }
+    private final String CREATE_GOAL_SQL = "INSERT INTO goal (id, entry_id, description) " +
+            "VALUES (DEFAULT, ?, ?) " +
+            "RETURNING id;";
 
-   //CREATE
-   public Goal create(int userId, LocalDateTime created, String description)
-         throws DuplicateKeyException {
+    private final String CREATE_COMPLETED_GOAL = "INSERT INTO completed_goal (goal_id, completed_day, completed_time) " +
+            "VALUES (?, ?, ?) " +
+            "RETURNING id;";
 
-      // First it is needed to create an entry and take its id
-      int entryId = super.create(userId);
+    private final String GET_GOAL_SQL = "SELECT * " +
+            "FROM goal " +
+            "INNER JOIN entry ON goal.entry_id = entry.id " +
+            "WHERE goal.id = ? ;";
 
-      String sqlInsert = "INSERT INTO goal(id, entry_id, description)"
-            + " VALUES(DEFAULT ,?,?) RETURNING id ;";
+    private final String GET_ALL_GOAL_SQL = "SELECT * " +
+            "FROM goal " +
+            "INNER JOIN entry ON goal.entry_id = entry.id " +
+            "LEFT OUTER JOIN deleted_entry ON deleted_entry.entry_id = entry.id " +
+            "WHERE deleted_entry.deleted_time IS NULL AND entry.user_id = ? ;";
 
-      Object id = jdbcTemplate
-            .queryForObject(sqlInsert, new Object[] { entryId, description },
-                  Integer.class);
+    private final String GET_ALL_WITH_DELETED_GOAL_SQL = "SELECT * " +
+            "FROM goal " +
+            "INNER JOIN entry ON goal.entry_id = entry.id " +
+            "WHERE entry.user_id = ? ;";
 
-      return id == null ? null : new Goal(entryId, created, (int) id, description);
-   }
+    private final String GET_COMPLETED_GOALS_GOAL_SQL = "SELECT * " +
+            "FROM completed_goal " +
+            "INNER JOIN goal ON goal.id = completed_goal.goal_id " +
+            "WHERE goal.id = ? ;";
 
-   //READ
-   public Goal get(int id) throws EmptyResultDataAccessException {
-      String sqlGet = "SELECT * FROM goal"
-            + " INNER JOIN  entry ON goal.entry_id = entry.id"
-            + " WHERE goal.id = " + id + ";";
+    private final String UPDATE_GOAL_SQL = "UPDATE goal " +
+            "SET description = ? " +
+            "WHERE id = ?;";
 
-      return jdbcTemplate.queryForObject(sqlGet,
-            (RowMapper<Goal>) (ResultSet resultSet, int rowNum) -> {
-               return getGoal(resultSet);
-            }
-      );
-   }
+    private final String DELETE_GOAL_SQL = "DELETE FROM goal WHERE id = ? ;";
 
-   private Goal getGoal(final ResultSet resultSet) throws SQLException {
-      int goalId = resultSet.getInt("id");
-      int entryId = resultSet.getInt("entry_id");
-      LocalDateTime created = (LocalDateTime) resultSet.getObject("created");
+    private final String DELETE_ALL_GOAL_SQL = "DELETE FROM goal;";
 
-      String description = resultSet.getString("description");
+    GoalDao(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
+    }
 
-      return new Goal(entryId, created, goalId, description);
-   }
+    public Goal create(int userId, String description) throws DuplicateKeyException {
+        int entryId = super.create(userId);
+        int id = jdbcTemplate.queryForObject(
+                CREATE_GOAL_SQL,
+                new Object[]{entryId, description},
+                Integer.class
+        );
 
-   public List<Goal> getAll() {
-      String sqlGetAll = "SELECT * FROM goal"
-            + " INNER JOIN  entry ON goal.entry_id = entry.id;";
+        return new Goal(entryId, id, description);
+    }
 
-      return jdbcTemplate.query(sqlGetAll,
-            (RowMapper<Goal>) (resultSet, rowNum) -> {
-               return getGoal(resultSet);
-            }
-      );
-   }
+    public CompletedGoal createCopletedGoal(int goalId) throws DuplicateKeyException {
+        LocalTime time = LocalTime.now();
+        LocalDate date = LocalDate.now();
 
-   //UPDATE
-   public Goal update(Goal goal) throws DuplicateKeyException {
+        int id = jdbcTemplate.queryForObject(
+                CREATE_COMPLETED_GOAL,
+                new Object[]{goalId, date, time},
+                Integer.class
+        );
 
-      String sqlUpdateAll = "UPDATE goal "
-            + "SET description = ? WHERE id = "
-            + goal.getId() + ";";
-      jdbcTemplate.update(sqlUpdateAll, goal.getDescription());
+        return new CompletedGoal(id, date, time);
+    }
 
-      return goal;
-   }
+    public Goal get(int id) throws EmptyResultDataAccessException {
+        return jdbcTemplate.queryForObject(
+                GET_GOAL_SQL,
+                new Object[]{id},
+                (resultSet, row) -> readGoal(resultSet)
+        );
+    }
 
-   //DELETE
-   public Goal delete(Goal goal) {
-      String sqlDelete = "DELETE FROM goal WHERE id = "+goal.getId();
-      jdbcTemplate.update(sqlDelete);
-      return goal;
-   }
+    public List<Goal> getAll(int userId) throws EmptyResultDataAccessException {
+        return jdbcTemplate.query(
+                GET_ALL_GOAL_SQL,
+                new Object[]{userId},
+                (resultSet, row) -> readGoal(resultSet)
+        );
+    }
+
+    public List<Goal> getAllWithDeleted(int userId) throws EmptyResultDataAccessException {
+        return jdbcTemplate.query(
+                GET_ALL_WITH_DELETED_GOAL_SQL,
+                new Object[]{userId},
+                (resultSet, row) -> readGoal(resultSet)
+        );
+    }
+
+    public List<CompletedGoal> getCompletedGoals(int goalId) throws EmptyResultDataAccessException {
+        return jdbcTemplate.query(
+                GET_COMPLETED_GOALS_GOAL_SQL,
+                new Object[]{goalId},
+                (resultSet, row) -> readCompletedGoal(resultSet)
+        );
+    }
+
+    public Goal update(Goal goal) throws DuplicateKeyException {
+        jdbcTemplate.update(UPDATE_GOAL_SQL, goal.getDescription(), goal.getId());
+        return goal;
+    }
+
+    public Goal delete(Goal goal) {
+        jdbcTemplate.update(DELETE_GOAL_SQL, goal.getId());
+        return goal;
+    }
+
+    public void deleteAll(Goal goal) {
+        jdbcTemplate.update(DELETE_ALL_GOAL_SQL);
+    }
+
+    private Goal readGoal(final ResultSet resultSet) throws SQLException {
+        int goalId = resultSet.getInt("id");
+        int entryId = resultSet.getInt("entry_id");
+
+        String description = resultSet.getString("description");
+
+        return new Goal(entryId, goalId, description);
+    }
+
+    private CompletedGoal readCompletedGoal(final ResultSet resultSet) throws SQLException {
+        int id = resultSet.getInt("id");
+        LocalDate completedDay = resultSet.getDate("completed_day").toLocalDate();
+        LocalTime completedTime = (LocalTime) resultSet.getObject("completed_time");
+
+        return new CompletedGoal(id, completedDay, completedTime);
+    }
+
 }

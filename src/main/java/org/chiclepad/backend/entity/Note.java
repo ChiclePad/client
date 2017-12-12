@@ -2,7 +2,6 @@ package org.chiclepad.backend.entity;
 
 import org.springframework.lang.NonNull;
 
-import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -18,11 +17,6 @@ public class Note extends Entry {
     private final int id;
 
     /**
-     * Horizontal and vertival position on the office board
-     */
-    private Point position;
-
-    /**
      * Text written on the note
      */
     private String content;
@@ -35,31 +29,17 @@ public class Note extends Entry {
     /**
      * Basic constructor
      */
-    public Note(int entryId,
-                LocalDateTime created,
-                List<Category> categories,
-                int id,
-                int positionX,
-                int positionY,
-                String content) {
-        super(entryId, created, categories);
+    public Note(int entryId, List<Category> categories, int id, String content) {
+        super(entryId, categories);
         this.id = id;
-        this.position = new Point(positionX, positionY);
         this.content = content;
     }
 
     /**
      * Constructor for note with reminder
      */
-    public Note(int entryId,
-                LocalDateTime created,
-                List<Category> categories,
-                int id,
-                int positionX,
-                int positionY,
-                String content,
-                @NonNull LocalDateTime reminderTime) {
-        this(entryId, created, categories, id, positionX, positionY, content);
+    public Note(int entryId, List<Category> categories, int id, String content, @NonNull LocalDateTime reminderTime) {
+        this(entryId, categories, id, content);
 
         if (reminderTime == null) {
             throw new RuntimeException("Provided reminder time to a note " + id + " can't be null");
@@ -71,29 +51,17 @@ public class Note extends Entry {
     /**
      * Basic constructor
      */
-    public Note(int entryId,
-                LocalDateTime created,
-                int id,
-                int positionX,
-                int positionY,
-                String content) {
-        super(entryId, created);
+    public Note(int entryId, int id, String content) {
+        super(entryId);
         this.id = id;
-        this.position = new Point(positionX, positionY);
         this.content = content;
     }
 
     /**
      * Constructor for note with reminder
      */
-    public Note(int entryId,
-                LocalDateTime created,
-                int id,
-                int positionX,
-                int positionY,
-                String content,
-                @NonNull LocalDateTime reminderTime) {
-        this(entryId, created, id, positionX, positionY, content);
+    public Note(int entryId, int id, String content, @NonNull LocalDateTime reminderTime) {
+        this(entryId, id, content);
 
         if (reminderTime == null) {
             throw new RuntimeException("Provided reminder time to a note " + id + " can't be null");
@@ -107,48 +75,6 @@ public class Note extends Entry {
      */
     public int getId() {
         return id;
-    }
-
-    /**
-     * @return Position of the note on an office board
-     */
-    public Point getPosition() {
-        return position;
-    }
-
-    /**
-     * @param position New position of the note on an office board
-     */
-    public void setPosition(Point position) {
-        this.position = position;
-    }
-
-    /**
-     * @return Get horizontal position of a note on an office board
-     */
-    public int getPositionX() {
-        return position.x;
-    }
-
-    /**
-     * @param positionX New horizontal position of the note
-     */
-    public void setPositionX(int positionX) {
-        this.position.x = positionX;
-    }
-
-    /**
-     * @return Get vertival position of the note on an office board
-     */
-    public int getPositionY() {
-        return position.y;
-    }
-
-    /**
-     * @param positionY New vertical position of the note
-     */
-    public void setPositionY(int positionY) {
-        this.position.y = positionY;
     }
 
     /**
@@ -200,7 +126,6 @@ public class Note extends Entry {
     public String toString() {
         return "Note{" +
                 "id=" + id +
-                ", position=" + position +
                 ", content='" + content + '\'' +
                 ", entryId=" + entryId +
                 '}';

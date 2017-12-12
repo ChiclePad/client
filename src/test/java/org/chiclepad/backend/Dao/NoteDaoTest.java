@@ -6,7 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class EntryDaoTest {
+class NoteDaoTest {
 
     private static CategoryDao dao = DaoFactory.INSTANCE.getCategoryDao();
     private static ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
@@ -33,7 +33,19 @@ class EntryDaoTest {
     }
 
     @Test
-    void markDeleted() {
+    void get() {
+    }
+
+    @Test
+    void getAll() {
+    }
+
+    @Test
+    void getAllWithDeleted() {
+    }
+
+    @Test
+    void update() {
     }
 
     @Test

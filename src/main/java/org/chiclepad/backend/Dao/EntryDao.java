@@ -7,10 +7,10 @@ import java.time.LocalDateTime;
 
 abstract class EntryDao {
 
-    private final String CREATE_ENTRY_SQL = "INSERT INTO entry(user_id, created) VALUES (?, ?)";
+    private final String CREATE_ENTRY_SQL = "INSERT INTO entry(user_id, created) VALUES (?, NOW())";
 
     private final String MARK_DELETED_ENTRY_SQL = "INSERT INTO deleted_entry(id, entry_id, deleted_time) " +
-            "VALUES (DDEFAULT , ?, ?) " +
+            "VALUES (DEFAULT , ?, NOW()) " +
             "RETURNING id;";
 
     private final String DELETE_ENTRY_SQL = "DELETE FROM entry WHERE id = ?;";
@@ -26,7 +26,7 @@ abstract class EntryDao {
     public int create(int userId) throws DuplicateKeyException {
         return jdbcTemplate.queryForObject(
                 CREATE_ENTRY_SQL,
-                new Object[]{userId, LocalDateTime.now()},
+                new Object[]{userId},
                 Integer.class
         );
     }
@@ -37,13 +37,9 @@ abstract class EntryDao {
 
     public void delete(int entryId) {
         jdbcTemplate.update(DELETE_ENTRY_SQL,
-                new Object[]{entryId, LocalDateTime.now()},
+                new Object[]{entryId},
                 Integer.class
         );
-    }
-
-    public void deleteAll() {
-        jdbcTemplate.update(DELETE_ALL_ENTRY_SQL);
     }
 
 }
