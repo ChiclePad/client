@@ -23,7 +23,7 @@ public class TodoDao extends EntryDao {
          Optional<LocalDateTime> softDeadline, int priority) throws DuplicateKeyException {
 
       // First it is needed to create an entry and take its id
-      int entryId = super.create(userId, created);
+      int entryId = super.create(userId);
 
       String sqlInsert = "INSERT INTO todo(id, entry_id, description, deadline, soft_deadline, priority)"
             + " VALUES(DEFAULT ,?,?,?,?,?) RETURNING id ;";

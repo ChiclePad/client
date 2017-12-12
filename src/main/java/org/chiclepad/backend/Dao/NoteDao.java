@@ -18,12 +18,11 @@ public class NoteDao extends EntryDao {
       super(jdbcTemplate);
    }
 
-   //CREATE
    public Note create(int userId, LocalDateTime created, int positionX, int positionY, String content,
          LocalDateTime reminderTime) throws DuplicateKeyException {
 
       // First it is needed to create an entry and take its id
-      int entryId = super.create(userId, created);
+      int entryId = super.create(userId);
 
       String sqlInsert = "INSERT INTO note(id, entry_id, position_x, position_y, content, reminder_time)"
             + " VALUES(DEFAULT ,?,?,?,?,?) RETURNING id ;";

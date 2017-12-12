@@ -7,34 +7,43 @@ import java.time.LocalDateTime;
 
 abstract class EntryDao {
 
-   // Data source
-   protected JdbcTemplate jdbcTemplate;
+    private final String CREATE_ENTRY_SQL = "INSERT INTO entry(user_id, created) VALUES (?, ?)";
 
-   EntryDao(JdbcTemplate jdbcTemplate) {
-      this.jdbcTemplate = jdbcTemplate;
-   }
+    private final String MARK_DELETED_ENTRY_SQL = "INSERT INTO deleted_entry(id, entry_id, deleted_time) " +
+            "VALUES (DDEFAULT , ?, ?) " +
+            "RETURNING id;";
 
-   //CREATE
-   public int create(int userId, LocalDateTime created) throws DuplicateKeyException {
+    private final String DELETE_ENTRY_SQL = "DELETE FROM entry WHERE id = ?;";
 
-      String sqlInsert = "INSERT INTO entry(id,user_id, created)"
-            + " VALUES(DEFAULT ,?,?) RETURNING id ;";
+    private final String DELETE_ALL_ENTRY_SQL = "DELETE FROM entry";
 
-      Object id = jdbcTemplate.queryForObject(sqlInsert, new Object[] { userId, created }, Integer.class);
+    JdbcTemplate jdbcTemplate;
 
-      return id == null ? -1 : (int) id;
-   }
+    EntryDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
-   //DELETE
-   // Deletion by user, entry is not deleted for real, only put to deleted entries.
-   // Returns deleted_entry.id
-   public int delete(int entryId) {
-      String sqlAddToDeletedEntries = "INSERT INTO deleted_entry(id,entry_id, deleted_time)"
-            + " VALUES(DEFAULT ,?,?) RETURNING id ;";
+    public int create(int userId) throws DuplicateKeyException {
+        return jdbcTemplate.queryForObject(
+                CREATE_ENTRY_SQL,
+                new Object[]{userId, LocalDateTime.now()},
+                Integer.class
+        );
+    }
 
-      Object id = jdbcTemplate
-            .queryForObject(sqlAddToDeletedEntries, new Object[] { entryId, LocalDateTime.now() }, Integer.class);
-      return id == null ? -1 : (int) id;
-   }
+    public void markDeleted(int entryId) {
+        jdbcTemplate.update(MARK_DELETED_ENTRY_SQL, entryId, LocalDateTime.now());
+    }
+
+    public void delete(int entryId) {
+        jdbcTemplate.update(DELETE_ENTRY_SQL,
+                new Object[]{entryId, LocalDateTime.now()},
+                Integer.class
+        );
+    }
+
+    public void deleteAll() {
+        jdbcTemplate.update(DELETE_ALL_ENTRY_SQL);
+    }
 
 }

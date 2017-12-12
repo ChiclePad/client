@@ -28,11 +28,6 @@ public class ChiclePadUser {
     private String password;
 
     /**
-     * Salt added to password
-     */
-    private String salt;
-
-    /**
      * Users entries
      */
     private final List<Entry> entries;
@@ -50,31 +45,25 @@ public class ChiclePadUser {
     /**
      * Basic constructor
      */
-    public ChiclePadUser(int id, String email, String password, String salt, List<Entry> entries) {
+    public ChiclePadUser(int id, String email, String password, List<Entry> entries) {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.salt = salt;
         this.entries = entries;
     }
 
     /**
      * Basic constructor
      */
-    public ChiclePadUser(int id, String email, String password, String salt) {
-        this(id, email, password, salt, new ArrayList<>());
+    public ChiclePadUser(int id, String email, String password) {
+        this(id, email, password, new ArrayList<>());
     }
 
     /**
      * Constructor for user with locale
      */
-    public ChiclePadUser(int id,
-                         String email,
-                         String password,
-                         String salt,
-                         List<Entry> entries,
-                         @NonNull Locale locale) {
-        this(id, email, password, salt, entries);
+    public ChiclePadUser(int id, String email, String password, List<Entry> entries, @NonNull Locale locale) {
+        this(id, email, password, entries);
 
         if (locale == null) {
             throw new RuntimeException("Provided user's (" + id + " " + email + ") locale can't be null.");
@@ -86,20 +75,15 @@ public class ChiclePadUser {
     /**
      * Constructor for user with locale
      */
-    public ChiclePadUser(int id, String email, String password, String salt, @NonNull Locale locale) {
-        this(id, email, password, salt, new ArrayList<>(), locale);
+    public ChiclePadUser(int id, String email, String password, @NonNull Locale locale) {
+        this(id, email, password, new ArrayList<>(), locale);
     }
 
     /**
      * Constructor for user with name
      */
-    public ChiclePadUser(int id,
-                         String email,
-                         String password,
-                         String salt,
-                         List<Entry> entries,
-                         @NonNull String name) {
-        this(id, email, password, salt, entries);
+    public ChiclePadUser(int id, String email, String password, List<Entry> entries, @NonNull String name) {
+        this(id, email, password, entries);
 
         if (name == null) {
             throw new RuntimeException("Provided username of user (" + id + " " + email + ") can't be null.");
@@ -111,8 +95,8 @@ public class ChiclePadUser {
     /**
      * Constructor for user with name
      */
-    public ChiclePadUser(int id, String email, String password, String salt, @NonNull String name) {
-        this(id, email, password, salt, new ArrayList<>(), name);
+    public ChiclePadUser(int id, String email, String password, @NonNull String name) {
+        this(id, email, password, new ArrayList<>(), name);
     }
 
     /**
@@ -121,11 +105,10 @@ public class ChiclePadUser {
     public ChiclePadUser(int id,
                          String email,
                          String password,
-                         String salt,
                          List<Entry> entries,
                          @NonNull Locale locale,
                          @NonNull String name) {
-        this(id, email, password, salt, entries);
+        this(id, email, password, entries);
 
         if (locale == null) {
             throw new RuntimeException("Provided user's (" + id + " " + email + ") locale can't be null.");
@@ -142,12 +125,8 @@ public class ChiclePadUser {
     /**
      * Constructor for user with locale and name
      */
-    public ChiclePadUser(int id, String email,
-                         String password,
-                         String salt,
-                         @NonNull Locale locale,
-                         @NonNull String name) {
-        this(id, email, password, salt, new ArrayList<>(), locale, name);
+    public ChiclePadUser(int id, String email, String password, @NonNull Locale locale, @NonNull String name) {
+        this(id, email, password, new ArrayList<>(), locale, name);
     }
 
     /**
@@ -183,20 +162,6 @@ public class ChiclePadUser {
      */
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    /**
-     * @return Salt to add to password for hashing
-     */
-    public String getSalt() {
-        return salt;
-    }
-
-    /**
-     * @param salt Salt used for hashing password
-     */
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     /**
@@ -263,4 +228,5 @@ public class ChiclePadUser {
                 ", name=" + name.orElse("None") +
                 '}';
     }
+
 }

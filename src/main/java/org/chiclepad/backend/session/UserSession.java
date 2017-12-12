@@ -6,30 +6,22 @@ import java.time.LocalDateTime;
 
 public class UserSession {
 
-   private ChiclePadUser loggedUser;
    private int userId;
-   private LocalDateTime registrationDate;
-   private LocalDateTime lastLogInDate;
+   private ChiclePadUser loggedUser;
+   private LocalDateTime logInDate;
 
    UserSession(final ChiclePadUser loggedUser, final int userId) {
       this.loggedUser = loggedUser;
       this.userId = userId;
+      this.logInDate = LocalDateTime.now();
    }
 
-   public LocalDateTime getRegistrationDate() {
-      return registrationDate;
+   public LocalDateTime getLogInDate() {
+      return logInDate;
    }
 
-   public void setRegistrationDate(final LocalDateTime registrationDate) {
-      this.registrationDate = registrationDate;
-   }
-
-   public LocalDateTime getLastLogInDate() {
-      return lastLogInDate;
-   }
-
-   public void setLastLogInDate(final LocalDateTime lastLogInDate) {
-      this.lastLogInDate = lastLogInDate;
+   public void setLogInDate(final LocalDateTime logInDate) {
+      this.logInDate = logInDate;
    }
 
    public ChiclePadUser getLoggedUser() {
@@ -47,4 +39,5 @@ public class UserSession {
    public void setUserId(final int userId) {
       this.userId = userId;
    }
+
 }

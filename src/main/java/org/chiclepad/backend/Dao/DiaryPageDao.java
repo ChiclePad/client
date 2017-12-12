@@ -23,7 +23,7 @@ public class DiaryPageDao extends EntryDao {
          throws DuplicateKeyException {
 
       // First it is needed to create an entry and take its id
-      int entryId = super.create(userId, created);
+      int entryId = super.create(userId);
 
       String sqlInsert = "INSERT INTO diary_page(id, entry_id, text, recorded_day)"
             + " VALUES(DEFAULT ,?,?,?) RETURNING id ;";

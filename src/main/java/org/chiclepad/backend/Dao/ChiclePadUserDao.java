@@ -5,140 +5,171 @@ import org.chiclepad.backend.entity.ChiclePadUser;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Locale;
 
 public class ChiclePadUserDao {
 
-   // Data source
-   private JdbcTemplate jdbcTemplate;
+    private final String CREATE_USER_SQL = "INSERT INTO chiclepad_user (id, email, password) " +
+            "VALUES (DEFAULT, ?, ?) " +
+            "RETURNING id;";
 
-   ChiclePadUserDao(JdbcTemplate jdbcTemplate) {
-      this.jdbcTemplate = jdbcTemplate;
-   }
+    private final String CREATE_DETAILS_USER_SQL = "INSERT INTO chiclepad_user_details (user_id) VALUES (?);";
 
-   //CREATE
-   public ChiclePadUser create(String email, String password, String salt) throws DuplicateKeyException {
+    private final String GET_USER_BY_ID_SQL = "SELECT * " +
+            "FROM chiclepad_user " +
+            "LEFT OUTER JOIN chiclepad_user_details ON user_id = chiclepad_user.id " +
+            "WHERE chiclepad_user.id = ?;";
 
-      String sqlInsert = "INSERT INTO chiclepad_user(id,email, password, salt)"
-            + " VALUES(DEFAULT ,?,?,?) RETURNING id ;";
+    private final String GET_USER_BY_EMAIL_SQL = "SELECT * " +
+            "FROM chiclepad_user " +
+            "LEFT OUTER JOIN chiclepad_user_details ON user_id = chiclepad_user.id " +
+            "WHERE email = ? ;";
 
-      Object id = jdbcTemplate.queryForObject(sqlInsert, new Object[] { email, password, salt }, Integer.class);
-      return id == null ? null : new ChiclePadUser((int) id, email, password, salt);
-   }
+    private final String GET_ALL_USERS_SQL = "SELECT * " +
+            "FROM chiclepad_user " +
+            "LEFT OUTER JOIN chiclepad_user_details ON user_id = chiclepad_user.id;";
 
-   //READ
-   public ChiclePadUser get(int id) throws EmptyResultDataAccessException {
-      String sqlGet = "SELECT * FROM chiclepad_user"
-            + " LEFT OUTER JOIN chiclepad_user_details ON chiclepad_user_details.user_id = " + id
-            + " WHERE chiclepad_user.id =" + id + ";";
+    private final String UPDATE_PASSWORD_USER_SQL = "UPDATE chiclepad_user " +
+            "SET password = ? " +
+            "WHERE id = ?;";
 
-      return jdbcTemplate.queryForObject(sqlGet, (ResultSet resultSet, int rowNum) -> getChiclePadUser(resultSet));
-   }
+    private final String HAS_DETAILS_USER_SQL = "SELECT count(*) >= 1 " +
+            "FROM chiclepad_user_details " +
+            "WHERE  user_id = ?;";
 
-   public ChiclePadUser get(String email) throws EmptyResultDataAccessException {
-      String sqlGet = "SELECT * FROM chiclepad_user"
-            + " LEFT OUTER JOIN chiclepad_user_details ON chiclepad_user_details.user_id = chiclepad_user.id "
-            + "WHERE  chiclepad_user.email = \'" + email + "\' ;";
+    private final String UPDATE_DETAILS_USER_SQL = "UPDATE chiclepad_user_details " +
+            "SET name = ?, locale = ? " +
+            "WHERE user_id = ?;";
 
-      return jdbcTemplate.queryForObject(sqlGet,
-            (RowMapper<ChiclePadUser>) (ResultSet resultSet, int rowNum) -> {
-               return getChiclePadUser(resultSet);
+    private final String DELETE_DETAILS_USER_SQL = "DELETE " +
+            "FROM chiclepad_user_details " +
+            "WHERE user_id = ?;";
+
+    private final String DELETE_USER_SQL = "DELETE " +
+            "FROM chiclepad_user " +
+            "WHERE id = ?;";
+
+    private final String DELETE_ALL_USER_SQL = "DELETE FROM chiclepad_user;";
+
+
+    private JdbcTemplate jdbcTemplate;
+
+    ChiclePadUserDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public ChiclePadUser create(String email, String password) throws DuplicateKeyException {
+        int id = jdbcTemplate.queryForObject(
+                CREATE_USER_SQL,
+                new Object[]{email, password},
+                Integer.class
+        );
+        return new ChiclePadUser(id, email, password);
+    }
+
+    public ChiclePadUser get(int id) throws EmptyResultDataAccessException {
+        return jdbcTemplate.queryForObject(
+                GET_USER_BY_ID_SQL,
+                new Object[]{id},
+                (resultSet, row) -> readUser(resultSet)
+        );
+    }
+
+    public ChiclePadUser get(String email) throws EmptyResultDataAccessException {
+        return jdbcTemplate.queryForObject(
+                GET_USER_BY_EMAIL_SQL,
+                new Object[]{email},
+                (resultSet, row) -> readUser(resultSet)
+        );
+    }
+
+    public List<ChiclePadUser> getAll() {
+        return jdbcTemplate.query(
+                GET_ALL_USERS_SQL,
+                (resultSet, row) -> readUser(resultSet)
+        );
+    }
+
+    public ChiclePadUser updatePassword(ChiclePadUser chiclePadUser) throws DuplicateKeyException {
+        jdbcTemplate.update(UPDATE_PASSWORD_USER_SQL, chiclePadUser.getPassword(), chiclePadUser.getId());
+        return chiclePadUser;
+    }
+
+    public ChiclePadUser updateDetails(ChiclePadUser chiclePadUser) throws DuplicateKeyException {
+        if (chiclePadUser.getName().isPresent() || chiclePadUser.getLocale().isPresent()) {
+            if (!userDetailsExist(chiclePadUser)) {
+                createUserDetails(chiclePadUser);
             }
-      );
-   }
 
-   private ChiclePadUser getChiclePadUser(final ResultSet resultSet) throws SQLException {
-      int userId = resultSet.getInt("id");
-      String email = resultSet.getString("email");
-      String password = resultSet.getString("password");
-      String salt = resultSet.getString("salt");
-      String name = resultSet.getString("name");
-      String localeCode = resultSet.getString("locale");
-      Locale locale = null;
-      if (localeCode != null) {
-         locale = LocaleUtils.localeFromCode(localeCode);
-      }
+            updateUserDetails(chiclePadUser);
+        } else {
+            deleteUserDetails(chiclePadUser);
+        }
 
-      if (name != null && locale != null) {
-         return new ChiclePadUser(userId, email, password, salt, locale, name);
-      } else if (name != null && locale == null) {
-         return new ChiclePadUser(userId, email, password, salt, name);
-      } else if (name == null && locale != null) {
-         return new ChiclePadUser(userId, email, password, salt, locale);
-      }
+        return chiclePadUser;
+    }
 
-      return new ChiclePadUser(userId, email, password, salt);
-   }
+    private void createUserDetails(ChiclePadUser chiclePadUser) {
+        jdbcTemplate.update(CREATE_DETAILS_USER_SQL, chiclePadUser.getId());
+    }
 
-   public List<ChiclePadUser> getAll() {
-      String sqlGetAll = "SELECT * FROM chiclepad_user"
-            + " LEFT OUTER JOIN chiclepad_user_details ON chiclepad_user_details.user_id = chiclepad_user.id;";
+    private void updateUserDetails(ChiclePadUser chiclePadUser) {
+        jdbcTemplate.update(
+                UPDATE_DETAILS_USER_SQL,
+                chiclePadUser.getName().orElse(null),
+                LocaleUtils.codeFromLocale(chiclePadUser.getLocale().orElse(null)).orElse(null),
+                chiclePadUser.getId()
+        );
+    }
 
-      return jdbcTemplate.query(sqlGetAll,
-            (RowMapper<ChiclePadUser>) (resultSet, rowNum) -> {
-               return getChiclePadUser(resultSet);
-            }
-      );
-   }
+    private void deleteUserDetails(ChiclePadUser chiclePadUser) {
+        jdbcTemplate.update(
+                DELETE_DETAILS_USER_SQL,
+                chiclePadUser.getId()
+        );
+    }
 
-   //UPDATE
-   public ChiclePadUser update(ChiclePadUser chiclePadUser) throws DuplicateKeyException {
+    private boolean userDetailsExist(ChiclePadUser chiclePadUser) {
+        return jdbcTemplate.queryForObject(
+                HAS_DETAILS_USER_SQL,
+                new Object[]{chiclePadUser.getId()},
+                Boolean.class
+        );
+    }
 
-      String sqlUpdatePassword = "UPDATE chiclepad_user "
-            + "SET password = ? WHERE id = "
-            + chiclePadUser.getId() + ";";
-      jdbcTemplate.update(sqlUpdatePassword, chiclePadUser.getPassword());
+    public ChiclePadUser delete(ChiclePadUser chiclePadUser) {
+        jdbcTemplate.update(DELETE_USER_SQL, chiclePadUser.getId());
+        return chiclePadUser;
+    }
 
-      String sqlAreUserDetailsPresent =
-            " SELECT count(*) FROM chiclepad_user_details WHERE  user_id = " + chiclePadUser.getId() + " ;";
+    public void deleteAll() {
+        jdbcTemplate.update(DELETE_ALL_USER_SQL);
+    }
 
-      int userId = -1;
-      if (chiclePadUser.getLocale().isPresent() || chiclePadUser.getName().isPresent()) {
-         Integer userIdQueried = jdbcTemplate.queryForObject(sqlAreUserDetailsPresent, Integer.class);
-         if (userIdQueried != null) {
-            userId = userIdQueried;
-         }
+    private ChiclePadUser readUser(final ResultSet resultSet) throws SQLException {
+        int userId = resultSet.getInt("id");
+        String email = resultSet.getString("email");
+        String password = resultSet.getString("password");
 
-         if (userId == 0) {
-            String sqlInsertUserDetailsRow =
-                  "INSERT INTO chiclepad_user_details(user_id) VALUES (" + chiclePadUser.getId() + ")";
-            jdbcTemplate.update(sqlInsertUserDetailsRow);
-         }
+        String name = resultSet.getString("name");
+        String localeCode = resultSet.getString("locale");
 
-         // Set locale
-         if (chiclePadUser.getLocale().isPresent()) {
-            Locale locale = chiclePadUser.getLocale().get();
-            String sqlUpdateLocale =
-                  "UPDATE chiclepad_user_details SET locale = ? WHERE user_id = "
-                        + chiclePadUser.getId()
-                        + ";";
-            jdbcTemplate.update(sqlUpdateLocale, locale);
-         }
+        if (name != null && localeCode != null) {
+            return new ChiclePadUser(userId, email, password, LocaleUtils.localeFromCode(localeCode), name);
+        }
 
-         // Set name
-         if (chiclePadUser.getName().isPresent()) {
-            String name = chiclePadUser.getName().get();
-            String sqlUpdateName =
-                  "UPDATE chiclepad_user_details SET name = ? WHERE user_id = "
-                        + chiclePadUser.getId()
-                        + ";";
-            jdbcTemplate.update(sqlUpdateName, name);
-         }
-      }
+        if (name != null) {
+            return new ChiclePadUser(userId, email, password, name);
+        }
 
-      return chiclePadUser;
-   }
+        if (localeCode != null) {
+            return new ChiclePadUser(userId, email, password, LocaleUtils.localeFromCode(localeCode));
+        }
 
-   //DELETE
-   public ChiclePadUser delete(ChiclePadUser chiclePadUser) {
-      String sqlDelete = "DELETE  FROM chiclepad_user WHERE  id = " + chiclePadUser.getId();
-      jdbcTemplate.update(sqlDelete);
-      return chiclePadUser;
-   }
+        return new ChiclePadUser(userId, email, password);
+    }
 
 }

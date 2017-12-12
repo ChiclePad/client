@@ -1,12 +1,13 @@
 package org.chiclepad.backend;
 
-import static org.assertj.core.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class LocaleUtilsTest {
 
@@ -17,6 +18,34 @@ class LocaleUtilsTest {
         assertThat(locals)
                 .doesNotContainNull()
                 .isNotEmpty();
+    }
+
+    @Test
+    void getAllLocalsAsStrings() {
+        assertThat(LocaleUtils.getAllLocalsAsStrings()).hasSameSizeAs(LocaleUtils.getAllLocals());
+    }
+
+    @Test
+    void getReadableLocales() {
+        assertThat(LocaleUtils.getReadableLocales()).hasSameSizeAs(LocaleUtils.getAllLocals());
+    }
+
+    @Test
+    void getCodeFromReadableLocale() {
+        List<String> readableLocales = LocaleUtils.getReadableLocales();
+        List<Locale> allLocals = LocaleUtils.getAllLocals();
+
+        List<String> codes1 = readableLocales.stream()
+                .map(LocaleUtils::getCodeFromReadableLocale)
+                .collect(Collectors.toList());
+
+        List<String> codes2 = allLocals.stream()
+                .map(LocaleUtils::codeFromLocale)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+
+        assertThat(codes1).containsAll(codes2);
     }
 
     @Test
@@ -57,4 +86,5 @@ class LocaleUtilsTest {
                 .isPresent()
                 .isEqualTo(Optional.of(code));
     }
+
 }

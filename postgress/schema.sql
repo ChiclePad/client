@@ -2,8 +2,7 @@
 CREATE TABLE chiclepad_user (
   id       SERIAL PRIMARY KEY,
   email    VARCHAR(150) NOT NULL, -- unique will not do, as emails don't depend on casing
-  password VARCHAR(60)  NOT NULL CHECK (password != ''),
-  salt     CHAR(29)     NOT NULL
+  password VARCHAR(60)  NOT NULL CHECK (password != '')
 );
 CREATE UNIQUE INDEX email_id on chiclepad_user (lower(email));
 

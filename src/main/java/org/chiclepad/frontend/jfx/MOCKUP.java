@@ -31,7 +31,7 @@ public class MOCKUP {
     private static int diaryPageId = 1;
 
     static {
-        USER = new ChiclePadUser(1, "1234", "salt", "Daco", "Alan Turing");
+        USER = new ChiclePadUser(1, "1234", "Daco", "Alan Turing");
 
         CATEGORIES.add(new Category(categoryId++, "School", FontAwesomeIconName.BOOK.name(), "#EF9A9A"));
         CATEGORIES.add(new Category(categoryId++, "Shopping", FontAwesomeIconName.SHOPPING_CART.name(), "#80DEEA"));

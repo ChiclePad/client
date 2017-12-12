@@ -22,7 +22,7 @@ public class GoalDao extends EntryDao {
          throws DuplicateKeyException {
 
       // First it is needed to create an entry and take its id
-      int entryId = super.create(userId, created);
+      int entryId = super.create(userId);
 
       String sqlInsert = "INSERT INTO goal(id, entry_id, description)"
             + " VALUES(DEFAULT ,?,?) RETURNING id ;";
