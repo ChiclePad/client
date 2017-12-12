@@ -40,15 +40,7 @@ $ sudo apt install postgresql
 $ sudo -u postgres psql
 
 postgres=# CREATE DATABASE chiclepad;
-postgres=# CREATE USER <username> PASSWORD '<password>';
-chiclepad=# GRANT ALL PRIVILEGES ON DATABASE chiclepad TO <username>;
-
 postgres=# \connect chiclepad
-chiclepad=# CREATE SCHEMA model;
-chiclepad=# GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA model TO <username>;
-chiclepad=# GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA model TO <username>;
-chiclepad=# DROP SCHEMA new_schema;
-chiclepad=# SET search_path TO model;
 ```
 Execute `schema.sql` script from `/backend/postgress` folder to initialize the newly created schema.
 ```
