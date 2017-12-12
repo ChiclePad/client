@@ -7,13 +7,15 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public class TodoDao extends EntryDao {
 
-    private final String CREATE_TODO_SQL = "INSERT INTO todo(id, entry_id, description, deadline, soft_deadline, priority) " +
-            "VALUES (DEFAULT, ?, ?, ?, ?, ?) " +
+    private final String CREATE_TODO_SQL = "INSERT INTO todo(entry_id, description, deadline, soft_deadline, priority) " +
+            "VALUES (?, ?, ?, ?, ?) " +
             "RETURNING id ;";
 
     private final String GET_TODO_SQL = "SELECT * " +
@@ -36,7 +38,7 @@ public class TodoDao extends EntryDao {
             "SET description = ?, deadline = ?, soft_deadline = ?, priority = ? " +
             "WHERE id = ?;";
 
-    private final String DELETE_ALL_DIARY_PAGE_SQL = "DELETE FROM diary_page;";
+    private final String DELETE_ALL_DIARY_PAGE_SQL = "DELETE FROM todo;";
 
     TodoDao(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
@@ -48,7 +50,7 @@ public class TodoDao extends EntryDao {
 
         int id = jdbcTemplate.queryForObject(
                 CREATE_TODO_SQL,
-                new Object[]{entryId, description, deadline, null, priority},
+                new Object[]{entryId, description, Timestamp.valueOf(deadline), null, priority},
                 Integer.class
         );
 
@@ -61,7 +63,7 @@ public class TodoDao extends EntryDao {
 
         int id = jdbcTemplate.queryForObject(
                 CREATE_TODO_SQL,
-                new Object[]{entryId, description, deadline, softDeadline, priority},
+                new Object[]{entryId, description, Timestamp.valueOf(deadline), Timestamp.valueOf(softDeadline), priority},
                 Integer.class
         );
         return new Todo(entryId, id, description, deadline, softDeadline, priority);
@@ -92,16 +94,22 @@ public class TodoDao extends EntryDao {
     }
 
     public Todo update(Todo todo) throws DuplicateKeyException {
+        Timestamp softDeadline = localDateTimeToTimestamp(todo.getSoftDeadline());
         jdbcTemplate.update(
                 UPDATE_DIARY_PAGE_SQL,
                 todo.getDescription(),
-                todo.getDeadline(),
-                todo.getSoftDeadline().orElse(null),
+                Timestamp.valueOf(todo.getDeadline()),
+                softDeadline,
                 todo.getPriority(),
                 todo.getId()
         );
-
         return todo;
+    }
+
+    private Timestamp localDateTimeToTimestamp(Optional<LocalDateTime> softDeadline) {
+        return softDeadline
+                .map(Timestamp::valueOf)
+                .orElse(null);
     }
 
     public Todo delete(Todo todo) {
@@ -116,15 +124,15 @@ public class TodoDao extends EntryDao {
     private Todo readTodo(final ResultSet resultSet) throws SQLException {
         int todoId = resultSet.getInt("id");
         int entryId = resultSet.getInt("entry_id");
-        LocalDateTime deadline = (LocalDateTime) resultSet.getObject("deadline");
-        LocalDateTime softDeadline = (LocalDateTime) resultSet.getObject("soft_deadline");
+        Timestamp deadline = resultSet.getTimestamp("deadline");
+        Timestamp softDeadline = resultSet.getTimestamp("soft_deadline");
         int priority = resultSet.getInt("priority");
         String description = resultSet.getString("description");
 
         if (softDeadline == null) {
-            return new Todo(entryId, todoId, description, deadline, priority);
+            return new Todo(entryId, todoId, description, deadline.toLocalDateTime(), priority);
         } else {
-            return new Todo(entryId, todoId, description, deadline, softDeadline, priority);
+            return new Todo(entryId, todoId, description, deadline.toLocalDateTime(), softDeadline.toLocalDateTime(), priority);
         }
     }
 

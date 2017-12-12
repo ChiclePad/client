@@ -6,8 +6,10 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -72,7 +74,7 @@ public class GoalDao extends EntryDao {
 
         int id = jdbcTemplate.queryForObject(
                 CREATE_COMPLETED_GOAL,
-                new Object[]{goalId, date, time},
+                new Object[]{goalId, Date.valueOf(date), Time.valueOf(time)},
                 Integer.class
         );
 
@@ -121,7 +123,7 @@ public class GoalDao extends EntryDao {
         return goal;
     }
 
-    public void deleteAll(Goal goal) {
+    public void deleteAll() {
         jdbcTemplate.update(DELETE_ALL_GOAL_SQL);
     }
 
@@ -137,7 +139,7 @@ public class GoalDao extends EntryDao {
     private CompletedGoal readCompletedGoal(final ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt("id");
         LocalDate completedDay = resultSet.getDate("completed_day").toLocalDate();
-        LocalTime completedTime = (LocalTime) resultSet.getObject("completed_time");
+        LocalTime completedTime = resultSet.getTime("completed_time").toLocalTime();
 
         return new CompletedGoal(id, completedDay, completedTime);
     }

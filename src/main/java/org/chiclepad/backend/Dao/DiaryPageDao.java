@@ -5,6 +5,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -12,14 +13,14 @@ import java.util.List;
 
 public class DiaryPageDao extends EntryDao {
 
-    private final String CREATE_DIARY_PAGE_SQL = "INSERT INTO diary_page (id, entry_id, text, recorded_day) " +
-            "VALUES (DEFAULT, ?, ?, ?) " +
+    private final String CREATE_DIARY_PAGE_SQL = "INSERT INTO diary_page (entry_id, text, recorded_day) " +
+            "VALUES (?, ?, ?) " +
             "RETURNING id;";
 
     private final String GET_DIARY_PAGE_SQL = "SELECT * " +
             "FROM diary_page " +
             "INNER JOIN entry ON entry_id = entry.id " +
-            "WHERE diaryPage.id = ? ;";
+            "WHERE diary_page.id = ? ;";
 
     private final String GET_ALL_DIARY_PAGE_SQL = "SELECT * " +
             "FROM diary_page " +
@@ -47,7 +48,7 @@ public class DiaryPageDao extends EntryDao {
 
         int id = jdbcTemplate.queryForObject(
                 CREATE_DIARY_PAGE_SQL,
-                new Object[]{entryId, text, recordedDay},
+                new Object[]{entryId, text, Date.valueOf(recordedDay)},
                 Integer.class
         );
         return new DiaryPage(entryId, id, text, recordedDay);
@@ -78,7 +79,7 @@ public class DiaryPageDao extends EntryDao {
     }
 
     public DiaryPage update(DiaryPage diaryPage) throws DuplicateKeyException {
-        jdbcTemplate.update(UPDATE_DIARY_PAGE_SQL, diaryPage.getText(), diaryPage.getRecordedDay(), diaryPage.getId());
+        jdbcTemplate.update(UPDATE_DIARY_PAGE_SQL, diaryPage.getText(), Date.valueOf(diaryPage.getRecordedDay()), diaryPage.getId());
         return diaryPage;
     }
 

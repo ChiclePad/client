@@ -39,14 +39,14 @@ public class MOCKUP {
         CATEGORIES.add(new Category(categoryId++, "Personal", FontAwesomeIconName.USER.name(), "#BCAAA4"));
         CATEGORIES.add(new Category(categoryId++, "Finance", FontAwesomeIconName.USD.name(), "#CE93D8"));
 
-        Todo todo1 = new Todo(entryId++, LocalDateTime.now(), todoId++, "Finish the project", LocalDateTime.of(2020, 3, 1, 2, 3), -1);
-        Todo todo2 = new Todo(entryId++, LocalDateTime.now(), List.of(CATEGORIES.get(0), CATEGORIES.get(1)), todoId++, "Start exercising", LocalDateTime.of(2000, 3, 1, 2, 3), 10);
-        Todo todo3 = new Todo(entryId++, LocalDateTime.of(1990, 2, 1, 4, 56), todoId++, "Build a cross country highway", LocalDateTime.of(2020, 3, 1, 2, 3), LocalDateTime.of(2019, 3, 1, 2, 4), 0);
+        Todo todo1 = new Todo(entryId++, todoId++, "Finish the project", LocalDateTime.of(2020, 3, 1, 2, 3), -1);
+        Todo todo2 = new Todo(entryId++, List.of(CATEGORIES.get(0), CATEGORIES.get(1)), todoId++, "Start exercising", LocalDateTime.of(2000, 3, 1, 2, 3), 10);
+        Todo todo3 = new Todo(entryId++, todoId++, "Build a cross country highway", LocalDateTime.of(2020, 3, 1, 2, 3), LocalDateTime.of(2019, 3, 1, 2, 4), 0);
 
-        Note note1 = new Note(entryId++, LocalDateTime.now(), noteId++, 10, 20, "You can do it");
-        Note note2 = new Note(entryId++, LocalDateTime.now(), List.of(CATEGORIES.get(0), CATEGORIES.get(1)), noteId++, 100, 200, "Start bodybuilding");
-        Note note3 = new Note(entryId++, LocalDateTime.of(1990, 2, 1, 4, 56), noteId++, -1, -1, "Don't be a lazy !@#$");
-        Note note4 = new Note(entryId++, LocalDateTime.of(1990, 2, 1, 4, 56), List.of(CATEGORIES.get(4)), noteId++, -1, -1, "And buy some milk");
+        Note note1 = new Note(entryId++, noteId++, "You can do it");
+        Note note2 = new Note(entryId++, List.of(CATEGORIES.get(0), CATEGORIES.get(1)), noteId++, "Start bodybuilding");
+        Note note3 = new Note(entryId++, noteId++, "Don't be a lazy !@#$");
+        Note note4 = new Note(entryId++, List.of(CATEGORIES.get(4)), noteId++, "And buy some milk");
 
         Goal goal1 = new Goal(entryId++, goalId++, "Stretch for 10 minutes");
         Goal goal2 = new Goal(entryId++, List.of(CATEGORIES.get(0), CATEGORIES.get(1)), goalId++, "Wake up on time", List.of(new CompletedGoal(1, LocalDate.now().plusDays(10), LocalTime.now()), new CompletedGoal(2, LocalDate.now().plusDays(11), LocalTime.now().plusHours(2))));
@@ -77,7 +77,6 @@ public class MOCKUP {
         USER.getEntries().add(diaryPage2);
         USER.getEntries().add(diaryPage3);
         USER.getEntries().add(diaryPage4);
-
     }
 
 }

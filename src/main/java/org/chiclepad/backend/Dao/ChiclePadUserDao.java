@@ -12,8 +12,8 @@ import java.util.List;
 
 public class ChiclePadUserDao {
 
-    private final String CREATE_USER_SQL = "INSERT INTO chiclepad_user (id, email, password) " +
-            "VALUES (DEFAULT, ?, ?) " +
+    private final String CREATE_USER_SQL = "INSERT INTO chiclepad_user (email, password) " +
+            "VALUES (?, ?) " +
             "RETURNING id;";
 
     private final String CREATE_DETAILS_USER_SQL = "INSERT INTO chiclepad_user_details (user_id) VALUES (?);";

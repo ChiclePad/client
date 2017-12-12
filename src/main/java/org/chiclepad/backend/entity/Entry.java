@@ -35,7 +35,7 @@ public abstract class Entry {
     /**
      * Basic constructor
      */
-    public Entry(int entryId, LocalDateTime created, List<Category> categories) {
+    Entry(int entryId, LocalDateTime created, List<Category> categories) {
         this.entryId = entryId;
         this.created = created;
         this.categories = categories;
@@ -44,7 +44,7 @@ public abstract class Entry {
     /**
      * Basic constructor
      */
-    public Entry(int entryId, List<Category> categories) {
+    Entry(int entryId, List<Category> categories) {
         this.entryId = entryId;
         this.categories = categories;
     }
@@ -52,21 +52,21 @@ public abstract class Entry {
     /**
      * Basic constructor
      */
-    public Entry(int entryId, LocalDateTime created) {
+    Entry(int entryId, LocalDateTime created) {
         this(entryId, created, new ArrayList<>());
     }
 
     /**
      * Basic constructor
      */
-    public Entry(int entryId) {
+    Entry(int entryId) {
         this(entryId, new ArrayList<>());
     }
 
     /**
      * Constructor for deleted entries
      */
-    public Entry(int entryId, LocalDateTime created, List<Category> categories, @NonNull LocalDateTime deletionTime) {
+    Entry(int entryId, LocalDateTime created, List<Category> categories, @NonNull LocalDateTime deletionTime) {
         this(entryId, created, categories);
 
         if (deletionTime == null) {

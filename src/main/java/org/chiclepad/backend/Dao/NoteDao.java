@@ -7,13 +7,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class NoteDao extends EntryDao {
 
-    private final String CREATE_NOTE_SQL = "INSERT INTO note(id, entry_id, content, reminder_time) " +
-            "VALUES (DEFAULT, ?, ?, ?) " +
+    private final String CREATE_NOTE_SQL = "INSERT INTO note(entry_id, content, reminder_time) " +
+            "VALUES (?, ?, ?) " +
             "RETURNING id;";
 
     private final String GET_NOTE_SQL = "SELECT * " +
@@ -48,7 +49,7 @@ public class NoteDao extends EntryDao {
         int entryId = super.create(userId);
         int id = jdbcTemplate.queryForObject(
                 CREATE_NOTE_SQL,
-                new Object[]{entryId, content, reminderTime},
+                new Object[]{entryId, content, Timestamp.valueOf(reminderTime)},
                 Integer.class
         );
 
@@ -80,8 +81,15 @@ public class NoteDao extends EntryDao {
     }
 
     public Note update(Note note) throws DuplicateKeyException {
-        jdbcTemplate.update(UPDATE_NOTE_SQL, note.getContent(), note.getReminderTime().orElse(null), note.getId());
+        Timestamp reminderTime = reminderTimeToTimestamp(note);
+        jdbcTemplate.update(UPDATE_NOTE_SQL, note.getContent(), reminderTime, note.getId());
         return note;
+    }
+
+    private Timestamp reminderTimeToTimestamp(Note note) {
+        return note.getReminderTime()
+                    .map(Timestamp::valueOf)
+                    .orElse(null);
     }
 
     public Note delete(Note note) {
@@ -97,7 +105,7 @@ public class NoteDao extends EntryDao {
         int noteId = resultSet.getInt("id");
         int entryId = resultSet.getInt("entry_id");
         String content = resultSet.getString("content");
-        LocalDateTime reminderTime = (LocalDateTime) resultSet.getObject("reminder_time");
+        LocalDateTime reminderTime = resultSet.getTimestamp("reminder_time").toLocalDateTime();
 
         if (reminderTime != null) {
             return new Note(entryId, noteId, content, reminderTime);
