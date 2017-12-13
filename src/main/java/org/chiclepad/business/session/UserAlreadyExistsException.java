@@ -1,4 +1,4 @@
-package org.chiclepad.backend.session;
+package org.chiclepad.business.session;
 
 public class UserAlreadyExistsException extends RuntimeException {
 }

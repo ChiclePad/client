@@ -8,9 +8,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.chiclepad.backend.Dao.CategoryDao;
+import org.chiclepad.backend.Dao.ChiclePadUserDao;
+import org.chiclepad.backend.Dao.DaoFactory;
+import org.chiclepad.backend.entity.Category;
+import org.chiclepad.backend.entity.ChiclePadUser;
+import org.chiclepad.business.UserSessionManager;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.MOCKUP;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
+
+import java.util.List;
 
 public class HomeSceneController {
 
@@ -41,6 +49,9 @@ public class HomeSceneController {
     private CategoryListModel categories;
 
     private String filter = "";
+    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
+    private ChiclePadUser loggedInUser;
+    private CategoryDao categoryDao = DaoFactory.INSTANCE.getCategoryDao();
 
     @FXML
     public void initialize() {
@@ -54,20 +65,21 @@ public class HomeSceneController {
     }
 
     private void initializeUser() {
-        // TODO get real user
-        MOCKUP.USER.getName().ifPresent(name -> usernameLabel.setText(name));
+        int userId = UserSessionManager.INSTANCE.getCurrentUserSession().getUserId();
+        loggedInUser = userDao.get(userId);
+        loggedInUser.getName().ifPresent(name -> usernameLabel.setText(name));
     }
 
     private void initializeCategories() {
         this.categories = new CategoryListModel(categoryList, categoriesRippler);
-        // TODO get real categories
-        MOCKUP.CATEGORIES.forEach(category -> categories.add(category));
+        List<Category> categories = this.categoryDao.getAll(this.loggedInUser.getId());
+        categories.forEach(category -> this.categories.add(category));
     }
 
     @FXML
     public void refreshFilter() {
         filter = searchTextField.getText();
-        // TODO reload
+        // TODO reload for Simon
     }
 
     @FXML

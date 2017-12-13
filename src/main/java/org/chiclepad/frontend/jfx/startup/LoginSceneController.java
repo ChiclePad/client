@@ -8,10 +8,13 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.chiclepad.business.session.Authentificator;
+import org.chiclepad.business.session.BadPasswordException;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.ChiclePadColor;
 import org.chiclepad.frontend.jfx.ChiclePadDialog;
 import org.chiclepad.frontend.jfx.homepage.HomeSceneController;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class LoginSceneController {
 
@@ -78,12 +81,15 @@ public class LoginSceneController {
 
     @FXML
     public void onLoginPressed() {
-        // TODO login user
-        boolean loginSuccesfull = true;
-        if (loginSuccesfull) {
+        Authentificator authentificator = Authentificator.INSTANCE;
+        try {
+            authentificator.logIn(this.emailTextField.getText(), this.passwordField.getText());
             ChiclePadApp.switchScene(new HomeSceneController(), "homepage/homeScene.fxml");
-        } else {
-            ChiclePadDialog.show("Login Failed!", "Check if you entered correct email and password.", overlay);
+        } catch (BadPasswordException e1) {
+            ChiclePadDialog.show("Login Failed!", "Bad password entered.", overlay);
+
+        } catch (EmptyResultDataAccessException e) {
+            ChiclePadDialog.show("Login Failed!", "Bad email entered.", overlay);
         }
     }
 

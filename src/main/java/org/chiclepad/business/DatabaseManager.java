@@ -1,4 +1,4 @@
-package org.chiclepad.backend;
+package org.chiclepad.business;
 
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;

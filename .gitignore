@@ -168,3 +168,4 @@ nbdist/
 
 # End of https://www.gitignore.io/api/java,maven,eclipse,netbeans,intellij+all
 !/src/main/resources/jfoenix-9.0.0.jar
+/backend.iml

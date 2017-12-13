@@ -11,7 +11,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import org.chiclepad.backend.LocaleUtils;
+import org.chiclepad.backend.Dao.ChiclePadUserDao;
+import org.chiclepad.backend.Dao.DaoFactory;
+import org.chiclepad.backend.entity.ChiclePadUser;
+import org.chiclepad.business.LocaleUtils;
+import org.chiclepad.business.UserSessionManager;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.ChiclePadColor;
 import org.chiclepad.frontend.jfx.ChiclePadDialog;
@@ -49,6 +53,8 @@ public class SettingsSceneController {
     private boolean passwordValid;
 
     private boolean verifyPasswordValid;
+    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
+    private ChiclePadUser loggedInUser;
 
     @FXML
     public void initialize() {
@@ -76,26 +82,30 @@ public class SettingsSceneController {
     }
 
     private void initializeUserName() {
-        // TODO get real user
-        MOCKUP.USER.getName().ifPresent(name -> {
-            nameTextField.setText(name);
-            usernameLabel.setText(name);
-        });
+        int userId = UserSessionManager.INSTANCE.getCurrentUserSession().getUserId();
+        loggedInUser = userDao.get(userId);
+        loggedInUser.getName().ifPresent(name -> {
+                    usernameLabel.setText(name);
+                    nameTextField.setText(name);
+                }
+        );
 
         nameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            MOCKUP.USER.setName(newValue);
+            this.loggedInUser.setName(newValue);
             usernameLabel.setText(newValue);
         });
-        // TODO send data
-        // nameTextField.focusColorProperty().addListener((observable, oldValue, newValue) -> SEND DATA);
+
+        nameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            this.userDao.updateDetails(this.loggedInUser);
+        });
     }
 
     private void initializeLanguagePicker() {
         languageComboBox.getItems().addAll(LocaleUtils.getReadableLocales());
         languageComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             String localeCode = LocaleUtils.getCodeFromReadableLocale(newValue);
-            MOCKUP.USER.setLocale(LocaleUtils.localeFromCode(localeCode));
-            // TODO send
+            this.loggedInUser.setLocale(LocaleUtils.localeFromCode(localeCode));
+            this.userDao.updateDetails(this.loggedInUser);
         });
     }
 
@@ -108,14 +118,14 @@ public class SettingsSceneController {
     public void changePassword() {
         String newPassword = this.passwordField.getText();
         MOCKUP.USER.setPassword(newPassword);
+        this.loggedInUser.setPassword(newPassword);
 
-        // TODO send
-        boolean passwordChanged = true;
-        if (passwordChanged) {
+        try {
+            this.userDao.updatePassword(loggedInUser);
             ChiclePadDialog.show("Success!", "Password changed", dialogArea);
             passwordField.setText("");
             verifyPasswordField.setText("");
-        } else {
+        } catch (Exception e) {
             ChiclePadDialog.show("Error!", "Password failed to change", dialogArea);
         }
     }

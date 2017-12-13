@@ -1,4 +1,4 @@
-package org.chiclepad.backend;
+package org.chiclepad.business;
 
 import java.util.Arrays;
 import java.util.List;

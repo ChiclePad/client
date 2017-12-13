@@ -8,11 +8,20 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.chiclepad.backend.Dao.CategoryDao;
+import org.chiclepad.backend.Dao.ChiclePadUserDao;
+import org.chiclepad.backend.Dao.DaoFactory;
+import org.chiclepad.backend.Dao.TodoDao;
+import org.chiclepad.backend.entity.Category;
+import org.chiclepad.backend.entity.ChiclePadUser;
 import org.chiclepad.backend.entity.Todo;
+import org.chiclepad.business.UserSessionManager;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.MOCKUP;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 import org.chiclepad.frontend.jfx.model.TodoListModel;
+
+import java.util.List;
 
 public class TodoSceneController {
 
@@ -42,6 +51,10 @@ public class TodoSceneController {
     private CategoryListModel categories;
 
     private String filter = "";
+    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
+    private ChiclePadUser loggedInUser;
+    private CategoryDao categoryDao = DaoFactory.INSTANCE.getCategoryDao();
+    private TodoDao todoDao = DaoFactory.INSTANCE.getTodoDao();
 
     @FXML
     public void initialize() {
@@ -56,29 +69,26 @@ public class TodoSceneController {
     }
 
     private void initializeUser() {
-        // TODO get real user
-        MOCKUP.USER.getName().ifPresent(name -> usernameLabel.setText(name));
+        int userId = UserSessionManager.INSTANCE.getCurrentUserSession().getUserId();
+        loggedInUser = userDao.get(userId);
+        loggedInUser.getName().ifPresent(name -> usernameLabel.setText(name));
     }
 
     private void initializeCategories() {
         this.categories = new CategoryListModel(categoryList, categoriesRippler);
-        // TODO get real categories
-        MOCKUP.CATEGORIES.forEach(category -> categories.add(category));
+        List<Category> categories = this.categoryDao.getAll(this.loggedInUser.getId());
+        categories.forEach(category -> this.categories.add(category));
     }
 
     private void initializeTodos() {
         todos = new TodoListModel(todoList);
-        // TODO get real todos
-        MOCKUP.USER.getEntries().stream()
-                .filter(entry -> entry instanceof Todo)
-                .map(entry -> (Todo) entry)
-                .forEach(todo -> todos.add(todo));
+        this.todoDao.getAll(this.loggedInUser.getId()).forEach(todo -> this.todos.add(todo));
     }
 
     @FXML
     public void refreshFilter() {
         filter = searchTextField.getText();
-        // TODO reload
+        // TODO reload for Simon
     }
 
     @FXML

@@ -1,5 +1,6 @@
 package org.chiclepad.backend;
 
+import org.chiclepad.business.DatabaseManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
