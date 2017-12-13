@@ -1,6 +1,9 @@
 package org.chiclepad.frontend.jfx.homepage;
 
+import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXMasonryPane;
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.JFXTimePicker;
 import com.jfoenix.effects.JFXDepthManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -53,6 +56,15 @@ public class NoteSceneController {
     @FXML
     private JFXMasonryPane noteMasonry;
 
+    @FXML
+    private JFXTextField descriptionField;
+
+    @FXML
+    private JFXDatePicker reminderDate;
+
+    @FXML
+    private JFXTimePicker reminderTime;
+
     private CategoryListModel categories;
 
     private NoteListModel notes;
@@ -88,14 +100,25 @@ public class NoteSceneController {
     }
 
     private void initializeNotes() {
-        notes = new NoteListModel(noteMasonry);
+        notes = new NoteListModel(noteMasonry, descriptionField, reminderDate, reminderTime);
         this.noteDao.getAll(this.loggedInUser.getId()).forEach(note -> this.notes.add(note));
     }
 
     @FXML
     public void refreshFilter() {
         filter = searchTextField.getText();
-        // TODO reload for Simon
+        notes.setNewFilter(filter);
+    }
+
+    @FXML
+    public void addNote() {
+        // TODO create using dao
+        notes.add(new Note(1, 1, "DACO"));
+    }
+
+    @FXML
+    public void deleteSelected() {
+        notes.deleteSelected();
     }
 
     @FXML

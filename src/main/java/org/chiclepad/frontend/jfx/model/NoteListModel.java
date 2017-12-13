@@ -1,30 +1,62 @@
 package org.chiclepad.frontend.jfx.model;
 
+import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXMasonryPane;
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.JFXTimePicker;
 import com.jfoenix.effects.JFXDepthManager;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import org.chiclepad.backend.entity.Note;
 import org.chiclepad.frontend.jfx.ChiclePadColor;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class NoteListModel {
+
+    private VBox selectedPostIt;
 
     private JFXMasonryPane layout;
 
-    public NoteListModel(JFXMasonryPane layout) {
+    private JFXTextField descriptionField;
+
+    private JFXDatePicker reminderDate;
+
+    private JFXTimePicker reminderTime;
+
+    public NoteListModel(
+            JFXMasonryPane layout,
+            JFXTextField descriptionField,
+            JFXDatePicker reminderDate,
+            JFXTimePicker reminderTime
+    ) {
         this.layout = layout;
+        this.descriptionField = descriptionField;
+        this.reminderDate = reminderDate;
+        this.reminderTime = reminderTime;
     }
 
     public void add(Note note) {
         VBox postIt = new VBox();
+        postIt.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+            setSelectedPostIt(postIt);
+            descriptionField.setText(note.getContent());
+            reminderDate.setValue(LocalDate.now());
+            reminderTime.setValue(LocalTime.now());
+        });
 
         setPostItStyle(note, postIt);
 
         Label bodyText = new Label(note.getContent());
+        bodyText.setMinSize(30, 30);
+        bodyText.setPrefSize(30, 30);
+        bodyText.setMaxSize(100, 100);
         bodyText.getStyleClass().addAll("normal-text");
 
         Pane divider = new Pane();
@@ -79,8 +111,16 @@ public class NoteListModel {
         }
     }
 
+    public void deleteSelected() {
+        layout.getChildren().removeIf(child -> child == selectedPostIt);
+    }
+
     public void setNewFilter(String filter) {
 
+    }
+
+    private void setSelectedPostIt(VBox selectedPostIt) {
+        this.selectedPostIt = selectedPostIt;
     }
 
 }

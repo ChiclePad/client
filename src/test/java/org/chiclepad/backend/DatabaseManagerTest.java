@@ -20,14 +20,12 @@ class DatabaseManagerTest {
     private static void initializeProperties() {
         goodProperties.setProperty("host", "localhost");
         goodProperties.setProperty("port", "5432");
-        goodProperties.setProperty("schema", "model");
         goodProperties.setProperty("database", "chiclepad");
         goodProperties.setProperty("username", "postgres");
         goodProperties.setProperty("password", "root");
 
         badProperties.setProperty("host", "0.0.0.0");
         badProperties.setProperty("port", "22");
-        badProperties.setProperty("schema", "model");
         badProperties.setProperty("database", "test");
         badProperties.setProperty("username", "root");
         badProperties.setProperty("password", "");
