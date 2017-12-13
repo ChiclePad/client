@@ -2,17 +2,27 @@ package org.chiclepad.frontend.jfx.homepage;
 
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.effects.JFXDepthManager;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import org.chiclepad.backend.Dao.*;
+import org.chiclepad.backend.entity.Category;
+import org.chiclepad.backend.entity.ChiclePadUser;
 import org.chiclepad.backend.entity.DiaryPage;
+import org.chiclepad.backend.entity.Todo;
+import org.chiclepad.business.UserSessionManager;
+import org.chiclepad.business.session.UserSession;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.MOCKUP;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 import org.chiclepad.frontend.jfx.model.DiaryListModel;
+
+import java.util.List;
 
 public class DiarySceneController {
 
@@ -42,6 +52,10 @@ public class DiarySceneController {
     private CategoryListModel categories;
 
     private String filter = "";
+    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
+    private ChiclePadUser loggedInUser;
+    private CategoryDao categoryDao = DaoFactory.INSTANCE.getCategoryDao();
+    private DiaryPageDao diaryPageDao = DaoFactory.INSTANCE.getDiaryPageDao();
 
     @FXML
     public void initialize() {
@@ -56,29 +70,26 @@ public class DiarySceneController {
     }
 
     private void initializeUser() {
-        // TODO get real user
-        MOCKUP.USER.getName().ifPresent(name -> usernameLabel.setText(name));
+        int userId = UserSessionManager.INSTANCE.getCurrentUserSession().getUserId();
+        loggedInUser = userDao.get(userId);
+        loggedInUser.getName().ifPresent(name -> usernameLabel.setText(name));
     }
 
     private void initializeCategories() {
         this.categories = new CategoryListModel(categoryList, categoriesRippler);
-        // TODO get real categories
-        MOCKUP.CATEGORIES.forEach(category -> categories.add(category));
+        List<Category> categories = this.categoryDao.getAll(this.loggedInUser.getId());
+        categories.forEach(category -> this.categories.add(category));
     }
 
     private void initializeDiaryPages() {
         diaryPages = new DiaryListModel(diaryList);
-        // TODO get real todos
-        MOCKUP.USER.getEntries().stream()
-                .filter(entry -> entry instanceof DiaryPage)
-                .map(entry -> (DiaryPage) entry)
-                .forEach(diaryPage -> diaryPages.add(diaryPage));
+        this.diaryPageDao.getAll(this.loggedInUser.getId()).forEach(diaryPage -> this.diaryPages.add(diaryPage));
     }
 
     @FXML
     public void refreshFilter() {
         filter = searchTextField.getText();
-        // TODO reload
+        // TODO reload for Simon
     }
 
     @FXML

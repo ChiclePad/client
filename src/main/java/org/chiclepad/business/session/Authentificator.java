@@ -1,12 +1,11 @@
-package org.chiclepad.backend.session;
+package org.chiclepad.business.session;
 
 import org.chiclepad.backend.Dao.ChiclePadUserDao;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.entity.ChiclePadUser;
+import org.chiclepad.business.UserSessionManager;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-
-import java.util.Locale;
 
 public enum Authentificator {
 
@@ -21,7 +20,10 @@ public enum Authentificator {
          throw new BadPasswordException();
       }
 
-      return new UserSession(user, user.getId());
+      UserSession userSession = new UserSession(user, user.getId());
+      UserSessionManager.INSTANCE.setCurrentUserSession(userSession);
+
+      return userSession;
    }
 
    public UserSession register(String email, String password)
@@ -34,8 +36,10 @@ public enum Authentificator {
       String hashedPassword = BCrypt.hashpw(password, salt);
 
       ChiclePadUser createdUser = userDao.create(email, hashedPassword);
+      UserSession userSession = new UserSession(createdUser, createdUser.getId());
+      UserSessionManager.INSTANCE.setCurrentUserSession(userSession);
 
-      return new UserSession(createdUser, createdUser.getId());
+      return userSession;
    }
 
    private boolean userExists(String email) {

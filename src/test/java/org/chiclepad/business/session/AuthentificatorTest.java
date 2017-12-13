@@ -1,4 +1,4 @@
-package org.chiclepad.backend.session;
+package org.chiclepad.business.session;
 
 import org.chiclepad.backend.Dao.ChiclePadUserDao;
 import org.chiclepad.backend.Dao.DaoFactory;

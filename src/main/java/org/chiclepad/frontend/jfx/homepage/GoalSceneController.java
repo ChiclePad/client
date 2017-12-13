@@ -8,11 +8,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.chiclepad.backend.Dao.*;
+import org.chiclepad.backend.entity.Category;
+import org.chiclepad.backend.entity.ChiclePadUser;
 import org.chiclepad.backend.entity.Goal;
+import org.chiclepad.business.UserSessionManager;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.MOCKUP;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 import org.chiclepad.frontend.jfx.model.GoalListModel;
+
+import java.util.List;
 
 public class GoalSceneController {
 
@@ -42,6 +48,10 @@ public class GoalSceneController {
     private CategoryListModel categories;
 
     private String filter = "";
+    private ChiclePadUser loggedInUser;
+    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
+    private CategoryDao categoryDao = DaoFactory.INSTANCE.getCategoryDao();
+    private GoalDao goalDao = DaoFactory.INSTANCE.getGoalDao();
 
     @FXML
     public void initialize() {
@@ -56,29 +66,26 @@ public class GoalSceneController {
     }
 
     private void initializeUser() {
-        // TODO get real user
-        MOCKUP.USER.getName().ifPresent(name -> usernameLabel.setText(name));
+        int userId = UserSessionManager.INSTANCE.getCurrentUserSession().getUserId();
+        loggedInUser = userDao.get(userId);
+        loggedInUser.getName().ifPresent(name -> usernameLabel.setText(name));
     }
 
     private void initializeCategories() {
         this.categories = new CategoryListModel(categoryList, categoriesRippler);
-        // TODO get real categories
-        MOCKUP.CATEGORIES.forEach(category -> categories.add(category));
+        List<Category> categories = this.categoryDao.getAll(this.loggedInUser.getId());
+        categories.forEach(category -> this.categories.add(category));
     }
 
     private void initializeGoals() {
         goals = new GoalListModel(goalList);
-        // TODO get real todos
-        MOCKUP.USER.getEntries().stream()
-                .filter(entry -> entry instanceof Goal)
-                .map(entry -> (Goal) entry)
-                .forEach(goal -> goals.add(goal));
+        this.goalDao.getAll(this.loggedInUser.getId()).forEach(goal -> this.goals.add(goal));
     }
 
     @FXML
     public void refreshFilter() {
         filter = searchTextField.getText();
-        // TODO reload
+        // TODO reload for Simon
     }
 
     @FXML
@@ -93,7 +100,7 @@ public class GoalSceneController {
 
     @FXML
     public void switchToTodoScene() {
-        ChiclePadApp.switchScene(new TodoSceneController(), "homepage/todoScene.fxml");
+        ChiclePadApp.switchScene(new TodoSceneController(), "homepage/goalScene.fxml");
     }
 
     @FXML

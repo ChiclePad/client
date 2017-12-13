@@ -11,9 +11,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-import org.chiclepad.backend.LocaleUtils;
-import org.chiclepad.backend.session.Authentificator;
-import org.chiclepad.backend.session.UserAlreadyExistsException;
+import org.chiclepad.backend.Dao.ChiclePadUserDao;
+import org.chiclepad.backend.Dao.DaoFactory;
+import org.chiclepad.business.LocaleUtils;
+import org.chiclepad.business.session.Authentificator;
+import org.chiclepad.business.session.UserAlreadyExistsException;
+import org.chiclepad.business.session.UserSession;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.ChiclePadColor;
 import org.chiclepad.frontend.jfx.ChiclePadDialog;
@@ -47,6 +50,8 @@ public class RegisterSceneController {
    private boolean emailValid;
 
    private boolean passwordValid;
+
+   private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
 
    @FXML
    public void initialize() {
@@ -90,9 +95,9 @@ public class RegisterSceneController {
       textField.setUnFocusColor(color);
    }
 
-   private String getSelectedLocaleCode() {
+   private Locale getSelectedLocale() {
       String readableLocale = languageComboBox.getSelectionModel().selectedItemProperty().getValue();
-      return LocaleUtils.getCodeFromReadableLocale(readableLocale);
+      return LocaleUtils.localeFromCode(LocaleUtils.getCodeFromReadableLocale(readableLocale));
    }
 
    @FXML
@@ -102,11 +107,27 @@ public class RegisterSceneController {
 
    @FXML
    public void onRegisterPressed() {
-      String selectedLocaleCode = getSelectedLocaleCode();
       try {
          Authentificator authentificator = Authentificator.INSTANCE;
-         authentificator.register(this.emailTextField.getText(), this.passwordField.getText());
+         UserSession userSession =
+               authentificator.register(this.emailTextField.getText(), this.passwordField.getText());
+
+         String name = this.nameTextField.getText();
+
+         if (name != null || this.getSelectedLocale() != null) {
+            if (name != null) {
+               userSession.getLoggedUser().setName(name);
+            }
+
+            if (this.getSelectedLocale() != null) {
+               userSession.getLoggedUser().setLocale(this.getSelectedLocale());
+            }
+
+            userDao.updateDetails(userSession.getLoggedUser());
+         }
+
          ChiclePadApp.switchScene(new HomeSceneController(), "homepage/homeScene.fxml");
+
       } catch (UserAlreadyExistsException e) {
          ChiclePadDialog.show("Registration Failed!", "Email already in use.", overlay);
       }
