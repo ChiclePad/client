@@ -6,43 +6,46 @@ import org.chiclepad.backend.entity.ChiclePadUser;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-public enum  Authentificator {
+import java.util.Locale;
 
-    INSTANCE;
+public enum Authentificator {
 
-    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
+   INSTANCE;
 
-    public UserSession logIn(String email, String password) throws BadPasswordException, EmptyResultDataAccessException {
-        ChiclePadUser user = userDao.get(email);
+   private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
 
-        if (!BCrypt.checkpw(password, user.getPassword())) {
-            throw new BadPasswordException();
-        }
+   public UserSession logIn(String email, String password) throws BadPasswordException, EmptyResultDataAccessException {
+      ChiclePadUser user = userDao.get(email);
 
-        return new UserSession(user, user.getId());
-    }
+      if (!BCrypt.checkpw(password, user.getPassword())) {
+         throw new BadPasswordException();
+      }
 
-    public UserSession register(String email, String password) throws UserAlreadyExistsException {
-        if (userExists(email)) {
-            throw new UserAlreadyExistsException();
-        }
+      return new UserSession(user, user.getId());
+   }
 
-        String salt = BCrypt.gensalt();
-        String hashedPassword = BCrypt.hashpw(password, salt);
+   public UserSession register(String email, String password)
+         throws UserAlreadyExistsException {
+      if (userExists(email)) {
+         throw new UserAlreadyExistsException();
+      }
 
-        ChiclePadUser createdUser = userDao.create(email, hashedPassword);
+      String salt = BCrypt.gensalt();
+      String hashedPassword = BCrypt.hashpw(password, salt);
 
-        return new UserSession(createdUser, createdUser.getId());
-    }
+      ChiclePadUser createdUser = userDao.create(email, hashedPassword);
 
-    private boolean userExists(String email) {
-        try {
-            userDao.get(email);
-            return true;
+      return new UserSession(createdUser, createdUser.getId());
+   }
 
-        } catch (EmptyResultDataAccessException ignored) {
-            return false;
-        }
-    }
+   private boolean userExists(String email) {
+      try {
+         userDao.get(email);
+         return true;
+
+      } catch (EmptyResultDataAccessException ignored) {
+         return false;
+      }
+   }
 
 }
