@@ -72,7 +72,7 @@ public class Goal extends Entry {
     }
 
     /**
-     * @param description New description of the goal to be acomplished every day
+     * @param description New description of the goal to be accomplished every day
      */
     public void setDescription(String description) {
         this.description = description;

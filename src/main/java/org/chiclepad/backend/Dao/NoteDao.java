@@ -88,8 +88,8 @@ public class NoteDao extends EntryDao {
 
     private Timestamp reminderTimeToTimestamp(Note note) {
         return note.getReminderTime()
-                    .map(Timestamp::valueOf)
-                    .orElse(null);
+                .map(Timestamp::valueOf)
+                .orElse(null);
     }
 
     public Note delete(Note note) {

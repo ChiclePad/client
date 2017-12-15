@@ -34,7 +34,7 @@ public class HomeSceneController {
     private TextField searchTextField;
 
     @FXML
-    private JFXListView upcommingListView;
+    private JFXListView upcomingListView;
 
     @FXML
     private JFXListView notificationsListView;

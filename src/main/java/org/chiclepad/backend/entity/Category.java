@@ -1,7 +1,7 @@
 package org.chiclepad.backend.entity;
 
 /**
- * Category of an entry, used for filtering and recogniction
+ * Category of an entry, used for filtering and recognition
  */
 public class Category {
 

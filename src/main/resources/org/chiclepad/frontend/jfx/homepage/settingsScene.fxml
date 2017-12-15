@@ -156,7 +156,7 @@
                         <Insets />
                     </opaqueInsets>
                     <children>
-                        <VBox fx:id="passwodPanel" alignment="CENTER_LEFT">
+                        <VBox fx:id="passwordPanel" alignment="CENTER_LEFT">
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>

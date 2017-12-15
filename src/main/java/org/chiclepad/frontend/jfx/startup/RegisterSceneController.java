@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
 import org.chiclepad.backend.Dao.ChiclePadUserDao;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.business.LocaleUtils;
-import org.chiclepad.business.session.Authentificator;
+import org.chiclepad.business.session.Authenticator;
 import org.chiclepad.business.session.UserAlreadyExistsException;
 import org.chiclepad.business.session.UserSession;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
@@ -54,8 +54,8 @@ public class RegisterSceneController {
     @FXML
     public void initialize() {
         initializeAdditionalStyles();
-        addEmailValiditator();
-        addPasswordValiditator();
+        addEmailValidator();
+        addPasswordValidator();
         initializeLocaleChooser();
     }
 
@@ -63,15 +63,15 @@ public class RegisterSceneController {
         JFXDepthManager.setDepth(formLayout, 3);
     }
 
-    private void addEmailValiditator() {
+    private void addEmailValidator() {
         emailTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            emailValid = EmailValiditator.INSTANCE.validEmail(newValue);
+            emailValid = EmailValidator.INSTANCE.validEmail(newValue);
             setTextFieldColor(emailTextField, emailValid ? ChiclePadColor.PRIMARY : ChiclePadColor.SECONDARY);
             registerButton.setDisable(!(passwordValid && emailValid));
         });
     }
 
-    private void addPasswordValiditator() {
+    private void addPasswordValidator() {
         passwordField.textProperty().addListener((observable, oldValue, newValue) -> {
             passwordValid = !newValue.isEmpty();
             setTextFieldColor(passwordField, passwordValid ? ChiclePadColor.PRIMARY : ChiclePadColor.SECONDARY);
@@ -107,8 +107,8 @@ public class RegisterSceneController {
     @FXML
     public void onRegisterPressed() {
         try {
-            Authentificator authentificator = Authentificator.INSTANCE;
-            UserSession userSession = authentificator.register(this.emailTextField.getText(), this.passwordField.getText());
+            Authenticator authenticator = Authenticator.INSTANCE;
+            UserSession userSession = authenticator.register(this.emailTextField.getText(), this.passwordField.getText());
 
             String name = this.nameTextField.getText();
             userSession.getLoggedUser().setName(name);

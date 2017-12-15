@@ -9,7 +9,7 @@ import java.time.LocalTime;
 public class CompletedGoal {
 
     /**
-     * Unique id of a recorded goal completition
+     * Unique id of a recorded goal competition
      */
     private final int id;
 

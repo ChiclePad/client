@@ -60,7 +60,7 @@ public class SettingsSceneController {
     public void initialize() {
         initializeAdditionalStyles();
         initializeUserName();
-        initializePasswordVerifiaction();
+        initializePasswordVerification();
         initializeLanguagePicker();
     }
 
@@ -68,7 +68,7 @@ public class SettingsSceneController {
         JFXDepthManager.setDepth(header, 1);
     }
 
-    private void initializePasswordVerifiaction() {
+    private void initializePasswordVerification() {
         passwordField.textProperty().addListener((observable, oldValue, newValue) -> {
             passwordValid = !newValue.isEmpty();
             passwordButton.setDisable(!(passwordValid && verifyPasswordValid));

@@ -8,7 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import org.chiclepad.business.session.Authentificator;
+import org.chiclepad.business.session.Authenticator;
 import org.chiclepad.business.session.BadPasswordException;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.ChiclePadColor;
@@ -40,23 +40,23 @@ public class LoginSceneController {
     @FXML
     public void initialize() {
         initializeAdditionalStyles();
-        addEmailValiditator();
-        addPasswordValiditator();
+        addEmailValidator();
+        addPasswordValidator();
     }
 
     private void initializeAdditionalStyles() {
         JFXDepthManager.setDepth(formLayout, 3);
     }
 
-    private void addEmailValiditator() {
+    private void addEmailValidator() {
         emailTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            emailValid = EmailValiditator.INSTANCE.validEmail(newValue);
+            emailValid = EmailValidator.INSTANCE.validEmail(newValue);
             setTextFieldColor(emailTextField, emailValid ? ChiclePadColor.PRIMARY : ChiclePadColor.SECONDARY);
             loginButton.setDisable(!(passwordValid && emailValid));
         });
     }
 
-    private void addPasswordValiditator() {
+    private void addPasswordValidator() {
         passwordField.textProperty().addListener((observable, oldValue, newValue) -> {
             passwordValid = !newValue.isEmpty();
             setTextFieldColor(passwordField, passwordValid ? ChiclePadColor.PRIMARY : ChiclePadColor.SECONDARY);
@@ -81,9 +81,9 @@ public class LoginSceneController {
 
     @FXML
     public void onLoginPressed() {
-        Authentificator authentificator = Authentificator.INSTANCE;
+        Authenticator authenticator = Authenticator.INSTANCE;
         try {
-            authentificator.logIn(this.emailTextField.getText(), this.passwordField.getText());
+            authenticator.logIn(this.emailTextField.getText(), this.passwordField.getText());
             ChiclePadApp.switchScene(new HomeSceneController(), "homepage/homeScene.fxml");
 
         } catch (BadPasswordException e1) {

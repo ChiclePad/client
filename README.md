@@ -70,7 +70,7 @@ password=root
 1. Fork the repository
 2. Create new branch `$ git chceckout -b my_new_branch`
 3. Commit your changes `$ git add *` `$ git commit`
-4. Make sure you're up to date `$ git pull -r upstream devel` (where upstream is the main repoitory)
+4. Make sure you're up to date `$ git pull -r upstream devel` (where upstream is the main repository)
 5. Upload to your fork `$ git push -u origin my_new_branch`
 6. Submit a Pull Request
 

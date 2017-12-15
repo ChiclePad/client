@@ -22,9 +22,9 @@ public class TodoListModel {
         items = FXCollections.observableArrayList();
         this.todoList = todoList;
 
-        JFXTreeTableColumn<TodoTreeItem, String> desctiptionColumn = new JFXTreeTableColumn<>("Description");
-        desctiptionColumn.setPrefWidth(400);
-        desctiptionColumn.setCellValueFactory(cellDataFeatures -> {
+        JFXTreeTableColumn<TodoTreeItem, String> descriptionColumn = new JFXTreeTableColumn<>("Description");
+        descriptionColumn.setPrefWidth(400);
+        descriptionColumn.setCellValueFactory(cellDataFeatures -> {
             return cellDataFeatures.getValue().getValue().description;
         });
 
@@ -49,15 +49,15 @@ public class TodoListModel {
                     .setDescription(t.getNewValue());
         });
 
-        desctiptionColumn.setCellFactory(param -> new GenericEditableTreeTableCell<>(new TextFieldEditorBuilder()));
-        desctiptionColumn.setOnEditCommit(t -> {
+        descriptionColumn.setCellFactory(param -> new GenericEditableTreeTableCell<>(new TextFieldEditorBuilder()));
+        descriptionColumn.setOnEditCommit(t -> {
             t.getTreeTableView().getTreeItem(t.getTreeTablePosition().getRow()).getValue().todo
                     .setPriority(Integer.parseInt(t.getNewValue()));
         });
 
         final TreeItem<TodoTreeItem> root = new RecursiveTreeItem<TodoTreeItem>(items, RecursiveTreeObject::getChildren);
         todoList.setRoot(root);
-        todoList.getColumns().setAll(desctiptionColumn, deadlineColumn, softDeadlineColumn, priorityColumn);
+        todoList.getColumns().setAll(descriptionColumn, deadlineColumn, softDeadlineColumn, priorityColumn);
     }
 
     public void add(Todo todo) {

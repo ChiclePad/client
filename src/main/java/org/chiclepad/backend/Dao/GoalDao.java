@@ -68,7 +68,7 @@ public class GoalDao extends EntryDao {
         return new Goal(entryId, id, description);
     }
 
-    public CompletedGoal createCopletedGoal(int goalId) throws DuplicateKeyException {
+    public CompletedGoal createCompletedGoal(int goalId) throws DuplicateKeyException {
         LocalTime time = LocalTime.now();
         LocalDate date = LocalDate.now();
 
