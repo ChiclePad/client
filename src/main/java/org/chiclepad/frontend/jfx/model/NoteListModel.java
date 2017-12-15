@@ -14,10 +14,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.chiclepad.backend.Dao.DaoFactory;
+import org.chiclepad.backend.Dao.NoteDao;
 import org.chiclepad.backend.entity.Note;
 import org.chiclepad.frontend.jfx.ChiclePadColor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +41,8 @@ public class NoteListModel {
 
     private JFXTimePicker reminderTime;
 
+    private NoteDao noteDao;
+
     public NoteListModel(
             JFXMasonryPane layout,
             JFXTextField descriptionField,
@@ -49,6 +54,7 @@ public class NoteListModel {
         this.descriptionField = descriptionField;
         this.reminderDate = reminderDate;
         this.reminderTime = reminderTime;
+        this.noteDao = DaoFactory.INSTANCE.getNoteDao();
     }
 
     public void add(Note addedNote) {
@@ -60,81 +66,127 @@ public class NoteListModel {
         VBox postIt = new VBox();
         stylePostIt(addedNote, postIt);
 
-        postIt.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
-            deselectPreviousPostIt();
-            selectNewPostIt(addedNote, postIt);
-
-            descriptionField.setText(addedNote.getContent());
-            descriptionField.textProperty().addListener(((observable, oldValue, newValue) -> {
-
-            }));
-
-            descriptionField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-
-            });
-
-            reminderDate.setValue(LocalDate.now());
-            reminderDate.valueProperty().addListener((observable, oldValue, newValue) -> {
-
-            });
-            reminderDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-
-            });
-
-            reminderTime.setValue(LocalTime.now());
-            reminderTime.valueProperty().addListener((observable, oldValue, newValue) -> {
-
-            });
-            reminderTime.focusedProperty().addListener((observable, oldValue, newValue) -> {
-
-            });
-        });
+        postIt.addEventFilter(MouseEvent.MOUSE_PRESSED, selectNote(addedNote, postIt));
 
         Label bodyText = new Label(addedNote.getContent());
         styleText(bodyText);
 
         postIt.getChildren().add(bodyText);
+
         layout.getChildren().add(postIt);
     }
 
+    private EventHandler<MouseEvent> selectNote(Note selectedNote, VBox postIt) {
+        return event -> {
+            deselectPreviousPostIt();
+            selectNewPostIt(selectedNote, postIt);
+
+            setDescriptionTextField();
+            setReminderTimeFields();
+        };
+    }
+
+    private void deselectPreviousPostIt() {
+        if (selectedPostIt == null) {
+            return;
+        }
+
+        noteDao.update(selectedNote);
+
+        selectedPostIt.getStyleClass().removeIf(cssClass -> cssClass.equals("bordered"));
+        JFXDepthManager.setDepth(selectedPostIt, 1);
+    }
+
     private void selectNewPostIt(Note addedNote, VBox postIt) {
-        setSelectedPostIt(postIt);
-        setSelectedNote(addedNote);
+        this.selectedPostIt = postIt;
+        this.selectedNote = addedNote;
+
+        setSelectedStyles();
+    }
+
+    private void setSelectedStyles() {
         selectedPostIt.getStyleClass().add("bordered");
         JFXDepthManager.setDepth(selectedPostIt, 2);
     }
 
-    private void deselectPreviousPostIt() {
-        if (selectedPostIt != null) {
-            selectedPostIt.getStyleClass().removeIf(cssClass -> cssClass.equals("bordered"));
-            JFXDepthManager.setDepth(selectedPostIt, 1);
-        }
+    private void setDescriptionTextField() {
+        descriptionField.setText(selectedNote.getContent());
+        descriptionField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            selectedNote.setContent(newValue);
+
+            Label label = (Label) selectedPostIt.getChildren().get(0);
+            label.setText(newValue);
+        }));
+
+        descriptionField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            noteDao.update(this.selectedNote);
+        });
+    }
+
+    private void setReminderTimeFields() {
+        selectedNote.getReminderTime().ifPresent(time -> {
+            reminderDate.setValue(time.toLocalDate());
+            reminderTime.setValue(time.toLocalTime());
+        });
+
+        setReminderDateField();
+        setReminderTimeField();
+    }
+
+    private void setReminderDateField() {
+        reminderDate.valueProperty().addListener((observable, oldValue, newValue) -> {
+            LocalTime localTime = selectedNote.getReminderTime()
+                    .map(LocalDateTime::toLocalTime)
+                    .orElse(LocalTime.now());
+
+            LocalDateTime newReminderDate = LocalDateTime.of(newValue, localTime);
+            selectedNote.setReminderTime(newReminderDate);
+        });
+
+        reminderDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            noteDao.update(selectedNote);
+        });
+    }
+
+    private void setReminderTimeField() {
+        reminderTime.valueProperty().addListener((observable, oldValue, newValue) -> {
+            LocalDate localDate = selectedNote.getReminderTime()
+                    .map(LocalDateTime::toLocalDate)
+                    .orElse(LocalDate.now());
+
+            LocalDateTime newReminderTime = LocalDateTime.of(localDate, newValue);
+            selectedNote.setReminderTime(newReminderTime);
+        });
+
+        reminderTime.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            noteDao.update(selectedNote);
+        });
     }
 
     private void styleText(Label bodyText) {
         bodyText.setWrapText(true);
-        bodyText.setAlignment(Pos.CENTER_LEFT);
         VBox.setVgrow(bodyText, Priority.ALWAYS);
         bodyText.getStyleClass().addAll("normal-text");
     }
 
     private void stylePostIt(Note addedNote, VBox postIt) {
         JFXDepthManager.setDepth(postIt, 1);
-        postIt.setAlignment(Pos.CENTER_RIGHT);
+        postIt.setMinSize(113, 70);
+        postIt.setPrefSize(113, 70);
+        postIt.setMaxSize(113, 70);
+
+        postIt.setPadding(new Insets(15, 15, 15, 15));
+
         postIt.getStyleClass().addAll("form");
         postIt.setStyle("-fx-background-color: " + categoryColorOfNote(addedNote));
-        postIt.setPadding(new Insets(15, 15, 15, 15));
-        postIt.setMinSize(110, 65);
-        postIt.setPrefSize(115, 70);
-        postIt.setMaxSize(120, 75);
+        postIt.setAlignment(Pos.CENTER_LEFT);
 
         setHighlightOnHover(addedNote, postIt);
     }
 
     private void setHighlightOnHover(Note addedNote, VBox postIt) {
         postIt.setOnMouseEntered(event -> {
-            System.out.println(darken(categoryColorOfNote(addedNote), 0.9));
-            postIt.setStyle("-fx-background-color: " + darken(categoryColorOfNote(addedNote), 0.9));
+            postIt.setStyle("-fx-background-color: " + darken(categoryColorOfNote(addedNote), 0.95));
         });
 
         postIt.setOnMouseExited(event -> {
@@ -149,7 +201,7 @@ public class NoteListModel {
         double b = color.getBlue();
         double g = color.getGreen();
 
-        return String.format("#%02x%02x%02x", (int) (r * amount), (int) (g * amount), (int) (b * amount));
+        return String.format("#%02x%02x%02x", (int) (r * amount * 255), (int) (g * amount * 255), (int) (b * amount * 255));
     }
 
     public Note deleteSelected() {
@@ -158,7 +210,7 @@ public class NoteListModel {
         return selectedNote;
     }
 
-    public void setNewFilter(String filter) {
+    public synchronized void setNewFilter(String filter) {
         layout.getChildren().clear();
         notes.stream()
                 .filter(note -> fitsFilter(note, filter))
@@ -168,14 +220,6 @@ public class NoteListModel {
     private boolean fitsFilter(Note note, String filter) {
         return note.getContent().contains(filter) ||
                 note.getReminderTime().map(time -> time.toString().contains(filter)).orElse(false);
-    }
-
-    private void setSelectedPostIt(VBox selectedPostIt) {
-        this.selectedPostIt = selectedPostIt;
-    }
-
-    private void setSelectedNote(Note selectedNote) {
-        this.selectedNote = selectedNote;
     }
 
     private String categoryNameOfNote(Note note) {

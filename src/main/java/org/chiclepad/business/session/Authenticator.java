@@ -32,14 +32,18 @@ public enum Authenticator {
             throw new UserAlreadyExistsException();
         }
 
-        String salt = BCrypt.gensalt();
-        String hashedPassword = BCrypt.hashpw(password, salt);
+        String hashedPassword = hashPassword(password);
 
         ChiclePadUser createdUser = userDao.create(email, hashedPassword);
         UserSession userSession = new UserSession(createdUser, createdUser.getId());
         UserSessionManager.INSTANCE.setCurrentUserSession(userSession);
 
         return userSession;
+    }
+
+    public String hashPassword(String plainText) {
+        String salt = BCrypt.gensalt();
+        return BCrypt.hashpw(plainText, salt);
     }
 
     private boolean userExists(String email) {

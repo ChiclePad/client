@@ -39,9 +39,11 @@ class NoteDaoTest {
         Note note1 = dao.create(user1.getId(), "test1", LocalDateTime.now());
         Note note2 = dao.create(user1.getId(), "test2", LocalDateTime.now());
         Note note3 = dao.create(user2.getId(), "test3", LocalDateTime.now().plusDays(3));
+        Note note4 = dao.create(user2.getId(), "test4");
+        Note note5 = dao.create(user2.getId(), "test5");
 
         assertThat(dao.getAll(user1.getId())).containsExactlyInAnyOrder(note1, note2);
-        assertThat(dao.getAll(user2.getId())).containsExactlyInAnyOrder(note3);
+        assertThat(dao.getAll(user2.getId())).containsExactlyInAnyOrder(note3, note4, note5);
     }
 
     @Test

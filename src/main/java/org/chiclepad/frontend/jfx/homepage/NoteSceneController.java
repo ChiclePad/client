@@ -24,7 +24,6 @@ import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 import org.chiclepad.frontend.jfx.model.NoteListModel;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class NoteSceneController {
@@ -116,7 +115,7 @@ public class NoteSceneController {
 
     @FXML
     public void addNote() {
-        Note created = noteDao.create(loggedInUser.getId(), "", LocalDateTime.now().minusDays(1));
+        Note created = noteDao.create(loggedInUser.getId(), "");
         notes.add(created);
     }
 
