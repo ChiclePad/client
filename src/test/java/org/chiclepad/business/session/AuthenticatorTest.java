@@ -10,38 +10,38 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import static org.assertj.core.api.Assertions.*;
 
 
-class AuthentificatorTest {
+class AuthenticatorTest {
 
     private static ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
 
     @BeforeEach
     void createUser() {
         userDao.deleteAll();
-        Authentificator.INSTANCE.register("alan@turing.com", "root");
-        Authentificator.INSTANCE.register("dijkstra@paths.com", "root");
+        Authenticator.INSTANCE.register("alan@turing.com", "root");
+        Authenticator.INSTANCE.register("dijkstra@paths.com", "root");
     }
 
     @Test
     void logIn() {
-        assertThatThrownBy(() -> Authentificator.INSTANCE.logIn("alan@turing.com", "test"))
+        assertThatThrownBy(() -> Authenticator.INSTANCE.logIn("alan@turing.com", "test"))
                 .isInstanceOf(BadPasswordException.class);
-        assertThatThrownBy(() -> Authentificator.INSTANCE.logIn("alan@turing223123.com", "test"))
+        assertThatThrownBy(() -> Authenticator.INSTANCE.logIn("alan@turing223123.com", "test"))
                 .isInstanceOf(EmptyResultDataAccessException.class);
 
-        assertThatCode(() -> Authentificator.INSTANCE.logIn("alan@turing.com", "root"))
+        assertThatCode(() -> Authenticator.INSTANCE.logIn("alan@turing.com", "root"))
                 .doesNotThrowAnyException();
 
-        assertThat(Authentificator.INSTANCE.logIn("alan@turing.com", "root")).isNotNull();
+        assertThat(Authenticator.INSTANCE.logIn("alan@turing.com", "root")).isNotNull();
     }
 
     @Test
     void register() {
-        assertThatThrownBy(() -> Authentificator.INSTANCE.register("alan@turing.com", "test"))
+        assertThatThrownBy(() -> Authenticator.INSTANCE.register("alan@turing.com", "test"))
                 .isInstanceOf(UserAlreadyExistsException.class);
-        assertThatCode(() -> Authentificator.INSTANCE.register("alan@turing223123.com", "test"))
+        assertThatCode(() -> Authenticator.INSTANCE.register("alan@turing223123.com", "test"))
                 .doesNotThrowAnyException();
 
-        assertThat(Authentificator.INSTANCE.register("alan12@turing.com", "root")).isNotNull();
+        assertThat(Authenticator.INSTANCE.register("alan12@turing.com", "root")).isNotNull();
     }
 
     @AfterAll

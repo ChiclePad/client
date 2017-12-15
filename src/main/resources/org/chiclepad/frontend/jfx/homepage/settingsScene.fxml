@@ -156,7 +156,7 @@
                         <Insets />
                     </opaqueInsets>
                     <children>
-                        <VBox fx:id="passwodPanel" alignment="CENTER_LEFT">
+                        <VBox fx:id="passwordPanel" alignment="CENTER_LEFT">
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>
@@ -265,7 +265,9 @@
                         </VBox>
                     </children>
                 </VBox>
-                <StackPane fx:id="stackPane" layoutX="-31.0" layoutY="30.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                <StackPane fx:id="dialogArea" layoutX="-31.0" layoutY="30.0" visible="false"
+                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                           AnchorPane.topAnchor="0.0"/>
             </children>
         </AnchorPane>
         <BorderPane fx:id="header" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

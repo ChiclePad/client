@@ -16,10 +16,10 @@ import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.entity.ChiclePadUser;
 import org.chiclepad.business.LocaleUtils;
 import org.chiclepad.business.UserSessionManager;
+import org.chiclepad.business.session.Authenticator;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.ChiclePadColor;
 import org.chiclepad.frontend.jfx.ChiclePadDialog;
-import org.chiclepad.frontend.jfx.MOCKUP;
 
 public class SettingsSceneController {
 
@@ -53,14 +53,16 @@ public class SettingsSceneController {
     private boolean passwordValid;
 
     private boolean verifyPasswordValid;
+
     private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
+
     private ChiclePadUser loggedInUser;
 
     @FXML
     public void initialize() {
         initializeAdditionalStyles();
         initializeUserName();
-        initializePasswordVerifiaction();
+        initializePasswordVerification();
         initializeLanguagePicker();
     }
 
@@ -68,9 +70,13 @@ public class SettingsSceneController {
         JFXDepthManager.setDepth(header, 1);
     }
 
-    private void initializePasswordVerifiaction() {
+    private void initializePasswordVerification() {
         passwordField.textProperty().addListener((observable, oldValue, newValue) -> {
             passwordValid = !newValue.isEmpty();
+
+            verifyPasswordValid = !newValue.isEmpty() && newValue.equals(passwordField.getText());
+            setTextFieldColor(verifyPasswordField, verifyPasswordValid ? ChiclePadColor.PRIMARY : ChiclePadColor.SECONDARY);
+
             passwordButton.setDisable(!(passwordValid && verifyPasswordValid));
         });
 
@@ -107,6 +113,11 @@ public class SettingsSceneController {
             this.loggedInUser.setLocale(LocaleUtils.localeFromCode(localeCode));
             this.userDao.updateDetails(this.loggedInUser);
         });
+
+        loggedInUser.getLocale().ifPresent(locale -> {
+            int index = LocaleUtils.getAllLocals().indexOf(locale);
+            languageComboBox.getSelectionModel().select(index);
+        });
     }
 
     private void setTextFieldColor(JFXPasswordField textField, Color color) {
@@ -117,14 +128,16 @@ public class SettingsSceneController {
     @FXML
     public void changePassword() {
         String newPassword = this.passwordField.getText();
-        MOCKUP.USER.setPassword(newPassword);
-        this.loggedInUser.setPassword(newPassword);
+        String newHashedPassword = Authenticator.INSTANCE.hashPassword(newPassword);
+        this.loggedInUser.setPassword(newHashedPassword);
 
         try {
             this.userDao.updatePassword(loggedInUser);
             ChiclePadDialog.show("Success!", "Password changed", dialogArea);
+
             passwordField.setText("");
             verifyPasswordField.setText("");
+
         } catch (Exception e) {
             ChiclePadDialog.show("Error!", "Password failed to change", dialogArea);
         }

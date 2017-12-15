@@ -90,7 +90,7 @@ public class CategoryListModel {
     private void styleCategoryLine(HBox line) {
         line.setSpacing(15);
         line.setPadding(new Insets(10, 10, 10, 40));
-        line.getStyleClass().addAll("highlited", "grey-dark-background", "grey-dark-background-hover");
+        line.getStyleClass().addAll("highlighted", "grey-dark-background", "grey-dark-background-hover");
     }
 
 

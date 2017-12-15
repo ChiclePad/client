@@ -17,10 +17,11 @@ import org.chiclepad.backend.entity.ChiclePadUser;
 import org.chiclepad.backend.entity.Todo;
 import org.chiclepad.business.UserSessionManager;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
-import org.chiclepad.frontend.jfx.MOCKUP;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 import org.chiclepad.frontend.jfx.model.TodoListModel;
+import org.chiclepad.frontend.jfx.model.TodoTreeItem;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class TodoSceneController {
@@ -38,7 +39,7 @@ public class TodoSceneController {
     private TextField searchTextField;
 
     @FXML
-    private JFXTreeTableView todoList;
+    private JFXTreeTableView<TodoTreeItem> todoList;
 
     @FXML
     private VBox categoryList;
@@ -93,7 +94,7 @@ public class TodoSceneController {
 
     @FXML
     public void addTodo() {
-        todos.add();
+        todos.add(new Todo(1, 1, "", LocalDateTime.now().plusDays(20), 0));
     }
 
     @FXML

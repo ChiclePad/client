@@ -16,7 +16,7 @@ public class ChiclePadDialog {
      */
     public static void show(String header, String body, StackPane parent) {
         JFXDialogLayout dialogLayout = new JFXDialogLayout();
-        setHeaderTexxt(header, dialogLayout);
+        setHeaderText(header, dialogLayout);
         setBodyText(body, dialogLayout);
 
         JFXDialog dialog = new JFXDialog(parent, dialogLayout, JFXDialog.DialogTransition.CENTER, true);
@@ -41,7 +41,7 @@ public class ChiclePadDialog {
         dialogLayout.setBody(bodyText);
     }
 
-    private static void setHeaderTexxt(String header, JFXDialogLayout dialogLayout) {
+    private static void setHeaderText(String header, JFXDialogLayout dialogLayout) {
         Text headerText = new Text(header);
         headerText.getStyleClass().addAll("text", "large-text", "red-text");
         dialogLayout.setHeading(headerText);

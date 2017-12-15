@@ -1,6 +1,9 @@
 package org.chiclepad.frontend.jfx.homepage;
 
+import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXMasonryPane;
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.JFXTimePicker;
 import com.jfoenix.effects.JFXDepthManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -18,7 +21,6 @@ import org.chiclepad.backend.entity.ChiclePadUser;
 import org.chiclepad.backend.entity.Note;
 import org.chiclepad.business.UserSessionManager;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
-import org.chiclepad.frontend.jfx.MOCKUP;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 import org.chiclepad.frontend.jfx.model.NoteListModel;
 
@@ -53,14 +55,27 @@ public class NoteSceneController {
     @FXML
     private JFXMasonryPane noteMasonry;
 
+    @FXML
+    private JFXTextField descriptionField;
+
+    @FXML
+    private JFXDatePicker reminderDate;
+
+    @FXML
+    private JFXTimePicker reminderTime;
+
     private CategoryListModel categories;
 
     private NoteListModel notes;
 
     private String filter = "";
-    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
+
     private ChiclePadUser loggedInUser;
+
+    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
+
     private CategoryDao categoryDao = DaoFactory.INSTANCE.getCategoryDao();
+
     private NoteDao noteDao = DaoFactory.INSTANCE.getNoteDao();
 
     @FXML
@@ -88,14 +103,26 @@ public class NoteSceneController {
     }
 
     private void initializeNotes() {
-        notes = new NoteListModel(noteMasonry);
+        notes = new NoteListModel(noteMasonry, descriptionField, reminderDate, reminderTime);
         this.noteDao.getAll(this.loggedInUser.getId()).forEach(note -> this.notes.add(note));
     }
 
     @FXML
     public void refreshFilter() {
         filter = searchTextField.getText();
-        // TODO reload for Simon
+        notes.setNewFilter(filter);
+    }
+
+    @FXML
+    public void addNote() {
+        Note created = noteDao.create(loggedInUser.getId(), "");
+        notes.add(created);
+    }
+
+    @FXML
+    public void deleteSelected() {
+        Note deleted = notes.deleteSelected();
+        noteDao.delete(deleted);
     }
 
     @FXML

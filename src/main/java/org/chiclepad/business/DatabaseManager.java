@@ -83,7 +83,7 @@ public enum DatabaseManager {
 
     /**
      * @return Connection to database
-     * @throws RuntimeException Connection doesnt't exist or error ocurred checking if it was closed
+     * @throws RuntimeException Connection doesn't exist or error occurred checking if it was closed
      */
     public JdbcTemplate getConnection() throws RuntimeException {
         if (jdbcTemplate == null) {

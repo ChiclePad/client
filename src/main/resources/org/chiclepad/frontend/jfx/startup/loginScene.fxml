@@ -3,13 +3,17 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXTextField?>
-<?import javafx.geometry.*?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
 <AnchorPane fx:id="root" prefHeight="800.0" prefWidth="1280.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <HBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -66,7 +70,7 @@
                                     <String fx:value="large-text" />
                                 </styleClass>
                             </JFXPasswordField>
-                            <JFXButton fx:id="loginButton" defaultButton="true" disable="true" onMousePressed="#onLoginPressed" prefWidth="400.0" ripplerFill="BLACK" text="Login">
+                            <JFXButton fx:id="loginButton" defaultButton="true" disable="true" onAction="#onLoginPressed" prefWidth="400.0" ripplerFill="BLACK" text="Login">
                                 <font>
                                     <Font size="22.0" />
                                 </font>

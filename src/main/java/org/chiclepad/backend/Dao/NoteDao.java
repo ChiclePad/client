@@ -13,7 +13,11 @@ import java.util.List;
 
 public class NoteDao extends EntryDao {
 
-    private final String CREATE_NOTE_SQL = "INSERT INTO note(entry_id, content, reminder_time) " +
+    private final String CREATE_NOTE_SQL = "INSERT INTO note(entry_id, content) " +
+            "VALUES (?, ?) " +
+            "RETURNING id;";
+
+    private final String CREATE_NOTE_WITH_REMINDER_SQL = "INSERT INTO note(entry_id, content, reminder_time) " +
             "VALUES (?, ?, ?) " +
             "RETURNING id;";
 
@@ -45,10 +49,21 @@ public class NoteDao extends EntryDao {
         super(jdbcTemplate);
     }
 
-    public Note create(int userId, String content, LocalDateTime reminderTime) throws DuplicateKeyException {
+    public Note create(int userId, String content) throws DuplicateKeyException {
         int entryId = super.create(userId);
         int id = jdbcTemplate.queryForObject(
                 CREATE_NOTE_SQL,
+                new Object[]{entryId, content},
+                Integer.class
+        );
+
+        return new Note(entryId, id, content);
+    }
+
+    public Note create(int userId, String content, LocalDateTime reminderTime) throws DuplicateKeyException {
+        int entryId = super.create(userId);
+        int id = jdbcTemplate.queryForObject(
+                CREATE_NOTE_WITH_REMINDER_SQL,
                 new Object[]{entryId, content, Timestamp.valueOf(reminderTime)},
                 Integer.class
         );
@@ -88,8 +103,8 @@ public class NoteDao extends EntryDao {
 
     private Timestamp reminderTimeToTimestamp(Note note) {
         return note.getReminderTime()
-                    .map(Timestamp::valueOf)
-                    .orElse(null);
+                .map(Timestamp::valueOf)
+                .orElse(null);
     }
 
     public Note delete(Note note) {
@@ -105,10 +120,10 @@ public class NoteDao extends EntryDao {
         int noteId = resultSet.getInt("id");
         int entryId = resultSet.getInt("entry_id");
         String content = resultSet.getString("content");
-        LocalDateTime reminderTime = resultSet.getTimestamp("reminder_time").toLocalDateTime();
+        Timestamp reminderTime = resultSet.getTimestamp("reminder_time");
 
         if (reminderTime != null) {
-            return new Note(entryId, noteId, content, reminderTime);
+            return new Note(entryId, noteId, content, reminderTime.toLocalDateTime());
         } else {
             return new Note(entryId, noteId, content);
         }

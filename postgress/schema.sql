@@ -1,4 +1,4 @@
--- User authentification data
+-- User authentication data
 CREATE TABLE chiclepad_user (
   id       SERIAL PRIMARY KEY,
   email    VARCHAR(150) NOT NULL, -- unique will not do, as emails don't depend on casing
@@ -44,7 +44,7 @@ CREATE TABLE goal (
   description VARCHAR(500) NOT NULL
 );
 
--- Goal finished succesfully for the day ("exercised today")
+-- Goal finished successfully for the day ("exercised today")
 CREATE TABLE completed_goal (
   id SERIAL PRIMARY KEY,
   goal_id INT REFERENCES goal ON DELETE CASCADE,
