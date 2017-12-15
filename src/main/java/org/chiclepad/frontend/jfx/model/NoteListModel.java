@@ -7,22 +7,29 @@ import com.jfoenix.controls.JFXTimePicker;
 import com.jfoenix.effects.JFXDepthManager;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.chiclepad.backend.entity.Note;
 import org.chiclepad.frontend.jfx.ChiclePadColor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NoteListModel {
 
-    private VBox selectedPostIt;
+    private List<Note> notes;
 
     private JFXMasonryPane layout;
+
+    private VBox selectedPostIt;
+
+    private Note selectedNote;
 
     private JFXTextField descriptionField;
 
@@ -36,63 +43,84 @@ public class NoteListModel {
             JFXDatePicker reminderDate,
             JFXTimePicker reminderTime
     ) {
+        this.notes = new ArrayList<>();
         this.layout = layout;
         this.descriptionField = descriptionField;
         this.reminderDate = reminderDate;
         this.reminderTime = reminderTime;
     }
 
-    public void add(Note note) {
+    public void add(Note addedNote) {
+        notes.add(addedNote);
+
         VBox postIt = new VBox();
+        JFXDepthManager.setDepth(postIt, 1);
+        postIt.setAlignment(Pos.CENTER_RIGHT);
+        postIt.getStyleClass().addAll("form");
+        postIt.setStyle("-fx-background-color: " + categoryColorOfNote(addedNote));
+        postIt.setPadding(new Insets(15, 15, 15, 15));
+        postIt.setMinSize(110, 65);
+        postIt.setPrefSize(115, 70);
+        postIt.setMaxSize(120, 75);
+
         postIt.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+            if (selectedPostIt != null) {
+                selectedPostIt.getStyleClass().removeIf(cssClass -> cssClass.equals("bordered"));
+            }
+
             setSelectedPostIt(postIt);
-            descriptionField.setText(note.getContent());
+            setSelectedNote(addedNote);
+            selectedPostIt.getStyleClass().add("bordered");
+
+            descriptionField.setText(addedNote.getContent());
             reminderDate.setValue(LocalDate.now());
             reminderTime.setValue(LocalTime.now());
         });
 
-        setPostItStyle(note, postIt);
-
-        Label bodyText = new Label(note.getContent());
-        bodyText.setMinSize(30, 30);
-        bodyText.setPrefSize(30, 30);
-        bodyText.setMaxSize(100, 100);
+        Label bodyText = new Label(addedNote.getContent());
+        bodyText.setWrapText(true);
+        bodyText.setAlignment(Pos.CENTER_LEFT);
+        VBox.setVgrow(bodyText, Priority.ALWAYS);
         bodyText.getStyleClass().addAll("normal-text");
 
-        Pane divider = new Pane();
-        divider.minHeight(1.5);
-        divider.prefHeight(1.5);
-        divider.maxHeight(1.5);
-        divider.setPrefWidth(100);
-        divider.getStyleClass().add("grey-dark-background");
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER_RIGHT);
+        hBox.setSpacing(10);
 
-        HBox category = new HBox();
-        FontAwesomeIcon icon = new FontAwesomeIcon();
-        icon.setIconName(categoryIconOfNote(note));
+        FontAwesomeIcon edit = new FontAwesomeIcon();
+        FontAwesomeIcon delete = new FontAwesomeIcon();
 
-        Label name = new Label(categoryNameOfNote(note));
-        name.getStyleClass().addAll("small-text");
+        hBox.getChildren().addAll(edit, delete);
 
-        category.getChildren().addAll(icon, name);
-
-        postIt.getChildren().addAll(bodyText, divider, category);
+        postIt.getChildren().addAll(bodyText, hBox);
 
         layout.getChildren().add(postIt);
     }
 
-    private void setPostItStyle(Note note, VBox postIt) {
-        JFXDepthManager.setDepth(postIt, 1);
-        postIt.getStyleClass().addAll("form");
-        postIt.setStyle("-fx-background-color: " + categoryColorOfNote(note));
-        postIt.setPadding(new Insets(10, 10, 10, 10));
+    public Note deleteSelected() {
+        layout.getChildren().removeIf(child -> child == selectedPostIt);
+        notes.remove(selectedNote);
+        return selectedNote;
     }
 
-    private String categoryIconOfNote(Note note) {
-        if (!note.getCategories().isEmpty()) {
-            return note.getCategories().get(0).getIcon();
-        } else {
-            return "CIRCLE";
-        }
+    public void setNewFilter(String filter) {
+        layout.getChildren().clear();
+        notes.stream()
+                .filter(note -> fitsFilter(note, filter))
+                .forEach(this::add);
+    }
+
+    private boolean fitsFilter(Note note, String filter) {
+        return note.getContent().contains(filter) ||
+                note.getReminderTime().map(time -> time.toString().contains(filter)).orElse(false);
+    }
+
+    private void setSelectedPostIt(VBox selectedPostIt) {
+        this.selectedPostIt = selectedPostIt;
+    }
+
+    private void setSelectedNote(Note selectedNote) {
+        this.selectedNote = selectedNote;
     }
 
     private String categoryNameOfNote(Note note) {
@@ -111,16 +139,12 @@ public class NoteListModel {
         }
     }
 
-    public void deleteSelected() {
-        layout.getChildren().removeIf(child -> child == selectedPostIt);
-    }
-
-    public void setNewFilter(String filter) {
-
-    }
-
-    private void setSelectedPostIt(VBox selectedPostIt) {
-        this.selectedPostIt = selectedPostIt;
+    private String categoryIconOfNote(Note note) {
+        if (!note.getCategories().isEmpty()) {
+            return note.getCategories().get(0).getIcon();
+        } else {
+            return "CIRCLE";
+        }
     }
 
 }

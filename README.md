@@ -41,8 +41,10 @@ $ sudo -u postgres psql
 
 postgres=# CREATE DATABASE chiclepad;
 postgres=# \connect chiclepad
+chiclepad=# CREATE SCHEMA public;
+chiclepad=# ALTER SCHEMA public OWNER to postgres;
 ```
-Execute `schema.sql` script from `/backend/postgress` folder to initialize the newly created schema.
+Execute `schema.sql` script from `/backend/postgress` folder to initialize the schema.
 ```
 chiclepad=# \q
 ```

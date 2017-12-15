@@ -85,6 +85,7 @@ public class LoginSceneController {
         try {
             authentificator.logIn(this.emailTextField.getText(), this.passwordField.getText());
             ChiclePadApp.switchScene(new HomeSceneController(), "homepage/homeScene.fxml");
+
         } catch (BadPasswordException e1) {
             ChiclePadDialog.show("Login Failed!", "Bad password entered.", overlay);
 

@@ -6,7 +6,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import org.chiclepad.frontend.jfx.homepage.TodoSceneController;
 import org.chiclepad.frontend.jfx.startup.LoginSceneController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +25,6 @@ public class ChiclePadApp extends Application {
         primaryStage.setScene(scene);
         configurePrimaryStage(primaryStage);
         primaryStage.show();
-
-        switchScene(new TodoSceneController(), "homepage/todoScene.fxml");
     }
 
     private Scene loadStartupScene() throws IOException {

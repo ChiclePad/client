@@ -1,7 +1,7 @@
 package org.chiclepad.backend.Dao;
 
-import org.chiclepad.business.LocaleUtils;
 import org.chiclepad.backend.entity.ChiclePadUser;
+import org.chiclepad.business.LocaleUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

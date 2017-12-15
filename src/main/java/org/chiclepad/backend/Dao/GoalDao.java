@@ -16,8 +16,8 @@ import java.util.List;
 
 public class GoalDao extends EntryDao {
 
-    private final String CREATE_GOAL_SQL = "INSERT INTO goal (id, entry_id, description) " +
-            "VALUES (DEFAULT, ?, ?) " +
+    private final String CREATE_GOAL_SQL = "INSERT INTO goal (entry_id, description) " +
+            "VALUES (?, ?) " +
             "RETURNING id;";
 
     private final String CREATE_COMPLETED_GOAL = "INSERT INTO completed_goal (goal_id, completed_day, completed_time) " +

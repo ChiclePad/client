@@ -21,10 +21,10 @@ import org.chiclepad.backend.entity.ChiclePadUser;
 import org.chiclepad.backend.entity.Note;
 import org.chiclepad.business.UserSessionManager;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
-import org.chiclepad.frontend.jfx.MOCKUP;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 import org.chiclepad.frontend.jfx.model.NoteListModel;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class NoteSceneController {
@@ -70,9 +70,13 @@ public class NoteSceneController {
     private NoteListModel notes;
 
     private String filter = "";
-    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
+
     private ChiclePadUser loggedInUser;
+
+    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
+
     private CategoryDao categoryDao = DaoFactory.INSTANCE.getCategoryDao();
+
     private NoteDao noteDao = DaoFactory.INSTANCE.getNoteDao();
 
     @FXML
@@ -112,13 +116,14 @@ public class NoteSceneController {
 
     @FXML
     public void addNote() {
-        // TODO create using dao
-        notes.add(new Note(1, 1, "DACO"));
+        Note created = noteDao.create(loggedInUser.getId(), "", LocalDateTime.now().minusDays(1));
+        notes.add(created);
     }
 
     @FXML
     public void deleteSelected() {
-        notes.deleteSelected();
+        Note deleted = notes.deleteSelected();
+        noteDao.delete(deleted);
     }
 
     @FXML

@@ -15,7 +15,6 @@ import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.ChiclePadUser;
 import org.chiclepad.business.UserSessionManager;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
-import org.chiclepad.frontend.jfx.MOCKUP;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 
 import java.util.List;

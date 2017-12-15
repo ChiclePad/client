@@ -125,6 +125,7 @@ public class SettingsSceneController {
             ChiclePadDialog.show("Success!", "Password changed", dialogArea);
             passwordField.setText("");
             verifyPasswordField.setText("");
+
         } catch (Exception e) {
             ChiclePadDialog.show("Error!", "Password failed to change", dialogArea);
         }

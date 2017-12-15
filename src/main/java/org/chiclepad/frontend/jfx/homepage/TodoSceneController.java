@@ -17,13 +17,11 @@ import org.chiclepad.backend.entity.ChiclePadUser;
 import org.chiclepad.backend.entity.Todo;
 import org.chiclepad.business.UserSessionManager;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
-import org.chiclepad.frontend.jfx.MOCKUP;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 import org.chiclepad.frontend.jfx.model.TodoListModel;
 import org.chiclepad.frontend.jfx.model.TodoTreeItem;
 
 import java.time.LocalDateTime;
-
 import java.util.List;
 
 public class TodoSceneController {
