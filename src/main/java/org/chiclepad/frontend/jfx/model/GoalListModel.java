@@ -1,29 +1,35 @@
 package org.chiclepad.frontend.jfx.model;
 
-import com.jfoenix.controls.JFXListView;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.scene.layout.VBox;
 import org.chiclepad.backend.entity.Goal;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GoalListModel {
 
-    private JFXListView<Goal> goalList;
+    private List<Goal> goals;
 
-    private ObservableList<Goal> goals;
+    private VBox layout;
 
-    public GoalListModel(JFXListView<Goal> goalList) {
-        this.goalList = goalList;
-        goals = FXCollections.observableArrayList();
-        this.goalList.setItems(goals);
-    }
+    private String filter;
 
-    public void add() {
-
+    public GoalListModel(VBox layout) {
+        this.goals = new ArrayList<>();
+        this.layout = layout;
     }
 
     public void add(Goal goalPage) {
         goals.add(goalPage);
     }
 
+
+    public void setNewFilter(String filter) {
+        this.filter = filter;
+    }
+
+    public Goal deleteSelected() {
+        return null;
+    }
 
 }

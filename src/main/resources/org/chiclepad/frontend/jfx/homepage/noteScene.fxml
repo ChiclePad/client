@@ -1,24 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXDatePicker?>
-<?import com.jfoenix.controls.JFXMasonryPane?>
-<?import com.jfoenix.controls.JFXTextField?>
-<?import com.jfoenix.controls.JFXTimePicker?>
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
-<?import java.lang.String?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import com.jfoenix.controls.*?>
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-
+<?import java.lang.*?>
 <AnchorPane prefHeight="800.0" prefWidth="1280.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <VBox prefWidth="254.0" styleClass="grey-dark-background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="45.0">
@@ -173,7 +163,8 @@
                 <String fx:value="grey-background" />
             </styleClass>
             <children>
-                <VBox fx:id="contentPanel" layoutX="33.0" layoutY="30.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="67.0" AnchorPane.topAnchor="30.0">
+                <VBox fx:id="contentPanel" layoutX="33.0" layoutY="30.0" spacing="20.0" AnchorPane.bottomAnchor="30.0"
+                      AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="67.0" AnchorPane.topAnchor="30.0">
                <children>
                   <HBox>
                      <children>
@@ -228,12 +219,12 @@
                            <JFXTimePicker fx:id="reminderTime" defaultColor="#8dc44e" prefWidth="200.0" promptText="Reminder time" styleClass="normal-text" />
                        </children>
                      <VBox.margin>
-                        <Insets top="10.0" />
+                         <Insets/>
                      </VBox.margin>
                    </HBox>
-                   <JFXMasonryPane fx:id="noteMasonry" cellHeight="-1.0" cellWidth="103.0" VBox.vgrow="ALWAYS">
+                   <JFXMasonryPane fx:id="noteMasonry" cellHeight="130.0" cellWidth="215.0" VBox.vgrow="ALWAYS">
                      <VBox.margin>
-                        <Insets top="20.0" />
+                         <Insets/>
                      </VBox.margin></JFXMasonryPane>
                </children>
                <padding>
@@ -280,7 +271,9 @@
                                         <Insets left="50.0" right="50.0" />
                                     </VBox.margin>
                                     <children>
-                                        <TextField fx:id="searchTextField" onKeyPressed="#refreshFilter" promptText="Search" HBox.hgrow="ALWAYS">
+                                        <TextField fx:id="searchTextField" onKeyPressed="#clearScene"
+                                                   onKeyReleased="#refreshFilter" promptText="Search"
+                                                   HBox.hgrow="ALWAYS">
                                             <styleClass>
                                                 <String fx:value="text" />
                                                 <String fx:value="raised-slight" />

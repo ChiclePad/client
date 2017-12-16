@@ -98,6 +98,11 @@ public class TodoSceneController {
     }
 
     @FXML
+    public void deleteSelected() {
+
+    }
+    
+    @FXML
     public void userClick() {
         UserPopup.showUnderParent(userArea);
     }

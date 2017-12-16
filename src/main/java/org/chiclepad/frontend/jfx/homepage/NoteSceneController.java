@@ -68,8 +68,6 @@ public class NoteSceneController {
 
     private NoteListModel notes;
 
-    private String filter = "";
-
     private ChiclePadUser loggedInUser;
 
     private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
@@ -108,8 +106,13 @@ public class NoteSceneController {
     }
 
     @FXML
+    public void clearScene() {
+        notes.clearNotes();
+    }
+
+    @FXML
     public void refreshFilter() {
-        filter = searchTextField.getText();
+        String filter = searchTextField.getText();
         notes.setNewFilter(filter);
     }
 

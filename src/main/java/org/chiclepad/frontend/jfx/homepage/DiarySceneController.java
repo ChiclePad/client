@@ -1,6 +1,6 @@
 package org.chiclepad.frontend.jfx.homepage;
 
-import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.effects.JFXDepthManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -14,11 +14,13 @@ import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.DiaryPageDao;
 import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.ChiclePadUser;
+import org.chiclepad.backend.entity.DiaryPage;
 import org.chiclepad.business.UserSessionManager;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 import org.chiclepad.frontend.jfx.model.DiaryListModel;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class DiarySceneController {
@@ -39,7 +41,10 @@ public class DiarySceneController {
     private VBox categoryList;
 
     @FXML
-    private JFXListView diaryList;
+    private VBox diaryPagesList;
+
+    @FXML
+    private JFXTextArea textArea;
 
     @FXML
     private VBox categoriesRippler;
@@ -48,10 +53,12 @@ public class DiarySceneController {
 
     private CategoryListModel categories;
 
-    private String filter = "";
-    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
     private ChiclePadUser loggedInUser;
+
+    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
+
     private CategoryDao categoryDao = DaoFactory.INSTANCE.getCategoryDao();
+
     private DiaryPageDao diaryPageDao = DaoFactory.INSTANCE.getDiaryPageDao();
 
     @FXML
@@ -79,14 +86,41 @@ public class DiarySceneController {
     }
 
     private void initializeDiaryPages() {
-        diaryPages = new DiaryListModel(diaryList);
+        diaryPages = new DiaryListModel(diaryPagesList, textArea);
         this.diaryPageDao.getAll(this.loggedInUser.getId()).forEach(diaryPage -> this.diaryPages.add(diaryPage));
     }
 
     @FXML
+    public void clearScene() {
+        diaryPages.clearDiaryPages();
+    }
+
+    @FXML
     public void refreshFilter() {
-        filter = searchTextField.getText();
-        // TODO reload for Simon
+        String filter = searchTextField.getText();
+        diaryPages.setNewFilter(filter);
+    }
+
+    @FXML
+    public void addDiaryPage() {
+        DiaryPage created = diaryPageDao.create(loggedInUser.getId(), "", LocalDate.now());
+        diaryPages.add(created);
+    }
+
+    @FXML
+    public void deleteSelected() {
+        DiaryPage deleted = diaryPages.deleteSelected();
+        diaryPageDao.delete(deleted);
+    }
+
+    @FXML
+    public void loadPrevious() {
+
+    }
+
+    @FXML
+    public void loadNext() {
+
     }
 
     @FXML

@@ -1,6 +1,5 @@
 package org.chiclepad.frontend.jfx.homepage;
 
-import com.jfoenix.controls.JFXListView;
 import com.jfoenix.effects.JFXDepthManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -14,6 +13,7 @@ import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.GoalDao;
 import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.ChiclePadUser;
+import org.chiclepad.backend.entity.Goal;
 import org.chiclepad.business.UserSessionManager;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
@@ -39,7 +39,7 @@ public class GoalSceneController {
     private VBox categoryList;
 
     @FXML
-    private JFXListView goalList;
+    private VBox goalList;
 
     @FXML
     private VBox categoriesRippler;
@@ -49,9 +49,13 @@ public class GoalSceneController {
     private CategoryListModel categories;
 
     private String filter = "";
+
     private ChiclePadUser loggedInUser;
+
     private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
+
     private CategoryDao categoryDao = DaoFactory.INSTANCE.getCategoryDao();
+
     private GoalDao goalDao = DaoFactory.INSTANCE.getGoalDao();
 
     @FXML
@@ -86,7 +90,19 @@ public class GoalSceneController {
     @FXML
     public void refreshFilter() {
         filter = searchTextField.getText();
-        // TODO reload for Simon
+        goals.setNewFilter(filter);
+    }
+
+    @FXML
+    public void addGoal() {
+        Goal created = goalDao.create(loggedInUser.getId(), "");
+        goals.add(created);
+    }
+
+    @FXML
+    public void deleteSelected() {
+        Goal deleted = goals.deleteSelected();
+        goalDao.delete(deleted);
     }
 
     @FXML

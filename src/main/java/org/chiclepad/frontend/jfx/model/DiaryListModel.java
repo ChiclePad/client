@@ -1,28 +1,76 @@
 package org.chiclepad.frontend.jfx.model;
 
-import com.jfoenix.controls.JFXListView;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.effects.JFXDepthManager;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import org.chiclepad.backend.Dao.DaoFactory;
+import org.chiclepad.backend.Dao.DiaryPageDao;
 import org.chiclepad.backend.entity.DiaryPage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DiaryListModel {
 
-    private JFXListView<DiaryPage> diaryList;
+    private List<DiaryPage> diaryPages;
 
-    private ObservableList<DiaryPage> diaryPages;
+    private VBox layout;
 
-    public DiaryListModel(JFXListView<DiaryPage> diaryList) {
-        this.diaryList = diaryList;
-        diaryPages = FXCollections.observableArrayList();
-        this.diaryList.setItems(diaryPages);
-    }
+    private HBox selectedDiaryPageLine;
 
-    public void add() {
+    private DiaryPage selectedDiaryPage;
 
+    private JFXTextArea textArea;
+
+    private DiaryPageDao diaryPageDao;
+
+    private String filter = "";
+
+    public DiaryListModel(VBox layout, JFXTextArea textArea) {
+        this.layout = layout;
+        this.textArea = textArea;
+        this.diaryPageDao = DaoFactory.INSTANCE.getDiaryPageDao();
+        this.diaryPages = new ArrayList<>();
     }
 
     public void add(DiaryPage diaryPage) {
         diaryPages.add(diaryPage);
+        addDiaryPageToLayout(diaryPage);
+    }
+
+    private void addDiaryPageToLayout(DiaryPage diaryPage) {
+        HBox diaryPageLine = new HBox();
+        JFXDepthManager.setDepth(diaryPageLine, 1);
+
+        Label text = new Label(diaryPage.getText());
+
+        diaryPageLine.getChildren().add(text);
+        layout.getChildren().add(diaryPageLine);
+    }
+
+    public void clearDiaryPages() {
+        layout.getChildren().clear();
+    }
+
+    public void setNewFilter(String filter) {
+        this.filter = filter;
+
+        diaryPages.stream()
+                .filter(diaryPage -> fitsFilter(diaryPage, filter))
+                .forEach(this::addDiaryPageToLayout);
+    }
+
+    private boolean fitsFilter(DiaryPage diaryPage, String filter) {
+        return diaryPage.getText().contains(filter) ||
+                diaryPage.getRecordedDay().toString().contains(filter);
+    }
+
+    public DiaryPage deleteSelected() {
+        layout.getChildren().removeIf(child -> child == selectedDiaryPageLine);
+        diaryPages.remove(selectedDiaryPage);
+        return selectedDiaryPage;
     }
 
 }

@@ -5,7 +5,6 @@ import com.jfoenix.controls.JFXMasonryPane;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTimePicker;
 import com.jfoenix.effects.JFXDepthManager;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -42,6 +41,8 @@ public class NoteListModel {
     private JFXTimePicker reminderTime;
 
     private NoteDao noteDao;
+
+    private String filter = "";
 
     public NoteListModel(
             JFXMasonryPane layout,
@@ -171,9 +172,9 @@ public class NoteListModel {
 
     private void stylePostIt(Note addedNote, VBox postIt) {
         JFXDepthManager.setDepth(postIt, 1);
-        postIt.setMinSize(113, 70);
-        postIt.setPrefSize(113, 70);
-        postIt.setMaxSize(113, 70);
+        postIt.setMinSize(215, 130);
+        postIt.setPrefSize(215, 130);
+        postIt.setMaxSize(215, 130);
 
         postIt.setPadding(new Insets(15, 15, 15, 15));
 
@@ -210,11 +211,16 @@ public class NoteListModel {
         return selectedNote;
     }
 
-    public synchronized void setNewFilter(String filter) {
+    public void clearNotes() {
         layout.getChildren().clear();
+    }
+
+    public void setNewFilter(String filter) {
+        this.filter = filter;
+
         notes.stream()
                 .filter(note -> fitsFilter(note, filter))
-                .forEach(note -> Platform.runLater(() -> addNoteToLayout(note)));
+                .forEach(this::addNoteToLayout);
     }
 
     private boolean fitsFilter(Note note, String filter) {
