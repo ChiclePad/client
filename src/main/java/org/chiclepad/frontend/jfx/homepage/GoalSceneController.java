@@ -1,6 +1,7 @@
 package org.chiclepad.frontend.jfx.homepage;
 
 import com.jfoenix.effects.JFXDepthManager;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -14,8 +15,9 @@ import org.chiclepad.backend.Dao.GoalDao;
 import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.ChiclePadUser;
 import org.chiclepad.backend.entity.Goal;
-import org.chiclepad.business.UserSessionManager;
+import org.chiclepad.business.session.UserSessionManager;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
+import org.chiclepad.frontend.jfx.ChiclePadColor;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 import org.chiclepad.frontend.jfx.model.GoalListModel;
 
@@ -39,16 +41,23 @@ public class GoalSceneController {
     private VBox categoryList;
 
     @FXML
+    private VBox categoriesRippler;
+
+    @FXML
     private VBox goalList;
 
     @FXML
-    private VBox categoriesRippler;
+    private FontAwesomeIcon loadNextButton;
+
+    @FXML
+    private FontAwesomeIcon loadPreviousButton;
+
+    @FXML
+    private FontAwesomeIcon addCategoryIcon;
 
     private GoalListModel goals;
 
     private CategoryListModel categories;
-
-    private String filter = "";
 
     private ChiclePadUser loggedInUser;
 
@@ -68,6 +77,15 @@ public class GoalSceneController {
 
     private void initializeAdditionalStyles() {
         JFXDepthManager.setDepth(header, 1);
+
+        addCategoryIcon.setOnMouseEntered(event -> addCategoryIcon.setFill(ChiclePadColor.PRIMARY));
+        addCategoryIcon.setOnMouseExited(event -> addCategoryIcon.setFill(ChiclePadColor.BLACK));
+
+        loadNextButton.setOnMouseEntered(event -> loadNextButton.setFill(ChiclePadColor.PRIMARY));
+        loadNextButton.setOnMouseExited(event -> loadNextButton.setFill(ChiclePadColor.BLACK));
+
+        loadPreviousButton.setOnMouseEntered(event -> loadPreviousButton.setFill(ChiclePadColor.PRIMARY));
+        loadPreviousButton.setOnMouseExited(event -> loadPreviousButton.setFill(ChiclePadColor.BLACK));
     }
 
     private void initializeUser() {
@@ -88,8 +106,13 @@ public class GoalSceneController {
     }
 
     @FXML
+    public void clearScene() {
+        goals.clearGoals();
+    }
+
+    @FXML
     public void refreshFilter() {
-        filter = searchTextField.getText();
+        String filter = searchTextField.getText();
         goals.setNewFilter(filter);
     }
 
@@ -106,6 +129,21 @@ public class GoalSceneController {
     }
 
     @FXML
+    public void loadPrevious() {
+
+    }
+
+    @FXML
+    public void loadNext() {
+
+    }
+
+    @FXML
+    public void addCategory() {
+        CategoryPopup.showUnderParent(addCategoryIcon);
+    }
+
+    @FXML
     public void userClick() {
         UserPopup.showUnderParent(userArea);
     }
@@ -117,7 +155,7 @@ public class GoalSceneController {
 
     @FXML
     public void switchToTodoScene() {
-        ChiclePadApp.switchScene(new TodoSceneController(), "homepage/goalScene.fxml");
+        ChiclePadApp.switchScene(new TodoSceneController(), "homepage/todoScene.fxml");
     }
 
     @FXML

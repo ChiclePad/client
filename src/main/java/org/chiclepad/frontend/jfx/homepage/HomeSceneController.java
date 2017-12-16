@@ -2,21 +2,25 @@ package org.chiclepad.frontend.jfx.homepage;
 
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.effects.JFXDepthManager;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.chiclepad.backend.Dao.CategoryDao;
-import org.chiclepad.backend.Dao.ChiclePadUserDao;
-import org.chiclepad.backend.Dao.DaoFactory;
+import org.chiclepad.backend.Dao.*;
 import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.ChiclePadUser;
-import org.chiclepad.business.UserSessionManager;
+import org.chiclepad.backend.entity.Todo;
+import org.chiclepad.business.session.UserSessionManager;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
+import org.chiclepad.frontend.jfx.ChiclePadColor;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
+import org.chiclepad.frontend.jfx.model.NotificationsListModel;
+import org.chiclepad.frontend.jfx.model.UpcomingListModel;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class HomeSceneController {
@@ -45,22 +49,41 @@ public class HomeSceneController {
     @FXML
     private VBox categoriesRippler;
 
+    @FXML
+    private FontAwesomeIcon addCategoryIcon;
+
+    private UpcomingListModel upcoming;
+
+    private NotificationsListModel notifications;
+
     private CategoryListModel categories;
 
-    private String filter = "";
-    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
     private ChiclePadUser loggedInUser;
+
+    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
+
     private CategoryDao categoryDao = DaoFactory.INSTANCE.getCategoryDao();
+
+    private TodoDao todoDao = DaoFactory.INSTANCE.getTodoDao();
+
+    private NoteDao noteDao = DaoFactory.INSTANCE.getNoteDao();
+
+    private GoalDao goalDao = DaoFactory.INSTANCE.getGoalDao();
 
     @FXML
     public void initialize() {
         initializeAdditionalStyles();
         initializeUser();
         initializeCategories();
+        initializeUpcoming();
+        initializeNotifications();
     }
 
     private void initializeAdditionalStyles() {
         JFXDepthManager.setDepth(header, 1);
+
+        addCategoryIcon.setOnMouseEntered(event -> addCategoryIcon.setFill(ChiclePadColor.PRIMARY));
+        addCategoryIcon.setOnMouseExited(event -> addCategoryIcon.setFill(ChiclePadColor.BLACK));
     }
 
     private void initializeUser() {
@@ -75,10 +98,41 @@ public class HomeSceneController {
         categories.forEach(category -> this.categories.add(category));
     }
 
+    private void initializeUpcoming() {
+        upcoming = new UpcomingListModel(upcomingListView);
+        todoDao.getAll(loggedInUser.getId()).stream()
+                .sorted(Comparator.comparing(Todo::getDeadline))
+                .forEach(todo -> upcoming.add(todo));
+    }
+
+    private void initializeNotifications() {
+        notifications = new NotificationsListModel(notificationsListView);
+
+        noteDao.getAll(loggedInUser.getId()).stream()
+                .filter(note -> note.getReminderTime().isPresent())
+                .sorted(Comparator.comparing(note2 -> note2.getReminderTime().get()))
+                .forEach(note -> notifications.addNote(note));
+
+        goalDao.getAllGoalsNotCompletedToday(loggedInUser.getId())
+                .forEach(goal -> notifications.addGoal(goal));
+    }
+
+    @FXML
+    public void clearScene() {
+        upcoming.clearUpcoming();
+        notifications.clearNotifications();
+    }
+
     @FXML
     public void refreshFilter() {
-        filter = searchTextField.getText();
-        // TODO reload for Simon
+        String filter = searchTextField.getText();
+        upcoming.setNewFilter(filter);
+        notifications.setNewFilter(filter);
+    }
+
+    @FXML
+    public void addCategory() {
+        CategoryPopup.showUnderParent(addCategoryIcon);
     }
 
     @FXML

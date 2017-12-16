@@ -55,9 +55,18 @@ tertiary: #3E5641
     -fx-text-fill: white;
 }
 
+.green-text {
+    -fx-font-family: Roboto;
+    -fx-text-fill: #8DC44E;
+}
+
 .red-text {
     -fx-font-family: Roboto;
     -fx-text-fill: #A24936;
+}
+
+.green-text-on-hover:hover {
+    -fx-text-fill: #8DC44E;
 }
 
 .form {

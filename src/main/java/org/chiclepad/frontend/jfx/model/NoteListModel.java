@@ -125,10 +125,16 @@ public class NoteListModel {
     }
 
     private void setReminderTimeFields() {
-        selectedNote.getReminderTime().ifPresent(time -> {
-            reminderDate.setValue(time.toLocalDate());
-            reminderTime.setValue(time.toLocalTime());
-        });
+        LocalDate noteReminderDate = selectedNote.getReminderTime()
+                .map(LocalDateTime::toLocalDate)
+                .orElse(null);
+
+        LocalTime noteReminderTime = selectedNote.getReminderTime()
+                .map(LocalDateTime::toLocalTime)
+                .orElse(null);
+
+        reminderDate.setValue(noteReminderDate);
+        reminderTime.setValue(noteReminderTime);
 
         setReminderDateField();
         setReminderTimeField();
@@ -136,6 +142,10 @@ public class NoteListModel {
 
     private void setReminderDateField() {
         reminderDate.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                return;
+            }
+
             LocalTime localTime = selectedNote.getReminderTime()
                     .map(LocalDateTime::toLocalTime)
                     .orElse(LocalTime.now());
@@ -151,6 +161,10 @@ public class NoteListModel {
 
     private void setReminderTimeField() {
         reminderTime.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                return;
+            }
+
             LocalDate localDate = selectedNote.getReminderTime()
                     .map(LocalDateTime::toLocalDate)
                     .orElse(LocalDate.now());

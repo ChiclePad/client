@@ -5,10 +5,10 @@ import com.jfoenix.controls.JFXMasonryPane;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTimePicker;
 import com.jfoenix.effects.JFXDepthManager;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -19,8 +19,9 @@ import org.chiclepad.backend.Dao.NoteDao;
 import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.ChiclePadUser;
 import org.chiclepad.backend.entity.Note;
-import org.chiclepad.business.UserSessionManager;
+import org.chiclepad.business.session.UserSessionManager;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
+import org.chiclepad.frontend.jfx.ChiclePadColor;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 import org.chiclepad.frontend.jfx.model.NoteListModel;
 
@@ -29,13 +30,7 @@ import java.util.List;
 public class NoteSceneController {
 
     @FXML
-    private AnchorPane content;
-
-    @FXML
     private BorderPane header;
-
-    @FXML
-    private VBox contentPanel;
 
     @FXML
     private HBox userArea;
@@ -64,6 +59,9 @@ public class NoteSceneController {
     @FXML
     private JFXTimePicker reminderTime;
 
+    @FXML
+    private FontAwesomeIcon addCategoryIcon;
+
     private CategoryListModel categories;
 
     private NoteListModel notes;
@@ -86,6 +84,9 @@ public class NoteSceneController {
 
     private void initializeAdditionalStyles() {
         JFXDepthManager.setDepth(header, 1);
+
+        addCategoryIcon.setOnMouseEntered(event -> addCategoryIcon.setFill(ChiclePadColor.PRIMARY));
+        addCategoryIcon.setOnMouseExited(event -> addCategoryIcon.setFill(ChiclePadColor.BLACK));
     }
 
     private void initializeUser() {
@@ -126,6 +127,11 @@ public class NoteSceneController {
     public void deleteSelected() {
         Note deleted = notes.deleteSelected();
         noteDao.delete(deleted);
+    }
+
+    @FXML
+    public void addCategory() {
+        CategoryPopup.showUnderParent(addCategoryIcon);
     }
 
     @FXML

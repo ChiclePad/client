@@ -35,6 +35,20 @@ public class GoalDao extends EntryDao {
             "LEFT OUTER JOIN deleted_entry ON deleted_entry.entry_id = entry.id " +
             "WHERE deleted_entry.deleted_time IS NULL AND entry.user_id = ? ;";
 
+    private final String GET_ALL_NOT_COMPLETED_TODAY_GOAL_SQL = "SELECT * " +
+            "FROM " +
+            "( " +
+            "  SELECT * " +
+            "  FROM goal " +
+            "  EXCEPT " +
+            "  SELECT goal.id, goal.entry_id, goal.description " +
+            "  FROM goal " +
+            "  INNER JOIN completed_goal ON goal.id = completed_goal.goal_id " +
+            "  WHERE completed_goal.completed_day = CURRENT_DATE " +
+            ") not_completed " +
+            "JOIN entry ON entry.id = not_completed.entry_id " +
+            "WHERE user_id = ?; ";
+
     private final String GET_ALL_WITH_DELETED_GOAL_SQL = "SELECT * " +
             "FROM goal " +
             "INNER JOIN entry ON goal.entry_id = entry.id " +
@@ -100,6 +114,14 @@ public class GoalDao extends EntryDao {
     public List<Goal> getAllWithDeleted(int userId) throws EmptyResultDataAccessException {
         return jdbcTemplate.query(
                 GET_ALL_WITH_DELETED_GOAL_SQL,
+                new Object[]{userId},
+                (resultSet, row) -> readGoal(resultSet)
+        );
+    }
+
+    public List<Goal> getAllGoalsNotCompletedToday(int userId) throws EmptyResultDataAccessException {
+        return jdbcTemplate.query(
+                GET_ALL_NOT_COMPLETED_TODAY_GOAL_SQL,
                 new Object[]{userId},
                 (resultSet, row) -> readGoal(resultSet)
         );

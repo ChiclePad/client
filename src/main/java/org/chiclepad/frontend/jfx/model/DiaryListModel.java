@@ -2,7 +2,6 @@ package org.chiclepad.frontend.jfx.model;
 
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.effects.JFXDepthManager;
-import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.chiclepad.backend.Dao.DaoFactory;
@@ -22,15 +21,12 @@ public class DiaryListModel {
 
     private DiaryPage selectedDiaryPage;
 
-    private JFXTextArea textArea;
-
     private DiaryPageDao diaryPageDao;
 
     private String filter = "";
 
-    public DiaryListModel(VBox layout, JFXTextArea textArea) {
+    public DiaryListModel(VBox layout) {
         this.layout = layout;
-        this.textArea = textArea;
         this.diaryPageDao = DaoFactory.INSTANCE.getDiaryPageDao();
         this.diaryPages = new ArrayList<>();
     }
@@ -44,7 +40,7 @@ public class DiaryListModel {
         HBox diaryPageLine = new HBox();
         JFXDepthManager.setDepth(diaryPageLine, 1);
 
-        Label text = new Label(diaryPage.getText());
+        JFXTextArea text = new JFXTextArea(diaryPage.getText());
 
         diaryPageLine.getChildren().add(text);
         layout.getChildren().add(diaryPageLine);

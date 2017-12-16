@@ -43,7 +43,7 @@ class GoalDaoTest {
     }
 
     @Test
-    void createcompletedGoal() {
+    void createCompletedGoal() {
         Goal goal1 = dao.create(user1.getId(), "test1");
         Goal goal2 = dao.create(user1.getId(), "test2");
         Goal goal3 = dao.create(user2.getId(), "test3");
@@ -91,6 +91,20 @@ class GoalDaoTest {
 
         assertThat(dao.getAllWithDeleted(user1.getId())).containsExactlyInAnyOrder(goal1, goal2);
         assertThat(dao.getAllWithDeleted(user2.getId())).containsExactlyInAnyOrder(goal3);
+    }
+
+    @Test
+    void getAllGoalsNotCompletedToday() {
+        Goal goal1 = dao.create(user1.getId(), "test1");
+        Goal goal2 = dao.create(user1.getId(), "test2");
+        Goal goal3 = dao.create(user2.getId(), "test3");
+        Goal goal4 = dao.create(user2.getId(), "test4");
+
+        CompletedGoal completedGoal1 = dao.createCompletedGoal(goal1.getId());
+        CompletedGoal completedGoal4 = dao.createCompletedGoal(goal4.getId());
+
+        assertThat(dao.getAllGoalsNotCompletedToday(user1.getId())).containsExactlyInAnyOrder(goal2);
+        assertThat(dao.getAllGoalsNotCompletedToday(user2.getId())).containsExactlyInAnyOrder(goal3);
     }
 
     @Test

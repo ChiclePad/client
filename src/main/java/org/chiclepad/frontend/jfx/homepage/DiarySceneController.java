@@ -1,7 +1,7 @@
 package org.chiclepad.frontend.jfx.homepage;
 
-import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.effects.JFXDepthManager;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -15,8 +15,9 @@ import org.chiclepad.backend.Dao.DiaryPageDao;
 import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.ChiclePadUser;
 import org.chiclepad.backend.entity.DiaryPage;
-import org.chiclepad.business.UserSessionManager;
+import org.chiclepad.business.session.UserSessionManager;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
+import org.chiclepad.frontend.jfx.ChiclePadColor;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 import org.chiclepad.frontend.jfx.model.DiaryListModel;
 
@@ -44,10 +45,28 @@ public class DiarySceneController {
     private VBox diaryPagesList;
 
     @FXML
-    private JFXTextArea textArea;
+    private VBox categoriesRippler;
 
     @FXML
-    private VBox categoriesRippler;
+    private HBox loadNextButton;
+
+    @FXML
+    private FontAwesomeIcon loadNextIcon;
+
+    @FXML
+    private Label loadNextText;
+
+    @FXML
+    private HBox loadPreviousButton;
+
+    @FXML
+    private FontAwesomeIcon loadPreviousIcon;
+
+    @FXML
+    private Label loadPreviousText;
+
+    @FXML
+    private FontAwesomeIcon addCategoryIcon;
 
     private DiaryListModel diaryPages;
 
@@ -71,6 +90,27 @@ public class DiarySceneController {
 
     private void initializeAdditionalStyles() {
         JFXDepthManager.setDepth(header, 1);
+
+        addCategoryIcon.setOnMouseEntered(event -> addCategoryIcon.setFill(ChiclePadColor.PRIMARY));
+        addCategoryIcon.setOnMouseExited(event -> addCategoryIcon.setFill(ChiclePadColor.BLACK));
+
+        loadNextButton.setOnMouseEntered(event -> {
+            loadNextIcon.setFill(ChiclePadColor.PRIMARY);
+            loadNextText.setTextFill(ChiclePadColor.PRIMARY);
+        });
+        loadNextButton.setOnMouseExited(event -> {
+            loadNextIcon.setFill(ChiclePadColor.BLACK);
+            loadNextText.setTextFill(ChiclePadColor.BLACK);
+        });
+
+        loadPreviousButton.setOnMouseEntered(event -> {
+            loadPreviousIcon.setFill(ChiclePadColor.PRIMARY);
+            loadPreviousText.setTextFill(ChiclePadColor.PRIMARY);
+        });
+        loadPreviousButton.setOnMouseExited(event -> {
+            loadPreviousIcon.setFill(ChiclePadColor.BLACK);
+            loadPreviousText.setTextFill(ChiclePadColor.BLACK);
+        });
     }
 
     private void initializeUser() {
@@ -86,7 +126,7 @@ public class DiarySceneController {
     }
 
     private void initializeDiaryPages() {
-        diaryPages = new DiaryListModel(diaryPagesList, textArea);
+        diaryPages = new DiaryListModel(diaryPagesList);
         this.diaryPageDao.getAll(this.loggedInUser.getId()).forEach(diaryPage -> this.diaryPages.add(diaryPage));
     }
 
@@ -121,6 +161,11 @@ public class DiarySceneController {
     @FXML
     public void loadNext() {
 
+    }
+
+    @FXML
+    public void addCategory() {
+        CategoryPopup.showUnderParent(addCategoryIcon);
     }
 
     @FXML

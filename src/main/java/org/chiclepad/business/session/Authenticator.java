@@ -3,7 +3,6 @@ package org.chiclepad.business.session;
 import org.chiclepad.backend.Dao.ChiclePadUserDao;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.entity.ChiclePadUser;
-import org.chiclepad.business.UserSessionManager;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 

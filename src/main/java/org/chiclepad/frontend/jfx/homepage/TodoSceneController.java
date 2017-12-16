@@ -2,6 +2,7 @@ package org.chiclepad.frontend.jfx.homepage;
 
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.effects.JFXDepthManager;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -15,8 +16,9 @@ import org.chiclepad.backend.Dao.TodoDao;
 import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.ChiclePadUser;
 import org.chiclepad.backend.entity.Todo;
-import org.chiclepad.business.UserSessionManager;
+import org.chiclepad.business.session.UserSessionManager;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
+import org.chiclepad.frontend.jfx.ChiclePadColor;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 import org.chiclepad.frontend.jfx.model.TodoListModel;
 import org.chiclepad.frontend.jfx.model.TodoTreeItem;
@@ -47,14 +49,19 @@ public class TodoSceneController {
     @FXML
     private VBox categoriesRippler;
 
+    @FXML
+    private FontAwesomeIcon addCategoryIcon;
+
     private TodoListModel todos;
 
     private CategoryListModel categories;
 
-    private String filter = "";
-    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
     private ChiclePadUser loggedInUser;
+
+    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
+
     private CategoryDao categoryDao = DaoFactory.INSTANCE.getCategoryDao();
+
     private TodoDao todoDao = DaoFactory.INSTANCE.getTodoDao();
 
     @FXML
@@ -67,6 +74,9 @@ public class TodoSceneController {
 
     private void initializeAdditionalStyles() {
         JFXDepthManager.setDepth(header, 1);
+
+        addCategoryIcon.setOnMouseEntered(event -> addCategoryIcon.setFill(ChiclePadColor.PRIMARY));
+        addCategoryIcon.setOnMouseExited(event -> addCategoryIcon.setFill(ChiclePadColor.BLACK));
     }
 
     private void initializeUser() {
@@ -88,18 +98,25 @@ public class TodoSceneController {
 
     @FXML
     public void refreshFilter() {
-        filter = searchTextField.getText();
-        // TODO reload for Simon
+        String filter = searchTextField.getText();
+        todos.setNewFilter(filter);
     }
 
     @FXML
     public void addTodo() {
-        todos.add(new Todo(1, 1, "", LocalDateTime.now().plusDays(20), 0));
+        Todo created = todoDao.create(loggedInUser.getId(), "", LocalDateTime.now(), 0);
+        todos.add(created);
     }
 
     @FXML
     public void deleteSelected() {
+        Todo deleted = todos.deleteSelected();
+        todoDao.delete(deleted);
+    }
 
+    @FXML
+    public void addCategory() {
+        CategoryPopup.showUnderParent(addCategoryIcon);
     }
     
     @FXML
