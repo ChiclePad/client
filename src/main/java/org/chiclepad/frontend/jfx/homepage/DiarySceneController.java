@@ -151,7 +151,7 @@ public class DiarySceneController {
             return;
         }
 
-        diaryPageDao.delete(deleted);
+        diaryPageDao.markDeleted(deleted);
     }
 
     @FXML

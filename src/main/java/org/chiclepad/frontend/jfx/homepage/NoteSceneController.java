@@ -131,7 +131,7 @@ public class NoteSceneController {
             return;
         }
 
-        noteDao.delete(deleted);
+        noteDao.markDeleted(deleted);
     }
 
     @FXML

@@ -89,6 +89,10 @@ abstract class EntryDao {
         );
     }
 
+    public void markDeleted(Entry entry) {
+        markDeleted(entry.getEntryId());
+    }
+
     public void markDeleted(int entryId) {
         jdbcTemplate.update(MARK_DELETED_ENTRY_SQL, entryId);
     }

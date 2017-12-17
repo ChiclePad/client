@@ -173,7 +173,7 @@ public class GoalSceneController {
             return;
         }
 
-        goalDao.delete(deleted);
+        goalDao.markDeleted(deleted);
     }
 
     @FXML

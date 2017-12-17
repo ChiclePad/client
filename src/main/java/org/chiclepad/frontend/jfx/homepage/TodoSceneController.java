@@ -131,7 +131,7 @@ public class TodoSceneController {
             return;
         }
 
-        todoDao.delete(deleted);
+        todoDao.markDeleted(deleted);
     }
 
     @FXML
