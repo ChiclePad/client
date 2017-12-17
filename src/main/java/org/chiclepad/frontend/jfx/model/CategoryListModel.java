@@ -5,10 +5,12 @@ import com.jfoenix.controls.JFXRippler;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.util.Callback;
 import org.chiclepad.backend.entity.Category;
 import org.chiclepad.constants.ChiclePadColor;
 
@@ -34,6 +36,43 @@ public class CategoryListModel {
         this.ripplerArea = ripplerArea;
         this.categoryPicker = categoryPicker;
         categorySelected = new HashMap<>();
+
+        initializeCategoryPickerCellFactory();
+    }
+
+    private static ListCell<Category> createComboBoxLine() {
+        return new ListCell<>() {
+
+            @Override
+            protected void updateItem(Category item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setGraphic(null);
+
+                } else {
+                    HBox hBox = new HBox();
+
+                    Label label = new Label(item.getName());
+
+                    FontAwesomeIcon icon = new FontAwesomeIcon();
+                    icon.setIconName(item.getIcon());
+                    icon.setSize("1.25em");
+                    icon.setFill(Color.web(item.getColor()));
+
+                    hBox.getChildren().addAll(label, icon);
+
+                    setGraphic(hBox);
+                }
+            }
+
+        };
+    }
+
+    private void initializeCategoryPickerCellFactory() {
+        Callback cellFactory = param -> createComboBoxLine();
+
+        categoryPicker.setButtonCell((ListCell) cellFactory.call(null));
+        categoryPicker.setCellFactory(cellFactory);
     }
 
     public void add(Category category) {

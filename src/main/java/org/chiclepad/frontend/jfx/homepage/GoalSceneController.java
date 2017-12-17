@@ -3,11 +3,9 @@ package org.chiclepad.frontend.jfx.homepage;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.effects.JFXDepthManager;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -26,10 +24,9 @@ import org.chiclepad.frontend.jfx.ChiclePadApp;
 import org.chiclepad.frontend.jfx.Popup.CategoryPopup;
 import org.chiclepad.frontend.jfx.Popup.UserPopup;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
+import org.chiclepad.frontend.jfx.model.GoalChartModel;
 import org.chiclepad.frontend.jfx.model.GoalListModel;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class GoalSceneController {
@@ -73,9 +70,9 @@ public class GoalSceneController {
     @FXML
     private PieChart dayChart;
 
-    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM");
-
     private GoalListModel goals;
+
+    private GoalChartModel goalCharts;
 
     private CategoryListModel categories;
 
@@ -93,6 +90,7 @@ public class GoalSceneController {
         initializeUser();
         initializeCategories();
         initializeGoals();
+        initializeGoalCharts();
     }
 
     private void initializeAdditionalStyles() {
@@ -123,39 +121,11 @@ public class GoalSceneController {
     private void initializeGoals() {
         goals = new GoalListModel(goalList);
         goalDao.getAllGoalsNotCompletedToday(loggedInUser.getId()).forEach(goal -> goals.add(goal));
+    }
 
-//        goalDao.getAll(loggedInUser.getId()).stream()
-//                .map(goal -> goalDao.getCompletedGoals(goal))
-//                .filter(completedGoals -> !completedGoals.isEmpty())
-//                .collect(Collectors.groupingBy(completedGoal -> completedGoal));
-        XYChart.Series successChartBars = new XYChart.Series<>();
-//        for (int i = 0; i < 7; i++) {
-//            LocalDate recentDay = LocalDate.now().minusDays(i);
-//
-//            successChartBars.getData().add()
-//        }
-
-        successChartBars.getData().addAll(
-                new XYChart.Data(dateFormatter.format(LocalDate.now()), 2),
-                new XYChart.Data(dateFormatter.format(LocalDate.now().minusDays(1)), 1),
-                new XYChart.Data(dateFormatter.format(LocalDate.now().minusDays(2)), 3),
-                new XYChart.Data(dateFormatter.format(LocalDate.now().minusDays(3)), 4),
-                new XYChart.Data(dateFormatter.format(LocalDate.now().minusDays(4)), 1),
-                new XYChart.Data(dateFormatter.format(LocalDate.now().minusDays(5)), 0),
-                new XYChart.Data(dateFormatter.format(LocalDate.now().minusDays(6)), 7),
-                new XYChart.Data(dateFormatter.format(LocalDate.now().minusDays(7)), 3)
-        );
-        successChart.setData(FXCollections.observableArrayList(successChartBars));
-
-        dayChart.setData(FXCollections.observableArrayList(
-                new PieChart.Data("Mon", 8),
-                new PieChart.Data("Tue", 2),
-                new PieChart.Data("Wed", 4),
-                new PieChart.Data("Thr", 3),
-                new PieChart.Data("Fri", 2),
-                new PieChart.Data("Sat", 7),
-                new PieChart.Data("Sun", 2)
-        ));
+    private void initializeGoalCharts() {
+        this.goalCharts = new GoalChartModel(successChart, dayChart);
+        goalCharts.initialize();
     }
 
     @FXML
@@ -167,6 +137,7 @@ public class GoalSceneController {
     public void refreshFilter() {
         String filter = searchTextField.getText();
         goals.setNewFilter(filter);
+        goalCharts.refreshWithFilter(filter);
     }
 
     @FXML

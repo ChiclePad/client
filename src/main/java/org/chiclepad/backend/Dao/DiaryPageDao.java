@@ -26,12 +26,14 @@ public class DiaryPageDao extends EntryDao {
             "FROM diary_page " +
             "INNER JOIN entry ON diary_page.entry_id = entry.id " +
             "LEFT OUTER JOIN deleted_entry ON deleted_entry.entry_id = entry.id " +
-            "WHERE deleted_entry.deleted_time IS NULL AND user_id = ? ;";
+            "WHERE deleted_entry.deleted_time IS NULL AND user_id = ? " +
+            "ORDER BY diary_page.recorded_day DESC;";
 
     private final String GET_ALL_WITH_DELETED_DIARY_PAGE_SQL = "SELECT * " +
             "FROM diary_page " +
             "INNER JOIN entry ON entry_id = entry.id " +
-            "WHERE user_id = ? ;";
+            "WHERE user_id = ? " +
+            "ORDER BY diary_page.recorded_day DESC;";
 
     private final String UPDATE_DIARY_PAGE_SQL = "UPDATE diary_page " +
             "SET text = ?, recorded_day = ? " +

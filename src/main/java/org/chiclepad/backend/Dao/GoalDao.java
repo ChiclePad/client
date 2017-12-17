@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.List;
 
 public class GoalDao extends EntryDao {
@@ -78,6 +77,7 @@ public class GoalDao extends EntryDao {
             "JOIN entry ON goal.entry_id = entry.id " +
             "WHERE entry.user_id = ? AND goal.description LIKE ? " +
             "GROUP BY completed_goal.completed_day " +
+            "ORDER BY completed_goal.completed_day DESC " +
             "LIMIT 7;";
 
     private final String UPDATE_GOAL_SQL = "UPDATE goal " +
@@ -152,7 +152,12 @@ public class GoalDao extends EntryDao {
         );
     }
 
-    public WeekDayFrequency getFilteredCompletedGoalsCountByWeekDay(int userId, String filter)
+    public WeekDayFrequency getCompletedGoalsCountByWeekDay(int userId)
+            throws EmptyResultDataAccessException {
+        return getCompletedGoalsCountByWeekDay(userId, "");
+    }
+
+    public WeekDayFrequency getCompletedGoalsCountByWeekDay(int userId, String filter)
             throws EmptyResultDataAccessException {
         WeekDayFrequency frequency = new WeekDayFrequency();
 
@@ -165,9 +170,14 @@ public class GoalDao extends EntryDao {
         return frequency;
     }
 
-    public DayFrequency getFilteredCompletedGoalsCountRecentDays(int userId, String filter)
+    public DayFrequency getCompletedGoalsCountOnRecentDays(int userId)
             throws EmptyResultDataAccessException {
-        DayFrequency frequency = (DayFrequency) new HashMap();
+        return getCompletedGoalsCountOnRecentDays(userId, "");
+    }
+
+    public DayFrequency getCompletedGoalsCountOnRecentDays(int userId, String filter)
+            throws EmptyResultDataAccessException {
+        DayFrequency frequency = new DayFrequency();
 
         jdbcTemplate.query(
                 GET_FILTERED_COMPLETED_COUNT_BY_DAY_GOAL_SQL,

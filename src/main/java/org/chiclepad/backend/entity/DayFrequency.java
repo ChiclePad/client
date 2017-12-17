@@ -1,10 +1,10 @@
 package org.chiclepad.backend.entity;
 
 import java.time.LocalDate;
-import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Frequency of an event each day
  */
-public interface DayFrequency extends Map<LocalDate, Integer> {
+public class DayFrequency extends HashMap<LocalDate, Integer> {
 }

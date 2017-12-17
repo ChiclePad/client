@@ -21,6 +21,7 @@ import org.chiclepad.frontend.jfx.Popup.ChiclePadDialog;
 import org.chiclepad.frontend.jfx.homepage.HomeSceneController;
 
 import java.util.Locale;
+import java.util.Optional;
 
 public class RegisterSceneController {
 
@@ -93,10 +94,10 @@ public class RegisterSceneController {
         textField.setUnFocusColor(color);
     }
 
-    private Locale getSelectedLocale() {
+    private Optional<Locale> getSelectedLocale() {
         String readableLocale = languageComboBox.getSelectionModel().selectedItemProperty().getValue();
         String code = LocaleUtils.getCodeFromReadableLocale(readableLocale);
-        return code == null ? null : LocaleUtils.localeFromCode(code);
+        return Optional.ofNullable(code).map(LocaleUtils::localeFromCode);
     }
 
     @FXML
@@ -112,7 +113,7 @@ public class RegisterSceneController {
 
             String name = this.nameTextField.getText();
             userSession.getLoggedUser().setName(name);
-            userSession.getLoggedUser().setLocale(this.getSelectedLocale());
+            this.getSelectedLocale().ifPresent(locale -> userSession.getLoggedUser().setLocale(locale));
             userDao.updateDetails(userSession.getLoggedUser());
 
             ChiclePadApp.switchScene(new HomeSceneController(), "homepage/homeScene.fxml");

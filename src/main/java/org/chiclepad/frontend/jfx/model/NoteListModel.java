@@ -124,7 +124,7 @@ public class NoteListModel {
         }));
 
         descriptionField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
+            if (newValue) {
                 return;
             }
 
@@ -163,7 +163,7 @@ public class NoteListModel {
         });
 
         reminderDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
+            if (newValue) {
                 return;
             }
 
@@ -186,7 +186,7 @@ public class NoteListModel {
         });
 
         reminderTime.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
+            if (newValue) {
                 return;
             }
 
@@ -258,27 +258,11 @@ public class NoteListModel {
                 note.getReminderTime().map(time -> time.toString().contains(filter)).orElse(false);
     }
 
-    private String categoryNameOfNote(Note note) {
-        if (!note.getCategories().isEmpty()) {
-            return note.getCategories().get(0).getName();
-        } else {
-            return "Category";
-        }
-    }
-
     private String categoryColorOfNote(Note note) {
         if (!note.getCategories().isEmpty()) {
             return note.getCategories().get(0).getColor();
         } else {
-            return ChiclePadColor.toHex(ChiclePadColor.CATEGORY_DEFAULT);
-        }
-    }
-
-    private String categoryIconOfNote(Note note) {
-        if (!note.getCategories().isEmpty()) {
-            return note.getCategories().get(0).getIcon();
-        } else {
-            return "CIRCLE";
+            return ChiclePadColor.toHex(ChiclePadColor.WHITE);
         }
     }
 

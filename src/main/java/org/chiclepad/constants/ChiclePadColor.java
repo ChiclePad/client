@@ -20,8 +20,6 @@ public class ChiclePadColor {
 
     public static final Color TERTIARY = Color.web("#3E5641");
 
-    public static final Color CATEGORY_DEFAULT = Color.web("#ffffff");
-
     public static String toHex(Color chiclePadColor) {
         return "#" + chiclePadColor.toString().substring(2, 8);
     }

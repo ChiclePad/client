@@ -45,19 +45,8 @@ public class GoalListModel {
 
     private void addGoalToLayout(Goal goal) {
         HBox goalLine = new HBox();
-        setGoalLineStyle(goalLine);
-        goalLine.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
-            if (selectedGoalLine != null) {
-                selectedGoalLine.getStyleClass().removeIf(styleClass -> styleClass.equals("bordered"));
-                JFXDepthManager.setDepth(selectedGoalLine, 1);
-            }
-
-            selectedGoalLine = goalLine;
-            selectedGoal = goal;
-
-            selectedGoalLine.getStyleClass().add("bordered");
-            JFXDepthManager.setDepth(selectedGoalLine, 2);
-        });
+        setGoalLineStyle(goalLine, goal);
+        setSelectionListener(goal, goalLine);
 
         FontAwesomeIcon checkMark = new FontAwesomeIcon();
         setCheckMarkStyle(checkMark);
@@ -65,24 +54,52 @@ public class GoalListModel {
 
         JFXTextField descriptionField = new JFXTextField(goal.getDescription());
         setDescriptionFieldStyle(descriptionField);
-
-        descriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
-            goal.setDescription(newValue);
-        });
-
-        descriptionField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                return;
-            }
-
-            goalDao.update(goal);
-        });
+        setDescriptionChangeListener(goal, descriptionField);
 
         goalLine.getChildren().addAll(checkMark, descriptionField);
         layout.getChildren().add(goalLine);
     }
 
-    private void setGoalLineStyle(HBox goalLine) {
+    private void setDescriptionChangeListener(Goal goal, JFXTextField descriptionField) {
+        descriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
+            goal.setDescription(newValue);
+        });
+
+        descriptionField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                return;
+            }
+
+            goalDao.update(goal);
+        });
+    }
+
+    private void setSelectionListener(Goal goal, HBox goalLine) {
+        goalLine.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+            deselectPreviousGoal();
+            selectGoal(goal, goalLine);
+            styleSelectedGoal();
+        });
+    }
+
+    private void deselectPreviousGoal() {
+        if (selectedGoalLine != null) {
+            selectedGoalLine.getStyleClass().removeIf(styleClass -> styleClass.equals("bordered"));
+            JFXDepthManager.setDepth(selectedGoalLine, 1);
+        }
+    }
+
+    private void selectGoal(Goal goal, HBox goalLine) {
+        selectedGoalLine = goalLine;
+        selectedGoal = goal;
+    }
+
+    private void styleSelectedGoal() {
+        selectedGoalLine.getStyleClass().add("bordered");
+        JFXDepthManager.setDepth(selectedGoalLine, 2);
+    }
+
+    private void setGoalLineStyle(HBox goalLine, Goal goal) {
         JFXDepthManager.setDepth(goalLine, 1);
         goalLine.getStyleClass().add("form");
 
@@ -90,6 +107,8 @@ public class GoalListModel {
 
         goalLine.setPadding(new Insets(10, 35, 10, 20));
         goalLine.setSpacing(10);
+
+        goalLine.setStyle("-fx-background-color: " + categoryColorOfGoal(goal));
     }
 
     private void setCheckMarkStyle(FontAwesomeIcon checkMark) {
@@ -137,6 +156,14 @@ public class GoalListModel {
         layout.getChildren().removeIf(child -> child == selectedGoalLine);
         goals.remove(selectedGoal);
         return selectedGoal;
+    }
+
+    private String categoryColorOfGoal(Goal goal) {
+        if (!goal.getCategories().isEmpty()) {
+            return goal.getCategories().get(0).getColor();
+        } else {
+            return ChiclePadColor.toHex(ChiclePadColor.WHITE);
+        }
     }
 
 }
