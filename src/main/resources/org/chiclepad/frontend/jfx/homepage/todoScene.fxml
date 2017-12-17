@@ -240,7 +240,12 @@
                    </HBox>
                    <VBox fx:id="contentPanel" alignment="BOTTOM_RIGHT" VBox.vgrow="ALWAYS">
                        <children>
-                           <JFXTreeTableView fx:id="todoList" showRoot="false" VBox.vgrow="ALWAYS"/>
+                           <JFXTreeTableView fx:id="todoList" showRoot="false" VBox.vgrow="ALWAYS">
+                               <styleClass>
+                                   <String fx:value="bordered"/>
+                                   <String fx:value="normal-text"/>
+                               </styleClass>
+                           </JFXTreeTableView>
                      </children>
                   </VBox>
                </children>

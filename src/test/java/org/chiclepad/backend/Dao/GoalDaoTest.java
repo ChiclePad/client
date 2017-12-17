@@ -53,11 +53,10 @@ class GoalDaoTest {
         Goal goal3 = dao.create(user2.getId(), "test3");
 
         CompletedGoal completedGoal1 = dao.createCompletedGoal(goal1.getId());
-        CompletedGoal completedGoal2 = dao.createCompletedGoal(goal1.getId());
         CompletedGoal completedGoal3 = dao.createCompletedGoal(goal2.getId());
         CompletedGoal completedGoal4 = dao.createCompletedGoal(goal3.getId());
 
-        assertThat(dao.getCompletedGoals(goal1.getId())).containsExactlyInAnyOrder(completedGoal1, completedGoal2);
+        assertThat(dao.getCompletedGoals(goal1.getId())).containsExactlyInAnyOrder(completedGoal1);
         assertThat(dao.getCompletedGoals(goal3.getId())).containsExactlyInAnyOrder(completedGoal4);
     }
 
@@ -118,11 +117,10 @@ class GoalDaoTest {
         Goal goal3 = dao.create(user2.getId(), "test3");
 
         CompletedGoal completedGoal1 = dao.createCompletedGoal(goal1.getId());
-        CompletedGoal completedGoal2 = dao.createCompletedGoal(goal1.getId());
         CompletedGoal completedGoal3 = dao.createCompletedGoal(goal2.getId());
         CompletedGoal completedGoal4 = dao.createCompletedGoal(goal3.getId());
 
-        assertThat(dao.getCompletedGoals(goal1.getId())).containsExactlyInAnyOrder(completedGoal1, completedGoal2);
+        assertThat(dao.getCompletedGoals(goal1.getId())).containsExactlyInAnyOrder(completedGoal1);
         assertThat(dao.getCompletedGoals(goal2.getId())).containsExactlyInAnyOrder(completedGoal3);
         assertThat(dao.getCompletedGoals(goal3.getId())).containsExactlyInAnyOrder(completedGoal4);
     }
