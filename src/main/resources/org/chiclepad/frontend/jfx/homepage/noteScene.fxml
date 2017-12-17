@@ -130,6 +130,7 @@
                             <styleClass>
                                 <String fx:value="normal-text" />
                                 <String fx:value="text-on-grey" />
+                                <String fx:value="green-text"/>
                             </styleClass>
                             <HBox.margin>
                                 <Insets left="30.0" />
@@ -184,13 +185,15 @@
                            <styleClass>
                               <String fx:value="huge-text" />
                               <String fx:value="bold" />
+                               <String fx:value="green-text"/>
                            </styleClass>
                         </Label>
-                        <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                         <HBox alignment="CENTER_RIGHT" spacing="20.0" HBox.hgrow="ALWAYS">
                            <children>
+                               <JFXComboBox/>
                                <JFXButton onAction="#deleteSelected" text="Remove x">
                                  <HBox.margin>
-                                    <Insets right="20.0" />
+                                     <Insets/>
                                  </HBox.margin>
                                  <padding>
                                     <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />

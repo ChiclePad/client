@@ -102,6 +102,10 @@ public class SettingsSceneController {
         });
 
         nameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                return;
+            }
+
             this.userDao.updateDetails(this.loggedInUser);
         });
     }

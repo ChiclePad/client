@@ -4,9 +4,9 @@ import javafx.scene.paint.Color;
 
 public class ChiclePadColor {
 
-    public static final Color WHITE = Color.web("#fff");
+    public static final Color WHITE = Color.web("#ffffff");
 
-    public static final Color GREY = Color.web("#eee");
+    public static final Color GREY = Color.web("#eeeeee");
 
     public static final Color GREY_TEXT = Color.web("#464947");
 

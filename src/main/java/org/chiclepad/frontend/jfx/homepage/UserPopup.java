@@ -30,6 +30,8 @@ public class UserPopup {
     }
 
     private static void styleLayout(VBox layout) {
+        layout.getStyleClass().addAll("form", "bordered");
+
         layout.setPadding(new Insets(15, 10, 15, 10));
         layout.setSpacing(10);
     }

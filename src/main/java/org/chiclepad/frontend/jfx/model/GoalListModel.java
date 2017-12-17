@@ -60,6 +60,17 @@ public class GoalListModel {
         text.setFocusColor(ChiclePadColor.PRIMARY);
         text.setUnFocusColor(ChiclePadColor.GREY_TEXT);
         HBox.setHgrow(text, Priority.ALWAYS);
+        text.textProperty().addListener((observable, oldValue, newValue) -> {
+            goal.setDescription(newValue);
+        });
+
+        text.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                return;
+            }
+
+            goalDao.update(goal);
+        });
 
         diaryPageLine.getChildren().addAll(checkMark, text);
         layout.getChildren().add(diaryPageLine);

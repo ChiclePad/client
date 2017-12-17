@@ -84,6 +84,9 @@ public class HomeSceneController {
 
         addCategoryIcon.setOnMouseEntered(event -> addCategoryIcon.setFill(ChiclePadColor.PRIMARY));
         addCategoryIcon.setOnMouseExited(event -> addCategoryIcon.setFill(ChiclePadColor.BLACK));
+
+        upcomingListView.setExpanded(true);
+        notificationsListView.setExpanded(true);
     }
 
     private void initializeUser() {
@@ -102,7 +105,7 @@ public class HomeSceneController {
         upcoming = new UpcomingListModel(upcomingListView);
         todoDao.getAll(loggedInUser.getId()).stream()
                 .sorted(Comparator.comparing(Todo::getPriority))
-                .limit(10)
+                .limit(6)
                 .forEach(todo -> upcoming.add(todo));
     }
 
@@ -112,11 +115,11 @@ public class HomeSceneController {
         noteDao.getAll(loggedInUser.getId()).stream()
                 .filter(note -> note.getReminderTime().isPresent())
                 .sorted(Comparator.comparing(note2 -> note2.getReminderTime().get()))
-                .limit(5)
+                .limit(3)
                 .forEach(note -> notifications.addNote(note));
 
         goalDao.getAllGoalsNotCompletedToday(loggedInUser.getId()).stream()
-                .limit(5)
+                .limit(3)
                 .forEach(goal -> notifications.addGoal(goal));
     }
 
@@ -135,7 +138,7 @@ public class HomeSceneController {
 
     @FXML
     public void addCategory() {
-        CategoryPopup.showUnderParent(addCategoryIcon);
+        CategoryPopup.showUnderParent(addCategoryIcon, categories);
     }
 
     @FXML

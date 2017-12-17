@@ -184,6 +184,7 @@
                              <styleClass>
                                  <String fx:value="huge-text"/>
                                  <String fx:value="bold"/>
+                                 <String fx:value="green-text"/>
                              </styleClass>
                          </Label>
                          <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
@@ -222,12 +223,17 @@
                        <children>
                            <JFXTextField fx:id="descriptionField" focusColor="#8dc44e" promptText="Description"
                                          styleClass="normal-text" unFocusColor="#464947" HBox.hgrow="ALWAYS"/>
-                           <JFXDatePicker fx:id="reminderDate" defaultColor="#8dc44e" prefWidth="180.0"
+                           <JFXDatePicker fx:id="deadlinePicker" defaultColor="#8dc44e" prefWidth="180.0"
                                           promptText="Deadline" styleClass="normal-text"/>
-                           <JFXDatePicker fx:id="reminderDate1" defaultColor="#8dc44e" prefWidth="180.0"
+                           <JFXDatePicker fx:id="softDeadlinePicker" defaultColor="#8dc44e" prefWidth="180.0"
                                           promptText="SoftDeadline" styleClass="normal-text"/>
-                           <JFXTextField fx:id="descriptionField1" focusColor="#8dc44e" prefWidth="80.0"
-                                         promptText="Priority" styleClass="normal-text" unFocusColor="#464947"/>
+                           <HBox alignment="CENTER_LEFT" spacing="5.0">
+                               <children>
+                                   <Label styleClass="normal-text" text="Priority"/>
+                                   <JFXSlider fx:id="prioritySlider" max="20.0" min="-19.0" prefWidth="100.0"
+                                              value="1.0"/>
+                               </children>
+                           </HBox>
                        </children>
                    </HBox>
                    <VBox fx:id="contentPanel" alignment="BOTTOM_RIGHT" VBox.vgrow="ALWAYS">

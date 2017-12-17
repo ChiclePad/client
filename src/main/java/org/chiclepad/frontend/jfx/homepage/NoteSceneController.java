@@ -136,7 +136,7 @@ public class NoteSceneController {
 
     @FXML
     public void addCategory() {
-        CategoryPopup.showUnderParent(addCategoryIcon);
+        CategoryPopup.showUnderParent(addCategoryIcon, categories);
     }
 
     @FXML

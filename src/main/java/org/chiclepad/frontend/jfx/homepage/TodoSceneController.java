@@ -1,5 +1,8 @@
 package org.chiclepad.frontend.jfx.homepage;
 
+import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.effects.JFXDepthManager;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -51,6 +54,18 @@ public class TodoSceneController {
 
     @FXML
     private FontAwesomeIcon addCategoryIcon;
+
+    @FXML
+    private JFXTextField descriptionField;
+
+    @FXML
+    private JFXDatePicker deadlinePicker;
+
+    @FXML
+    private JFXDatePicker softDeadlinePicker;
+
+    @FXML
+    private JFXSlider prioritySlider;
 
     private TodoListModel todos;
 
@@ -121,7 +136,7 @@ public class TodoSceneController {
 
     @FXML
     public void addCategory() {
-        CategoryPopup.showUnderParent(addCategoryIcon);
+        CategoryPopup.showUnderParent(addCategoryIcon, categories);
     }
     
     @FXML

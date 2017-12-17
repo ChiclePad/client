@@ -118,8 +118,14 @@ public class GoalSceneController {
         goals = new GoalListModel(goalList);
         goalDao.getAllGoalsNotCompletedToday(loggedInUser.getId()).forEach(goal -> goals.add(goal));
 
-        XYChart.Series data = new XYChart.Series<>();
-        data.getData().addAll(
+        XYChart.Series successChartBars = new XYChart.Series<>();
+//        for (int i = 0; i < 7; i++) {
+//            LocalDate recentDay = LocalDate.now().minusDays(i);
+//
+//            successChartBars.getData().add()
+//        }
+
+        successChartBars.getData().addAll(
                 new XYChart.Data(dateFormatter.format(LocalDate.now()), 2),
                 new XYChart.Data(dateFormatter.format(LocalDate.now().minusDays(1)), 1),
                 new XYChart.Data(dateFormatter.format(LocalDate.now().minusDays(2)), 3),
@@ -129,7 +135,7 @@ public class GoalSceneController {
                 new XYChart.Data(dateFormatter.format(LocalDate.now().minusDays(6)), 7),
                 new XYChart.Data(dateFormatter.format(LocalDate.now().minusDays(7)), 3)
         );
-        successChart.setData(FXCollections.observableArrayList(data));
+        successChart.setData(FXCollections.observableArrayList(successChartBars));
 
         dayChart.setData(FXCollections.observableArrayList(
                 new PieChart.Data("Mon", 8),
@@ -182,7 +188,7 @@ public class GoalSceneController {
 
     @FXML
     public void addCategory() {
-        CategoryPopup.showUnderParent(addCategoryIcon);
+        CategoryPopup.showUnderParent(addCategoryIcon, categories);
     }
 
     @FXML

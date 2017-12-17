@@ -99,6 +99,10 @@ public class NoteListModel {
     }
 
     private void selectNewPostIt(Note addedNote, VBox postIt) {
+        if (selectedNote != null) {
+            noteDao.update(selectedNote);
+        }
+
         this.selectedPostIt = postIt;
         this.selectedNote = addedNote;
 
@@ -120,6 +124,10 @@ public class NoteListModel {
         }));
 
         descriptionField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                return;
+            }
+
             noteDao.update(this.selectedNote);
         });
     }
@@ -155,6 +163,10 @@ public class NoteListModel {
         });
 
         reminderDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                return;
+            }
+
             noteDao.update(selectedNote);
         });
     }
@@ -174,6 +186,10 @@ public class NoteListModel {
         });
 
         reminderTime.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                return;
+            }
+
             noteDao.update(selectedNote);
         });
     }

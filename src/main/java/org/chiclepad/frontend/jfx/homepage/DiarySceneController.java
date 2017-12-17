@@ -166,7 +166,7 @@ public class DiarySceneController {
 
     @FXML
     public void addCategory() {
-        CategoryPopup.showUnderParent(addCategoryIcon);
+        CategoryPopup.showUnderParent(addCategoryIcon, categories);
     }
 
     @FXML
