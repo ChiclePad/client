@@ -1,5 +1,6 @@
 package org.chiclepad.frontend.jfx.model;
 
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXRippler;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.geometry.Insets;
@@ -9,12 +10,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.chiclepad.backend.entity.Category;
-import org.chiclepad.frontend.jfx.ChiclePadColor;
+import org.chiclepad.constants.ChiclePadColor;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CategoryListModel {
+
+    private JFXComboBox categoryPicker;
 
     private VBox ripplerArea;
 
@@ -23,16 +26,22 @@ public class CategoryListModel {
     private Map<HBox, Boolean> categorySelected;
 
     public CategoryListModel(VBox categories, VBox ripplerArea) {
-        this.categories = categories;
-        this.ripplerArea = ripplerArea;
-        categorySelected = new HashMap<>();
+        this(categories, ripplerArea, new JFXComboBox() /* Invisible combo box, to prevent needless null checking*/);
     }
 
+    public CategoryListModel(VBox categories, VBox ripplerArea, JFXComboBox categoryPicker) {
+        this.categories = categories;
+        this.ripplerArea = ripplerArea;
+        this.categoryPicker = categoryPicker;
+        categorySelected = new HashMap<>();
+    }
 
     public void add(Category category) {
         HBox line = createCategoryListLine(category);
         categorySelected.put(line, false);
         categories.getChildren().add(line);
+
+        categoryPicker.getItems().add(category);
     }
 
     private HBox createCategoryListLine(Category category) {
@@ -93,6 +102,4 @@ public class CategoryListModel {
         line.getStyleClass().addAll("highlighted", "grey-dark-background", "grey-dark-background-hover");
     }
 
-
 }
-

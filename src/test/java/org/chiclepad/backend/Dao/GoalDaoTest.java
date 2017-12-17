@@ -1,5 +1,6 @@
 package org.chiclepad.backend.Dao;
 
+import org.chiclepad.backend.business.DatabaseManager;
 import org.chiclepad.backend.entity.ChiclePadUser;
 import org.chiclepad.backend.entity.CompletedGoal;
 import org.chiclepad.backend.entity.Goal;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -14,6 +16,7 @@ class GoalDaoTest {
 
     private static GoalDao dao = DaoFactory.INSTANCE.getGoalDao();
     private static ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
+    private static JdbcTemplate jdbcTemplate = DatabaseManager.INSTANCE.getConnection();
 
     private static ChiclePadUser user1;
     private static ChiclePadUser user2;
@@ -121,6 +124,24 @@ class GoalDaoTest {
         assertThat(dao.getCompletedGoals(goal1.getId())).containsExactlyInAnyOrder(completedGoal1, completedGoal2);
         assertThat(dao.getCompletedGoals(goal2.getId())).containsExactlyInAnyOrder(completedGoal3);
         assertThat(dao.getCompletedGoals(goal3.getId())).containsExactlyInAnyOrder(completedGoal4);
+    }
+
+    @Test
+    void getFilteredCompletedGoalsCountByWeekDay() {
+        Goal goal1 = dao.create(user1.getId(), "test1");
+        Goal goal2 = dao.create(user1.getId(), "test2");
+        Goal goal3 = dao.create(user2.getId(), "test3");
+
+//        jdbcTemplate.update("INSERT INTO ")
+    }
+
+    @Test
+    void getFilteredCompletedGoalsCountRecentDays() {
+        Goal goal1 = dao.create(user1.getId(), "test1");
+        Goal goal2 = dao.create(user1.getId(), "test2");
+        Goal goal3 = dao.create(user2.getId(), "test3");
+
+//        jdbcTemplate.update("INSERT INTO ")
     }
 
     @Test

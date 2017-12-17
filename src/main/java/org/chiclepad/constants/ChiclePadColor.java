@@ -1,4 +1,4 @@
-package org.chiclepad.frontend.jfx;
+package org.chiclepad.constants;
 
 import javafx.scene.paint.Color;
 

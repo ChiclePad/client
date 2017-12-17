@@ -1,5 +1,6 @@
 package org.chiclepad.frontend.jfx.homepage;
 
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.effects.JFXDepthManager;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.collections.FXCollections;
@@ -16,12 +17,14 @@ import org.chiclepad.backend.Dao.CategoryDao;
 import org.chiclepad.backend.Dao.ChiclePadUserDao;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.GoalDao;
+import org.chiclepad.backend.business.session.UserSessionManager;
 import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.ChiclePadUser;
 import org.chiclepad.backend.entity.Goal;
-import org.chiclepad.business.session.UserSessionManager;
+import org.chiclepad.constants.ChiclePadColor;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
-import org.chiclepad.frontend.jfx.ChiclePadColor;
+import org.chiclepad.frontend.jfx.Popup.CategoryPopup;
+import org.chiclepad.frontend.jfx.Popup.UserPopup;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 import org.chiclepad.frontend.jfx.model.GoalListModel;
 
@@ -48,6 +51,9 @@ public class GoalSceneController {
 
     @FXML
     private VBox categoriesRippler;
+
+    @FXML
+    private JFXComboBox categoryPicker;
 
     @FXML
     private VBox goalList;
@@ -109,7 +115,7 @@ public class GoalSceneController {
     }
 
     private void initializeCategories() {
-        this.categories = new CategoryListModel(categoryList, categoriesRippler);
+        this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker);
         List<Category> categories = this.categoryDao.getAll(this.loggedInUser.getId());
         categories.forEach(category -> this.categories.add(category));
     }
@@ -118,6 +124,10 @@ public class GoalSceneController {
         goals = new GoalListModel(goalList);
         goalDao.getAllGoalsNotCompletedToday(loggedInUser.getId()).forEach(goal -> goals.add(goal));
 
+//        goalDao.getAll(loggedInUser.getId()).stream()
+//                .map(goal -> goalDao.getCompletedGoals(goal))
+//                .filter(completedGoals -> !completedGoals.isEmpty())
+//                .collect(Collectors.groupingBy(completedGoal -> completedGoal));
         XYChart.Series successChartBars = new XYChart.Series<>();
 //        for (int i = 0; i < 7; i++) {
 //            LocalDate recentDay = LocalDate.now().minusDays(i);

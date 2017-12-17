@@ -1,4 +1,4 @@
-package org.chiclepad.frontend.jfx;
+package org.chiclepad.frontend.jfx.Popup;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;

@@ -13,13 +13,14 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.chiclepad.backend.Dao.ChiclePadUserDao;
 import org.chiclepad.backend.Dao.DaoFactory;
+import org.chiclepad.backend.business.LocaleUtils;
+import org.chiclepad.backend.business.session.Authenticator;
+import org.chiclepad.backend.business.session.UserSessionManager;
 import org.chiclepad.backend.entity.ChiclePadUser;
-import org.chiclepad.business.LocaleUtils;
-import org.chiclepad.business.session.Authenticator;
-import org.chiclepad.business.session.UserSessionManager;
+import org.chiclepad.constants.ChiclePadColor;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
-import org.chiclepad.frontend.jfx.ChiclePadColor;
-import org.chiclepad.frontend.jfx.ChiclePadDialog;
+import org.chiclepad.frontend.jfx.Popup.ChiclePadDialog;
+import org.chiclepad.frontend.jfx.Popup.UserPopup;
 
 public class SettingsSceneController {
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
 <?import de.jensd.fx.glyphs.fontawesome.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -105,7 +106,6 @@
                             <styleClass>
                                 <String fx:value="text-on-grey" />
                                 <String fx:value="normal-text" />
-                                <String fx:value="green-text"/>
                             </styleClass>
                             <HBox.margin>
                                 <Insets left="30.0" />
@@ -188,11 +188,13 @@
                               <String fx:value="bold" />
                            </styleClass>
                         </Label>
-                         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                         <HBox alignment="CENTER_RIGHT" spacing="20.0" HBox.hgrow="ALWAYS">
                              <children>
+                                 <JFXComboBox fx:id="categoryPicker" focusColor="#8dc44e" prefWidth="150.0"
+                                              styleClass="normal-text" unFocusColor="#464947"/>
                                  <JFXButton onAction="#deleteSelected" text="Remove x">
                                      <HBox.margin>
-                                         <Insets right="20.0"/>
+                                         <Insets/>
                                      </HBox.margin>
                                      <padding>
                                          <Insets bottom="10.0" left="20.0" right="20.0" top="10.0"/>

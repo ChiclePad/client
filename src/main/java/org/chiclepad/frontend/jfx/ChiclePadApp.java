@@ -7,16 +7,12 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.chiclepad.frontend.jfx.startup.LoginSceneController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public class ChiclePadApp extends Application {
 
     private static Stage primaryStage;
-
-    private static final Logger logger = LoggerFactory.getLogger(ChiclePadApp.class);
 
     public void start(final Stage primaryStage) throws Exception {
         ChiclePadApp.primaryStage = primaryStage;
@@ -49,7 +45,7 @@ public class ChiclePadApp extends Application {
             Parent parentPane = fxmlLoader.load();
             primaryStage.getScene().setRoot(parentPane);
         } catch (IOException e) {
-            logger.error("Failed switching to scene: " + fxmlPath + "\n" + e.getMessage());
+            System.err.println("Failed switching to scene: " + fxmlPath + "\n" + e.getMessage());
             e.printStackTrace();
         }
     }

@@ -1,6 +1,6 @@
 package org.chiclepad.backend.Dao;
 
-import org.chiclepad.business.LocaleUtils;
+import org.chiclepad.backend.business.LocaleUtils;
 import org.chiclepad.backend.entity.ChiclePadUser;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,4 +1,4 @@
-package org.chiclepad.frontend.jfx.homepage;
+package org.chiclepad.frontend.jfx.Popup;
 
 import com.jfoenix.controls.*;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -13,9 +13,9 @@ import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import org.chiclepad.backend.Dao.CategoryDao;
 import org.chiclepad.backend.Dao.DaoFactory;
+import org.chiclepad.backend.business.session.UserSessionManager;
 import org.chiclepad.backend.entity.Category;
-import org.chiclepad.business.session.UserSessionManager;
-import org.chiclepad.frontend.jfx.ChiclePadColor;
+import org.chiclepad.constants.ChiclePadColor;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 
 public class CategoryPopup {
@@ -122,7 +122,7 @@ public class CategoryPopup {
 
     private static void styleCategoryIconChooser(JFXComboBox categoryIconChooser) {
         categoryIconChooser.getStyleClass().add("small-text");
-        categoryIconChooser.setPrefWidth(15);
+        categoryIconChooser.setPrefWidth(20);
 
         categoryIconChooser.setFocusColor(ChiclePadColor.PRIMARY);
         categoryIconChooser.setUnFocusColor(ChiclePadColor.GREY_TEXT);

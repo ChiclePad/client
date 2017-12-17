@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.NoteDao;
 import org.chiclepad.backend.entity.Note;
-import org.chiclepad.frontend.jfx.ChiclePadColor;
+import org.chiclepad.constants.ChiclePadColor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
