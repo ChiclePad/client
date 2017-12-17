@@ -1,6 +1,4 @@
-package org.chiclepad.business;
-
-import org.chiclepad.business.session.UserSession;
+package org.chiclepad.backend.business.session;
 
 public enum UserSessionManager {
     INSTANCE;

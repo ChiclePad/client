@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
 <?import de.jensd.fx.glyphs.fontawesome.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -146,15 +151,21 @@
                     </styleClass>
                 </HBox>
                 <Pane prefHeight="1.0" styleClass="grey-dark" />
-                <Label opacity="0.8" text="Categories">
+                <HBox alignment="CENTER_LEFT" spacing="15.0">
                     <VBox.margin>
-                        <Insets bottom="10.0" left="50.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="50.0" right="10.0" top="10.0"/>
                     </VBox.margin>
-                    <styleClass>
-                        <String fx:value="large-text" />
-                        <String fx:value="text-on-grey" />
-                    </styleClass>
-                </Label>
+                    <children>
+                        <Label opacity="0.8" text="Categories">
+                            <styleClass>
+                                <String fx:value="large-text"/>
+                                <String fx:value="text-on-grey"/>
+                            </styleClass>
+                        </Label>
+                        <FontAwesomeIcon fx:id="addCategoryIcon" fill="#464947" iconName="PLUS_CIRCLE"
+                                         onMousePressed="#addCategory" size="1.5em"/>
+                    </children>
+                </HBox>
             <VBox fx:id="categoryList" VBox.vgrow="ALWAYS" />
             </children>
         </VBox>
@@ -180,11 +191,13 @@
                               <String fx:value="bold" />
                            </styleClass>
                         </Label>
-                         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                         <HBox alignment="CENTER_RIGHT" spacing="20.0" HBox.hgrow="ALWAYS">
                              <children>
+                                 <JFXComboBox fx:id="categoryPicker" focusColor="#8dc44e" prefWidth="150.0"
+                                              styleClass="normal-text" unFocusColor="#464947"/>
                                  <JFXButton onAction="#deleteSelected" text="Remove x">
                                      <HBox.margin>
-                                         <Insets right="20.0"/>
+                                         <Insets/>
                                      </HBox.margin>
                                      <padding>
                                          <Insets bottom="10.0" left="20.0" right="20.0" top="10.0"/>
@@ -212,43 +225,37 @@
                          </HBox>
                      </children>
                   </HBox>
-                   <HBox alignment="CENTER" spacing="30.0">
+                   <HBox spacing="30.0" VBox.vgrow="ALWAYS">
                        <children>
-                           <JFXTextField fx:id="descriptionField" focusColor="#8dc44e" promptText="Description"
-                                         styleClass="normal-text" unFocusColor="#464947" HBox.hgrow="ALWAYS"/>
-                           <JFXDatePicker fx:id="reminderDate" defaultColor="#8dc44e" prefWidth="200.0"
-                                          promptText="Reminder date" styleClass="normal-text"/>
-                           <JFXTimePicker fx:id="reminderTime" defaultColor="#8dc44e" prefWidth="200.0"
-                                          promptText="Reminder time" styleClass="normal-text"/>
+                           <VBox fx:id="goalList" spacing="15.0" HBox.hgrow="ALWAYS"/>
+                           <VBox spacing="15.0">
+                               <children>
+                                   <BarChart fx:id="successChart" barGap="1.0" categoryGap="5.0" legendVisible="false"
+                                             prefWidth="350.0" styleClass="normal-text" title="Day Statistics"
+                                             verticalGridLinesVisible="false" verticalZeroLineVisible="false">
+                                       <xAxis>
+                                           <CategoryAxis side="BOTTOM"/>
+                                       </xAxis>
+                                       <yAxis>
+                                           <NumberAxis minorTickCount="2" side="RIGHT" upperBound="10.0"/>
+                                       </yAxis>
+                                   </BarChart>
+                                   <PieChart fx:id="dayChart" labelLineLength="10.0" legendVisible="false"
+                                             prefWidth="350.0" styleClass="small-normal-text"/>
+                               </children>
+                           </VBox>
                        </children>
-                       <VBox.margin>
-                           <Insets/>
-                       </VBox.margin>
                    </HBox>
-                   <VBox spacing="15.0" VBox.vgrow="ALWAYS">
-                       <children>
-                           <HBox prefHeight="100.0"
-                                 style="-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );"
-                                 styleClass="form"/>
-                           <HBox prefHeight="100.0"
-                                 style="-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );"
-                                 styleClass="form"/>
-                           <HBox prefHeight="100.0"
-                                 style="-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );"
-                                 styleClass="form"/>
-                           <HBox prefHeight="100.0"
-                                 style="-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );"
-                                 styleClass="form"/>
-                       </children>
-                   </VBox>
                    <HBox alignment="CENTER_LEFT">
                        <children>
-                           <FontAwesomeIcon fx:id="todoIcon2" fill="#464947" iconName="ARROW_LEFT" selectionEnd="1"
-                                            selectionStart="1" size="2em"/>
+                           <FontAwesomeIcon fx:id="loadPreviousButton" fill="#464947" iconName="ARROW_LEFT"
+                                            onMousePressed="#loadPrevious" selectionEnd="1" selectionStart="1"
+                                            size="2em" styleClass="link"/>
                            <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
                                <children>
-                                   <FontAwesomeIcon fx:id="todoIcon21" fill="#464947" iconName="ARROW_RIGHT"
-                                                    selectionEnd="1" selectionStart="1" size="2em"/>
+                                   <FontAwesomeIcon fx:id="loadNextButton" fill="#464947" iconName="ARROW_RIGHT"
+                                                    onMousePressed="#loadNext" selectionEnd="1" selectionStart="1"
+                                                    size="2em" styleClass="link"/>
                                </children>
                            </HBox>
                        </children>
@@ -306,8 +313,9 @@
                                         <Insets left="50.0" right="50.0" />
                                     </VBox.margin>
                                     <children>
-                                        <TextField fx:id="searchTextField" onKeyPressed="#refreshFilter"
-                                                   promptText="Search" HBox.hgrow="ALWAYS">
+                                        <TextField fx:id="searchTextField" onKeyPressed="#clearScene"
+                                                   onKeyReleased="#refreshFilter" promptText="Search"
+                                                   HBox.hgrow="ALWAYS">
                                             <styleClass>
                                                 <String fx:value="text" />
                                                 <String fx:value="raised-slight" />

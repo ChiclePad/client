@@ -55,9 +55,18 @@ tertiary: #3E5641
     -fx-text-fill: white;
 }
 
+.green-text {
+    -fx-font-family: Roboto;
+    -fx-text-fill: #8DC44E;
+}
+
 .red-text {
     -fx-font-family: Roboto;
     -fx-text-fill: #A24936;
+}
+
+.green-text-on-hover:hover {
+    -fx-text-fill: #8DC44E;
 }
 
 .form {
@@ -125,22 +134,27 @@ tertiary: #3E5641
 
 .small-text {
     -fx-font-size: 16px;
+    -fx-font-family: Roboto;
 }
 
 .small-normal-text {
     -fx-font-size: 18px;
+    -fx-font-family: Roboto;
 }
 
 .normal-text {
     -fx-font-size: 20px;
+    -fx-font-family: Roboto;
 }
 
 .large-text {
     -fx-font-size: 22px;
+    -fx-font-family: Roboto;
 }
 
 .huge-text {
     -fx-font-size: 26px;
+    -fx-font-family: Roboto;
 }
 
 .raised-slight {
@@ -195,4 +209,84 @@ tertiary: #3E5641
 
 .jfx-button {
     -fx-font-family: Roboto;
+}
+
+.jfx-slider .track,
+.jfx-slider:vertical .track {
+    -fx-background-color: #e0e0e0;
+    -fx-background-radius: 5;
+    -fx-background-insets: 0;
+    -fx-pref-width: 2px;
+    -fx-pref-height: 2px;
+}
+
+.jfx-slider .thumb,
+.jfx-slider:focused .thumb {
+    -fx-background-color: #8DC44E;
+    -fx-background-radius: 20;
+    -fx-background-insets: 0;
+}
+
+.jfx-slider .colored-track {
+    -fx-background-color: #8DC44E;
+    -fx-background-radius: 5;
+    -fx-background-insets: 0;
+}
+
+.jfx-slider .slider-value {
+    -fx-stroke: WHITE;
+    -fx-font-size: 10;
+}
+
+.jfx-slider .animated-thumb {
+    -fx-pref-width: 30px;
+    -fx-pref-height: 30px;
+    -fx-background-color: #8DC44E;
+    -fx-background-radius: 50% 50% 50% 0%;
+    -fx-background-insets: 0;
+}
+
+.jfx-slider:min .thumb,
+.jfx-slider:min:focused .thumb {
+    -fx-background-color: #e0e0e0;
+    -fx-background-radius: 20;
+    -fx-background-insets: 0;
+}
+
+.jfx-slider:min .animated-thumb {
+    -fx-background-color: #e0e0e0;
+    -fx-background-radius: 50% 50% 50% 0%;
+    -fx-background-insets: 0;
+}
+
+.default-color0.chart-pie {
+    -fx-pie-color: #aff25f;
+}
+
+.default-color1.chart-pie {
+    -fx-pie-color: #a6e65b;
+}
+
+.default-color2.chart-pie {
+    -fx-pie-color: #9dd956;
+}
+
+.default-color3.chart-pie {
+    -fx-pie-color: #8DC44E;
+}
+
+.default-color4.chart-pie {
+    -fx-pie-color: #84b749;
+}
+
+.default-color5.chart-pie {
+    -fx-pie-color: #7cac45;
+}
+
+.default-color6.chart-pie {
+    -fx-pie-color: #76a341;
+}
+
+.chart-bar {
+    -fx-bar-fill: #8DC44E;
 }

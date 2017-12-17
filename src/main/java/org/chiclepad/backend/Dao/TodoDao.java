@@ -27,12 +27,14 @@ public class TodoDao extends EntryDao {
             "FROM todo " +
             "INNER JOIN entry ON todo.entry_id = entry.id " +
             "LEFT OUTER JOIN deleted_entry ON deleted_entry.entry_id = entry.id " +
-            "WHERE deleted_entry.deleted_time IS NULL AND user_id = ? ;";
+            "WHERE deleted_entry.deleted_time IS NULL AND user_id = ? " +
+            "ORDER BY todo.deadline ASC;";
 
     private final String GET_ALL_WITH_DELETED_DIARY_PAGE_SQL = "SELECT * " +
             "FROM todo " +
             "INNER JOIN entry ON entry_id = entry.id " +
-            "WHERE user_id = ? ;";
+            "WHERE user_id = ? " +
+            "ORDER BY todo.deadline ASC;";
 
     private final String UPDATE_DIARY_PAGE_SQL = "UPDATE todo " +
             "SET description = ?, deadline = ?, soft_deadline = ?, priority = ? " +

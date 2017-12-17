@@ -1,6 +1,6 @@
 package org.chiclepad.backend.Dao;
 
-import org.chiclepad.business.DatabaseManager;
+import org.chiclepad.backend.business.DatabaseManager;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.File;

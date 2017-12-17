@@ -1,7 +1,8 @@
 package org.chiclepad.frontend.jfx.homepage;
 
-import com.jfoenix.controls.JFXTreeTableView;
+import com.jfoenix.controls.*;
 import com.jfoenix.effects.JFXDepthManager;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -12,11 +13,14 @@ import org.chiclepad.backend.Dao.CategoryDao;
 import org.chiclepad.backend.Dao.ChiclePadUserDao;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.TodoDao;
+import org.chiclepad.backend.business.session.UserSessionManager;
 import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.ChiclePadUser;
 import org.chiclepad.backend.entity.Todo;
-import org.chiclepad.business.UserSessionManager;
+import org.chiclepad.constants.ChiclePadColor;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
+import org.chiclepad.frontend.jfx.Popup.CategoryPopup;
+import org.chiclepad.frontend.jfx.Popup.UserPopup;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 import org.chiclepad.frontend.jfx.model.TodoListModel;
 import org.chiclepad.frontend.jfx.model.TodoTreeItem;
@@ -47,14 +51,34 @@ public class TodoSceneController {
     @FXML
     private VBox categoriesRippler;
 
+    @FXML
+    private JFXComboBox categoryPicker;
+
+    @FXML
+    private FontAwesomeIcon addCategoryIcon;
+
+    @FXML
+    private JFXTextField descriptionField;
+
+    @FXML
+    private JFXDatePicker deadlinePicker;
+
+    @FXML
+    private JFXDatePicker softDeadlinePicker;
+
+    @FXML
+    private JFXSlider prioritySlider;
+
     private TodoListModel todos;
 
     private CategoryListModel categories;
 
-    private String filter = "";
-    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
     private ChiclePadUser loggedInUser;
+
+    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
+
     private CategoryDao categoryDao = DaoFactory.INSTANCE.getCategoryDao();
+
     private TodoDao todoDao = DaoFactory.INSTANCE.getTodoDao();
 
     @FXML
@@ -67,6 +91,9 @@ public class TodoSceneController {
 
     private void initializeAdditionalStyles() {
         JFXDepthManager.setDepth(header, 1);
+
+        addCategoryIcon.setOnMouseEntered(event -> addCategoryIcon.setFill(ChiclePadColor.PRIMARY));
+        addCategoryIcon.setOnMouseExited(event -> addCategoryIcon.setFill(ChiclePadColor.BLACK));
     }
 
     private void initializeUser() {
@@ -76,7 +103,7 @@ public class TodoSceneController {
     }
 
     private void initializeCategories() {
-        this.categories = new CategoryListModel(categoryList, categoriesRippler);
+        this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker);
         List<Category> categories = this.categoryDao.getAll(this.loggedInUser.getId());
         categories.forEach(category -> this.categories.add(category));
     }
@@ -88,18 +115,30 @@ public class TodoSceneController {
 
     @FXML
     public void refreshFilter() {
-        filter = searchTextField.getText();
-        // TODO reload for Simon
+        String filter = searchTextField.getText();
+        todos.setNewFilter(filter);
     }
 
     @FXML
     public void addTodo() {
-        todos.add(new Todo(1, 1, "", LocalDateTime.now().plusDays(20), 0));
+        Todo created = todoDao.create(loggedInUser.getId(), "", LocalDateTime.now(), 0);
+        todos.add(created);
     }
 
     @FXML
     public void deleteSelected() {
+        Todo deleted = todos.deleteSelected();
 
+        if (deleted == null) {
+            return;
+        }
+
+        todoDao.markDeleted(deleted);
+    }
+
+    @FXML
+    public void addCategory() {
+        CategoryPopup.showUnderParent(addCategoryIcon, categories);
     }
     
     @FXML

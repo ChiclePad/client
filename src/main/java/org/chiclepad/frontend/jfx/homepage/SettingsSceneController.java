@@ -13,13 +13,14 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.chiclepad.backend.Dao.ChiclePadUserDao;
 import org.chiclepad.backend.Dao.DaoFactory;
+import org.chiclepad.backend.business.LocaleUtils;
+import org.chiclepad.backend.business.session.Authenticator;
+import org.chiclepad.backend.business.session.UserSessionManager;
 import org.chiclepad.backend.entity.ChiclePadUser;
-import org.chiclepad.business.LocaleUtils;
-import org.chiclepad.business.UserSessionManager;
-import org.chiclepad.business.session.Authenticator;
+import org.chiclepad.constants.ChiclePadColor;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
-import org.chiclepad.frontend.jfx.ChiclePadColor;
-import org.chiclepad.frontend.jfx.ChiclePadDialog;
+import org.chiclepad.frontend.jfx.Popup.ChiclePadDialog;
+import org.chiclepad.frontend.jfx.Popup.UserPopup;
 
 public class SettingsSceneController {
 
@@ -102,6 +103,10 @@ public class SettingsSceneController {
         });
 
         nameTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                return;
+            }
+
             this.userDao.updateDetails(this.loggedInUser);
         });
     }
@@ -140,6 +145,7 @@ public class SettingsSceneController {
 
         } catch (Exception e) {
             ChiclePadDialog.show("Error!", "Password failed to change", dialogArea);
+            passwordButton.setDisable(true);
         }
     }
 

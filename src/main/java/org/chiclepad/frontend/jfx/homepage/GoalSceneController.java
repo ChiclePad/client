@@ -1,7 +1,11 @@
 package org.chiclepad.frontend.jfx.homepage;
 
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.effects.JFXDepthManager;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.fxml.FXML;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -11,12 +15,16 @@ import org.chiclepad.backend.Dao.CategoryDao;
 import org.chiclepad.backend.Dao.ChiclePadUserDao;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.GoalDao;
+import org.chiclepad.backend.business.session.UserSessionManager;
 import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.ChiclePadUser;
 import org.chiclepad.backend.entity.Goal;
-import org.chiclepad.business.UserSessionManager;
+import org.chiclepad.constants.ChiclePadColor;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
+import org.chiclepad.frontend.jfx.Popup.CategoryPopup;
+import org.chiclepad.frontend.jfx.Popup.UserPopup;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
+import org.chiclepad.frontend.jfx.model.GoalChartModel;
 import org.chiclepad.frontend.jfx.model.GoalListModel;
 
 import java.util.List;
@@ -39,16 +47,34 @@ public class GoalSceneController {
     private VBox categoryList;
 
     @FXML
+    private VBox categoriesRippler;
+
+    @FXML
+    private JFXComboBox categoryPicker;
+
+    @FXML
     private VBox goalList;
 
     @FXML
-    private VBox categoriesRippler;
+    private FontAwesomeIcon loadNextButton;
+
+    @FXML
+    private FontAwesomeIcon loadPreviousButton;
+
+    @FXML
+    private FontAwesomeIcon addCategoryIcon;
+
+    @FXML
+    private BarChart successChart;
+
+    @FXML
+    private PieChart dayChart;
 
     private GoalListModel goals;
 
-    private CategoryListModel categories;
+    private GoalChartModel goalCharts;
 
-    private String filter = "";
+    private CategoryListModel categories;
 
     private ChiclePadUser loggedInUser;
 
@@ -64,10 +90,20 @@ public class GoalSceneController {
         initializeUser();
         initializeCategories();
         initializeGoals();
+        initializeGoalCharts();
     }
 
     private void initializeAdditionalStyles() {
         JFXDepthManager.setDepth(header, 1);
+
+        makeIconGreenOnHover(addCategoryIcon);
+        makeIconGreenOnHover(loadNextButton);
+        makeIconGreenOnHover(loadPreviousButton);
+    }
+
+    private void makeIconGreenOnHover(FontAwesomeIcon icon) {
+        icon.setOnMouseEntered(event -> icon.setFill(ChiclePadColor.PRIMARY));
+        icon.setOnMouseExited(event -> icon.setFill(ChiclePadColor.BLACK));
     }
 
     private void initializeUser() {
@@ -77,20 +113,31 @@ public class GoalSceneController {
     }
 
     private void initializeCategories() {
-        this.categories = new CategoryListModel(categoryList, categoriesRippler);
+        this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker);
         List<Category> categories = this.categoryDao.getAll(this.loggedInUser.getId());
         categories.forEach(category -> this.categories.add(category));
     }
 
     private void initializeGoals() {
         goals = new GoalListModel(goalList);
-        this.goalDao.getAll(this.loggedInUser.getId()).forEach(goal -> this.goals.add(goal));
+        goalDao.getAllGoalsNotCompletedToday(loggedInUser.getId()).forEach(goal -> goals.add(goal));
+    }
+
+    private void initializeGoalCharts() {
+        this.goalCharts = new GoalChartModel(successChart, dayChart);
+        goalCharts.initialize();
+    }
+
+    @FXML
+    public void clearScene() {
+        goals.clearGoals();
     }
 
     @FXML
     public void refreshFilter() {
-        filter = searchTextField.getText();
+        String filter = searchTextField.getText();
         goals.setNewFilter(filter);
+        goalCharts.refreshWithFilter(filter);
     }
 
     @FXML
@@ -102,7 +149,27 @@ public class GoalSceneController {
     @FXML
     public void deleteSelected() {
         Goal deleted = goals.deleteSelected();
-        goalDao.delete(deleted);
+
+        if (deleted == null) {
+            return;
+        }
+
+        goalDao.markDeleted(deleted);
+    }
+
+    @FXML
+    public void loadPrevious() {
+
+    }
+
+    @FXML
+    public void loadNext() {
+
+    }
+
+    @FXML
+    public void addCategory() {
+        CategoryPopup.showUnderParent(addCategoryIcon, categories);
     }
 
     @FXML
@@ -117,7 +184,7 @@ public class GoalSceneController {
 
     @FXML
     public void switchToTodoScene() {
-        ChiclePadApp.switchScene(new TodoSceneController(), "homepage/goalScene.fxml");
+        ChiclePadApp.switchScene(new TodoSceneController(), "homepage/todoScene.fxml");
     }
 
     @FXML

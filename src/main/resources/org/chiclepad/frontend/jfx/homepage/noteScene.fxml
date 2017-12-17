@@ -146,15 +146,21 @@
                     </styleClass>
                 </HBox>
                 <Pane prefHeight="1.0" styleClass="grey-dark" />
-                <Label opacity="0.8" text="Categories">
+                <HBox alignment="CENTER_LEFT" spacing="15.0">
                     <VBox.margin>
-                        <Insets bottom="10.0" left="50.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="50.0" right="10.0" top="10.0"/>
                     </VBox.margin>
-                    <styleClass>
-                        <String fx:value="large-text" />
-                        <String fx:value="text-on-grey" />
-                    </styleClass>
-                </Label>
+                    <children>
+                        <Label opacity="0.8" text="Categories">
+                            <styleClass>
+                                <String fx:value="large-text"/>
+                                <String fx:value="text-on-grey"/>
+                            </styleClass>
+                        </Label>
+                        <FontAwesomeIcon fx:id="addCategoryIcon" fill="#464947" iconName="PLUS_CIRCLE"
+                                         onMousePressed="#addCategory" size="1.5em"/>
+                    </children>
+                </HBox>
             <VBox fx:id="categoryList" VBox.vgrow="ALWAYS" />
             </children>
         </VBox>
@@ -178,13 +184,16 @@
                            <styleClass>
                               <String fx:value="huge-text" />
                               <String fx:value="bold" />
+                               <String fx:value="green-text"/>
                            </styleClass>
                         </Label>
-                        <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                         <HBox alignment="CENTER_RIGHT" spacing="20.0" HBox.hgrow="ALWAYS">
                            <children>
+                               <JFXComboBox fx:id="categoryPicker" focusColor="#8dc44e" prefWidth="150.0"
+                                            styleClass="normal-text" unFocusColor="#464947"/>
                                <JFXButton onAction="#deleteSelected" text="Remove x">
                                  <HBox.margin>
-                                    <Insets right="20.0" />
+                                     <Insets/>
                                  </HBox.margin>
                                  <padding>
                                     <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
@@ -225,7 +234,8 @@
                    <JFXMasonryPane fx:id="noteMasonry" cellHeight="130.0" cellWidth="215.0" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                          <Insets/>
-                     </VBox.margin></JFXMasonryPane>
+                     </VBox.margin>
+                   </JFXMasonryPane>
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

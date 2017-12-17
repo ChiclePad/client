@@ -64,10 +64,11 @@ public class TodoListModel {
         items.add(new TodoTreeItem(todo));
     }
 
-    public void setFilter(String filter) {
-//        todoList.setPredicate((Predicate<TreeItem<User>>) user -> user.getValue().age.get().contains(newVal)
-//                || user.getValue().department.get().contains(newVal)
-//                || user.getValue().userName.get().contains(newVal));
+    public void setNewFilter(String filter) {
+//        todoList.setPredicate(todo -> todo.getValue().);
     }
 
+    public Todo deleteSelected() {
+        return null;
+    }
 }

@@ -1,14 +1,11 @@
 package org.chiclepad.frontend.jfx.homepage;
 
-import com.jfoenix.controls.JFXDatePicker;
-import com.jfoenix.controls.JFXMasonryPane;
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.JFXTimePicker;
+import com.jfoenix.controls.*;
 import com.jfoenix.effects.JFXDepthManager;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -16,11 +13,14 @@ import org.chiclepad.backend.Dao.CategoryDao;
 import org.chiclepad.backend.Dao.ChiclePadUserDao;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.NoteDao;
+import org.chiclepad.backend.business.session.UserSessionManager;
 import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.ChiclePadUser;
 import org.chiclepad.backend.entity.Note;
-import org.chiclepad.business.UserSessionManager;
+import org.chiclepad.constants.ChiclePadColor;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
+import org.chiclepad.frontend.jfx.Popup.CategoryPopup;
+import org.chiclepad.frontend.jfx.Popup.UserPopup;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 import org.chiclepad.frontend.jfx.model.NoteListModel;
 
@@ -29,13 +29,7 @@ import java.util.List;
 public class NoteSceneController {
 
     @FXML
-    private AnchorPane content;
-
-    @FXML
     private BorderPane header;
-
-    @FXML
-    private VBox contentPanel;
 
     @FXML
     private HBox userArea;
@@ -53,6 +47,9 @@ public class NoteSceneController {
     private VBox categoriesRippler;
 
     @FXML
+    private JFXComboBox categoryPicker;
+
+    @FXML
     private JFXMasonryPane noteMasonry;
 
     @FXML
@@ -63,6 +60,9 @@ public class NoteSceneController {
 
     @FXML
     private JFXTimePicker reminderTime;
+
+    @FXML
+    private FontAwesomeIcon addCategoryIcon;
 
     private CategoryListModel categories;
 
@@ -86,6 +86,9 @@ public class NoteSceneController {
 
     private void initializeAdditionalStyles() {
         JFXDepthManager.setDepth(header, 1);
+
+        addCategoryIcon.setOnMouseEntered(event -> addCategoryIcon.setFill(ChiclePadColor.PRIMARY));
+        addCategoryIcon.setOnMouseExited(event -> addCategoryIcon.setFill(ChiclePadColor.BLACK));
     }
 
     private void initializeUser() {
@@ -95,7 +98,7 @@ public class NoteSceneController {
     }
 
     private void initializeCategories() {
-        this.categories = new CategoryListModel(categoryList, categoriesRippler);
+        this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker);
         List<Category> categories = this.categoryDao.getAll(this.loggedInUser.getId());
         categories.forEach(category -> this.categories.add(category));
     }
@@ -125,7 +128,17 @@ public class NoteSceneController {
     @FXML
     public void deleteSelected() {
         Note deleted = notes.deleteSelected();
-        noteDao.delete(deleted);
+
+        if (deleted == null) {
+            return;
+        }
+
+        noteDao.markDeleted(deleted);
+    }
+
+    @FXML
+    public void addCategory() {
+        CategoryPopup.showUnderParent(addCategoryIcon, categories);
     }
 
     @FXML

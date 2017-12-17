@@ -1,20 +1,25 @@
 package org.chiclepad.frontend.jfx.model;
 
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXRippler;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.util.Callback;
 import org.chiclepad.backend.entity.Category;
-import org.chiclepad.frontend.jfx.ChiclePadColor;
+import org.chiclepad.constants.ChiclePadColor;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CategoryListModel {
+
+    private JFXComboBox categoryPicker;
 
     private VBox ripplerArea;
 
@@ -23,16 +28,59 @@ public class CategoryListModel {
     private Map<HBox, Boolean> categorySelected;
 
     public CategoryListModel(VBox categories, VBox ripplerArea) {
-        this.categories = categories;
-        this.ripplerArea = ripplerArea;
-        categorySelected = new HashMap<>();
+        this(categories, ripplerArea, new JFXComboBox() /* Invisible combo box, to prevent needless null checking*/);
     }
 
+    public CategoryListModel(VBox categories, VBox ripplerArea, JFXComboBox categoryPicker) {
+        this.categories = categories;
+        this.ripplerArea = ripplerArea;
+        this.categoryPicker = categoryPicker;
+        categorySelected = new HashMap<>();
+
+        initializeCategoryPickerCellFactory();
+    }
+
+    private static ListCell<Category> createComboBoxLine() {
+        return new ListCell<>() {
+
+            @Override
+            protected void updateItem(Category item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setGraphic(null);
+
+                } else {
+                    HBox hBox = new HBox();
+
+                    Label label = new Label(item.getName());
+
+                    FontAwesomeIcon icon = new FontAwesomeIcon();
+                    icon.setIconName(item.getIcon());
+                    icon.setSize("1.25em");
+                    icon.setFill(Color.web(item.getColor()));
+
+                    hBox.getChildren().addAll(label, icon);
+
+                    setGraphic(hBox);
+                }
+            }
+
+        };
+    }
+
+    private void initializeCategoryPickerCellFactory() {
+        Callback cellFactory = param -> createComboBoxLine();
+
+        categoryPicker.setButtonCell((ListCell) cellFactory.call(null));
+        categoryPicker.setCellFactory(cellFactory);
+    }
 
     public void add(Category category) {
         HBox line = createCategoryListLine(category);
         categorySelected.put(line, false);
         categories.getChildren().add(line);
+
+        categoryPicker.getItems().add(category);
     }
 
     private HBox createCategoryListLine(Category category) {
@@ -93,6 +141,4 @@ public class CategoryListModel {
         line.getStyleClass().addAll("highlighted", "grey-dark-background", "grey-dark-background-hover");
     }
 
-
 }
-

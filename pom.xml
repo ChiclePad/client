@@ -46,13 +46,6 @@
    </properties>
 
    <dependencies>
-      <!--logging-->
-      <dependency>
-         <groupId>ch.qos.logback</groupId>
-         <artifactId>logback-classic</artifactId>
-         <version>RELEASE</version>
-      </dependency>
-
       <!--testing-->
       <dependency>
          <groupId>org.junit.jupiter</groupId>

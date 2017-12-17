@@ -1,4 +1,4 @@
-package org.chiclepad.frontend.jfx.homepage;
+package org.chiclepad.frontend.jfx.Popup;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPopup;
@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
+import org.chiclepad.frontend.jfx.homepage.SettingsSceneController;
 import org.chiclepad.frontend.jfx.startup.LoginSceneController;
 
 public class UserPopup {
@@ -30,6 +31,8 @@ public class UserPopup {
     }
 
     private static void styleLayout(VBox layout) {
+        layout.getStyleClass().addAll("form", "bordered");
+
         layout.setPadding(new Insets(15, 10, 15, 10));
         layout.setSpacing(10);
     }

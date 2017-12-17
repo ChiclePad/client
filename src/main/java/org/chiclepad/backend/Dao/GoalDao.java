@@ -1,7 +1,10 @@
 package org.chiclepad.backend.Dao;
 
 import org.chiclepad.backend.entity.CompletedGoal;
+import org.chiclepad.backend.entity.DayFrequency;
 import org.chiclepad.backend.entity.Goal;
+import org.chiclepad.backend.entity.WeekDayFrequency;
+import org.chiclepad.constants.DayOfWeek;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -35,6 +38,20 @@ public class GoalDao extends EntryDao {
             "LEFT OUTER JOIN deleted_entry ON deleted_entry.entry_id = entry.id " +
             "WHERE deleted_entry.deleted_time IS NULL AND entry.user_id = ? ;";
 
+    private final String GET_ALL_NOT_COMPLETED_TODAY_GOAL_SQL = "SELECT * " +
+            "FROM " +
+            "( " +
+            "  SELECT * " +
+            "  FROM goal " +
+            "  EXCEPT " +
+            "  SELECT goal.id, goal.entry_id, goal.description " +
+            "  FROM goal " +
+            "  INNER JOIN completed_goal ON goal.id = completed_goal.goal_id " +
+            "  WHERE completed_goal.completed_day = CURRENT_DATE " +
+            ") not_completed " +
+            "JOIN entry ON entry.id = not_completed.entry_id " +
+            "WHERE user_id = ?; ";
+
     private final String GET_ALL_WITH_DELETED_GOAL_SQL = "SELECT * " +
             "FROM goal " +
             "INNER JOIN entry ON goal.entry_id = entry.id " +
@@ -44,6 +61,24 @@ public class GoalDao extends EntryDao {
             "FROM completed_goal " +
             "INNER JOIN goal ON goal.id = completed_goal.goal_id " +
             "WHERE goal.id = ? ;";
+
+    private final String GET_FILTERED_COMPLETED_COUNT_BY_WEEK_DAY_GOAL_SQL = "SELECT " +
+            "COUNT(completed_goal.id) AS count, extract(ISODOW FROM completed_goal.completed_day) AS day " +
+            "FROM completed_goal " +
+            "JOIN goal ON completed_goal.goal_id = goal.id " +
+            "JOIN entry ON goal.entry_id = entry.id " +
+            "WHERE entry.user_id = ? AND goal.description LIKE ? " +
+            "GROUP BY extract(ISODOW FROM completed_goal.completed_day); ";
+
+    private final String GET_FILTERED_COMPLETED_COUNT_BY_DAY_GOAL_SQL = "SELECT " +
+            "COUNT(completed_goal.id) AS count, completed_goal.completed_day AS day " +
+            "FROM completed_goal " +
+            "JOIN goal ON completed_goal.goal_id = goal.id " +
+            "JOIN entry ON goal.entry_id = entry.id " +
+            "WHERE entry.user_id = ? AND goal.description LIKE ? " +
+            "GROUP BY completed_goal.completed_day " +
+            "ORDER BY completed_goal.completed_day DESC " +
+            "LIMIT 7;";
 
     private final String UPDATE_GOAL_SQL = "UPDATE goal " +
             "SET description = ? " +
@@ -66,6 +101,10 @@ public class GoalDao extends EntryDao {
         );
 
         return new Goal(entryId, id, description);
+    }
+
+    public CompletedGoal createCompletedGoal(Goal goal) throws DuplicateKeyException {
+        return createCompletedGoal(goal.getId());
     }
 
     public CompletedGoal createCompletedGoal(int goalId) throws DuplicateKeyException {
@@ -105,6 +144,54 @@ public class GoalDao extends EntryDao {
         );
     }
 
+    public List<Goal> getAllGoalsNotCompletedToday(int userId) throws EmptyResultDataAccessException {
+        return jdbcTemplate.query(
+                GET_ALL_NOT_COMPLETED_TODAY_GOAL_SQL,
+                new Object[]{userId},
+                (resultSet, row) -> readGoal(resultSet)
+        );
+    }
+
+    public WeekDayFrequency getCompletedGoalsCountByWeekDay(int userId)
+            throws EmptyResultDataAccessException {
+        return getCompletedGoalsCountByWeekDay(userId, "");
+    }
+
+    public WeekDayFrequency getCompletedGoalsCountByWeekDay(int userId, String filter)
+            throws EmptyResultDataAccessException {
+        WeekDayFrequency frequency = new WeekDayFrequency();
+
+        jdbcTemplate.query(
+                GET_FILTERED_COMPLETED_COUNT_BY_WEEK_DAY_GOAL_SQL,
+                new Object[]{userId, "%" + filter + "%"},
+                (resultSet, row) -> readWeekDayFrequency(resultSet, frequency)
+        );
+
+        return frequency;
+    }
+
+    public DayFrequency getCompletedGoalsCountOnRecentDays(int userId)
+            throws EmptyResultDataAccessException {
+        return getCompletedGoalsCountOnRecentDays(userId, "");
+    }
+
+    public DayFrequency getCompletedGoalsCountOnRecentDays(int userId, String filter)
+            throws EmptyResultDataAccessException {
+        DayFrequency frequency = new DayFrequency();
+
+        jdbcTemplate.query(
+                GET_FILTERED_COMPLETED_COUNT_BY_DAY_GOAL_SQL,
+                new Object[]{userId, "%" + filter + "%"},
+                (resultSet, row) -> readDayFrequency(resultSet, frequency)
+        );
+
+        return frequency;
+    }
+
+    public List<CompletedGoal> getCompletedGoals(Goal goal) throws EmptyResultDataAccessException {
+        return getCompletedGoals(goal.getId());
+    }
+
     public List<CompletedGoal> getCompletedGoals(int goalId) throws EmptyResultDataAccessException {
         return jdbcTemplate.query(
                 GET_COMPLETED_GOALS_GOAL_SQL,
@@ -142,6 +229,22 @@ public class GoalDao extends EntryDao {
         LocalTime completedTime = resultSet.getTime("completed_time").toLocalTime();
 
         return new CompletedGoal(id, completedDay, completedTime);
+    }
+
+    private DayFrequency readDayFrequency(ResultSet resultSet, DayFrequency frequency) throws SQLException {
+        int count = resultSet.getInt("count");
+        LocalDate day = resultSet.getDate("day").toLocalDate();
+
+        frequency.put(day, count);
+        return frequency;
+    }
+
+    private WeekDayFrequency readWeekDayFrequency(ResultSet resultSet, WeekDayFrequency frequency) throws SQLException {
+        int count = resultSet.getInt("count");
+        int day = resultSet.getInt("day");
+
+        frequency.setFrequency(DayOfWeek.fromInt(day), count);
+        return frequency;
     }
 
 }

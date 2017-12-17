@@ -1,12 +1,12 @@
-package org.chiclepad.frontend.jfx;
+package org.chiclepad.constants;
 
 import javafx.scene.paint.Color;
 
 public class ChiclePadColor {
 
-    public static final Color WHITE = Color.web("#fff");
+    public static final Color WHITE = Color.web("#ffffff");
 
-    public static final Color GREY = Color.web("#eee");
+    public static final Color GREY = Color.web("#eeeeee");
 
     public static final Color GREY_TEXT = Color.web("#464947");
 
@@ -19,8 +19,6 @@ public class ChiclePadColor {
     public static final Color SECONDARY = Color.web("#A24936");
 
     public static final Color TERTIARY = Color.web("#3E5641");
-
-    public static final Color CATEGORY_DEFAULT = Color.web("#ffffff");
 
     public static String toHex(Color chiclePadColor) {
         return "#" + chiclePadColor.toString().substring(2, 8);

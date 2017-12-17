@@ -11,16 +11,17 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.chiclepad.backend.Dao.ChiclePadUserDao;
 import org.chiclepad.backend.Dao.DaoFactory;
-import org.chiclepad.business.LocaleUtils;
-import org.chiclepad.business.session.Authenticator;
-import org.chiclepad.business.session.UserAlreadyExistsException;
-import org.chiclepad.business.session.UserSession;
+import org.chiclepad.backend.business.LocaleUtils;
+import org.chiclepad.backend.business.session.Authenticator;
+import org.chiclepad.backend.business.session.UserAlreadyExistsException;
+import org.chiclepad.backend.business.session.UserSession;
+import org.chiclepad.constants.ChiclePadColor;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
-import org.chiclepad.frontend.jfx.ChiclePadColor;
-import org.chiclepad.frontend.jfx.ChiclePadDialog;
+import org.chiclepad.frontend.jfx.Popup.ChiclePadDialog;
 import org.chiclepad.frontend.jfx.homepage.HomeSceneController;
 
 import java.util.Locale;
+import java.util.Optional;
 
 public class RegisterSceneController {
 
@@ -93,10 +94,10 @@ public class RegisterSceneController {
         textField.setUnFocusColor(color);
     }
 
-    private Locale getSelectedLocale() {
+    private Optional<Locale> getSelectedLocale() {
         String readableLocale = languageComboBox.getSelectionModel().selectedItemProperty().getValue();
         String code = LocaleUtils.getCodeFromReadableLocale(readableLocale);
-        return code == null ? null : LocaleUtils.localeFromCode(code);
+        return Optional.ofNullable(code).map(LocaleUtils::localeFromCode);
     }
 
     @FXML
@@ -112,7 +113,7 @@ public class RegisterSceneController {
 
             String name = this.nameTextField.getText();
             userSession.getLoggedUser().setName(name);
-            userSession.getLoggedUser().setLocale(this.getSelectedLocale());
+            this.getSelectedLocale().ifPresent(locale -> userSession.getLoggedUser().setLocale(locale));
             userDao.updateDetails(userSession.getLoggedUser());
 
             ChiclePadApp.switchScene(new HomeSceneController(), "homepage/homeScene.fxml");
@@ -120,6 +121,8 @@ public class RegisterSceneController {
         } catch (UserAlreadyExistsException e) {
             ChiclePadDialog.show("Registration Failed!", "Email already in use.", overlay);
         }
+
+        registerButton.setDisable(true);
     }
 
 }

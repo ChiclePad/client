@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.NoteDao;
 import org.chiclepad.backend.entity.Note;
-import org.chiclepad.frontend.jfx.ChiclePadColor;
+import org.chiclepad.constants.ChiclePadColor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -99,6 +99,10 @@ public class NoteListModel {
     }
 
     private void selectNewPostIt(Note addedNote, VBox postIt) {
+        if (selectedNote != null) {
+            noteDao.update(selectedNote);
+        }
+
         this.selectedPostIt = postIt;
         this.selectedNote = addedNote;
 
@@ -120,15 +124,25 @@ public class NoteListModel {
         }));
 
         descriptionField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                return;
+            }
+
             noteDao.update(this.selectedNote);
         });
     }
 
     private void setReminderTimeFields() {
-        selectedNote.getReminderTime().ifPresent(time -> {
-            reminderDate.setValue(time.toLocalDate());
-            reminderTime.setValue(time.toLocalTime());
-        });
+        LocalDate noteReminderDate = selectedNote.getReminderTime()
+                .map(LocalDateTime::toLocalDate)
+                .orElse(null);
+
+        LocalTime noteReminderTime = selectedNote.getReminderTime()
+                .map(LocalDateTime::toLocalTime)
+                .orElse(null);
+
+        reminderDate.setValue(noteReminderDate);
+        reminderTime.setValue(noteReminderTime);
 
         setReminderDateField();
         setReminderTimeField();
@@ -136,6 +150,10 @@ public class NoteListModel {
 
     private void setReminderDateField() {
         reminderDate.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                return;
+            }
+
             LocalTime localTime = selectedNote.getReminderTime()
                     .map(LocalDateTime::toLocalTime)
                     .orElse(LocalTime.now());
@@ -145,12 +163,20 @@ public class NoteListModel {
         });
 
         reminderDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                return;
+            }
+
             noteDao.update(selectedNote);
         });
     }
 
     private void setReminderTimeField() {
         reminderTime.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                return;
+            }
+
             LocalDate localDate = selectedNote.getReminderTime()
                     .map(LocalDateTime::toLocalDate)
                     .orElse(LocalDate.now());
@@ -160,6 +186,10 @@ public class NoteListModel {
         });
 
         reminderTime.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                return;
+            }
+
             noteDao.update(selectedNote);
         });
     }
@@ -228,27 +258,11 @@ public class NoteListModel {
                 note.getReminderTime().map(time -> time.toString().contains(filter)).orElse(false);
     }
 
-    private String categoryNameOfNote(Note note) {
-        if (!note.getCategories().isEmpty()) {
-            return note.getCategories().get(0).getName();
-        } else {
-            return "Category";
-        }
-    }
-
     private String categoryColorOfNote(Note note) {
         if (!note.getCategories().isEmpty()) {
             return note.getCategories().get(0).getColor();
         } else {
-            return ChiclePadColor.toHex(ChiclePadColor.CATEGORY_DEFAULT);
-        }
-    }
-
-    private String categoryIconOfNote(Note note) {
-        if (!note.getCategories().isEmpty()) {
-            return note.getCategories().get(0).getIcon();
-        } else {
-            return "CIRCLE";
+            return ChiclePadColor.toHex(ChiclePadColor.WHITE);
         }
     }
 

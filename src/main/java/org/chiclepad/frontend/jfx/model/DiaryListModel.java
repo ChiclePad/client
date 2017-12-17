@@ -2,12 +2,14 @@ package org.chiclepad.frontend.jfx.model;
 
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.effects.JFXDepthManager;
-import javafx.scene.control.Label;
+import javafx.geometry.Insets;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.DiaryPageDao;
 import org.chiclepad.backend.entity.DiaryPage;
+import org.chiclepad.constants.ChiclePadColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +24,12 @@ public class DiaryListModel {
 
     private DiaryPage selectedDiaryPage;
 
-    private JFXTextArea textArea;
-
     private DiaryPageDao diaryPageDao;
 
     private String filter = "";
 
-    public DiaryListModel(VBox layout, JFXTextArea textArea) {
+    public DiaryListModel(VBox layout) {
         this.layout = layout;
-        this.textArea = textArea;
         this.diaryPageDao = DaoFactory.INSTANCE.getDiaryPageDao();
         this.diaryPages = new ArrayList<>();
     }
@@ -42,9 +41,16 @@ public class DiaryListModel {
 
     private void addDiaryPageToLayout(DiaryPage diaryPage) {
         HBox diaryPageLine = new HBox();
+        diaryPageLine.getStyleClass().add("form");
+        diaryPageLine.setPadding(new Insets(15, 15, 15, 15));
         JFXDepthManager.setDepth(diaryPageLine, 1);
 
-        Label text = new Label(diaryPage.getText());
+        JFXTextArea text = new JFXTextArea(diaryPage.getText());
+        text.getStyleClass().add("small-normal-text");
+        text.setFocusColor(ChiclePadColor.PRIMARY);
+        text.setUnFocusColor(ChiclePadColor.GREY_TEXT);
+        text.setPrefRowCount(2);
+        HBox.setHgrow(text, Priority.ALWAYS);
 
         diaryPageLine.getChildren().add(text);
         layout.getChildren().add(diaryPageLine);
