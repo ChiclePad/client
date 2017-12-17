@@ -92,6 +92,8 @@ public class LoginSceneController {
         } catch (EmptyResultDataAccessException e) {
             ChiclePadDialog.show("Login Failed!", "Bad email entered.", overlay);
         }
+
+        loginButton.setDisable(true);
     }
 
 }

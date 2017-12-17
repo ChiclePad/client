@@ -2,7 +2,11 @@ package org.chiclepad.frontend.jfx.homepage;
 
 import com.jfoenix.effects.JFXDepthManager;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -21,6 +25,8 @@ import org.chiclepad.frontend.jfx.ChiclePadColor;
 import org.chiclepad.frontend.jfx.model.CategoryListModel;
 import org.chiclepad.frontend.jfx.model.GoalListModel;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class GoalSceneController {
@@ -55,6 +61,14 @@ public class GoalSceneController {
     @FXML
     private FontAwesomeIcon addCategoryIcon;
 
+    @FXML
+    private BarChart successChart;
+
+    @FXML
+    private PieChart dayChart;
+
+    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM");
+
     private GoalListModel goals;
 
     private CategoryListModel categories;
@@ -78,14 +92,14 @@ public class GoalSceneController {
     private void initializeAdditionalStyles() {
         JFXDepthManager.setDepth(header, 1);
 
-        addCategoryIcon.setOnMouseEntered(event -> addCategoryIcon.setFill(ChiclePadColor.PRIMARY));
-        addCategoryIcon.setOnMouseExited(event -> addCategoryIcon.setFill(ChiclePadColor.BLACK));
+        makeIconGreenOnHover(addCategoryIcon);
+        makeIconGreenOnHover(loadNextButton);
+        makeIconGreenOnHover(loadPreviousButton);
+    }
 
-        loadNextButton.setOnMouseEntered(event -> loadNextButton.setFill(ChiclePadColor.PRIMARY));
-        loadNextButton.setOnMouseExited(event -> loadNextButton.setFill(ChiclePadColor.BLACK));
-
-        loadPreviousButton.setOnMouseEntered(event -> loadPreviousButton.setFill(ChiclePadColor.PRIMARY));
-        loadPreviousButton.setOnMouseExited(event -> loadPreviousButton.setFill(ChiclePadColor.BLACK));
+    private void makeIconGreenOnHover(FontAwesomeIcon icon) {
+        icon.setOnMouseEntered(event -> icon.setFill(ChiclePadColor.PRIMARY));
+        icon.setOnMouseExited(event -> icon.setFill(ChiclePadColor.BLACK));
     }
 
     private void initializeUser() {
@@ -102,7 +116,30 @@ public class GoalSceneController {
 
     private void initializeGoals() {
         goals = new GoalListModel(goalList);
-        this.goalDao.getAll(this.loggedInUser.getId()).forEach(goal -> this.goals.add(goal));
+        goalDao.getAllGoalsNotCompletedToday(loggedInUser.getId()).forEach(goal -> goals.add(goal));
+
+        XYChart.Series data = new XYChart.Series<>();
+        data.getData().addAll(
+                new XYChart.Data(dateFormatter.format(LocalDate.now()), 2),
+                new XYChart.Data(dateFormatter.format(LocalDate.now().minusDays(1)), 1),
+                new XYChart.Data(dateFormatter.format(LocalDate.now().minusDays(2)), 3),
+                new XYChart.Data(dateFormatter.format(LocalDate.now().minusDays(3)), 4),
+                new XYChart.Data(dateFormatter.format(LocalDate.now().minusDays(4)), 1),
+                new XYChart.Data(dateFormatter.format(LocalDate.now().minusDays(5)), 0),
+                new XYChart.Data(dateFormatter.format(LocalDate.now().minusDays(6)), 7),
+                new XYChart.Data(dateFormatter.format(LocalDate.now().minusDays(7)), 3)
+        );
+        successChart.setData(FXCollections.observableArrayList(data));
+
+        dayChart.setData(FXCollections.observableArrayList(
+                new PieChart.Data("Mon", 8),
+                new PieChart.Data("Tue", 2),
+                new PieChart.Data("Wed", 4),
+                new PieChart.Data("Thr", 3),
+                new PieChart.Data("Fri", 2),
+                new PieChart.Data("Sat", 7),
+                new PieChart.Data("Sun", 2)
+        ));
     }
 
     @FXML
@@ -125,6 +162,11 @@ public class GoalSceneController {
     @FXML
     public void deleteSelected() {
         Goal deleted = goals.deleteSelected();
+
+        if (deleted == null) {
+            return;
+        }
+
         goalDao.delete(deleted);
     }
 

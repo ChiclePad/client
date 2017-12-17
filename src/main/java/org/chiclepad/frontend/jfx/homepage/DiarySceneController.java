@@ -94,22 +94,18 @@ public class DiarySceneController {
         addCategoryIcon.setOnMouseEntered(event -> addCategoryIcon.setFill(ChiclePadColor.PRIMARY));
         addCategoryIcon.setOnMouseExited(event -> addCategoryIcon.setFill(ChiclePadColor.BLACK));
 
-        loadNextButton.setOnMouseEntered(event -> {
-            loadNextIcon.setFill(ChiclePadColor.PRIMARY);
-            loadNextText.setTextFill(ChiclePadColor.PRIMARY);
-        });
-        loadNextButton.setOnMouseExited(event -> {
-            loadNextIcon.setFill(ChiclePadColor.BLACK);
-            loadNextText.setTextFill(ChiclePadColor.BLACK);
-        });
+        colorLoadButtonGreenOnHover(loadNextButton, loadNextIcon, loadNextText);
+        colorLoadButtonGreenOnHover(loadPreviousButton, loadPreviousIcon, loadPreviousText);
+    }
 
-        loadPreviousButton.setOnMouseEntered(event -> {
-            loadPreviousIcon.setFill(ChiclePadColor.PRIMARY);
-            loadPreviousText.setTextFill(ChiclePadColor.PRIMARY);
+    private void colorLoadButtonGreenOnHover(HBox button, FontAwesomeIcon icon, Label text) {
+        button.setOnMouseEntered(event -> {
+            icon.setFill(ChiclePadColor.PRIMARY);
+            text.setTextFill(ChiclePadColor.PRIMARY);
         });
-        loadPreviousButton.setOnMouseExited(event -> {
-            loadPreviousIcon.setFill(ChiclePadColor.BLACK);
-            loadPreviousText.setTextFill(ChiclePadColor.BLACK);
+        button.setOnMouseExited(event -> {
+            icon.setFill(ChiclePadColor.BLACK);
+            text.setTextFill(ChiclePadColor.BLACK);
         });
     }
 
@@ -150,6 +146,11 @@ public class DiarySceneController {
     @FXML
     public void deleteSelected() {
         DiaryPage deleted = diaryPages.deleteSelected();
+
+        if (deleted == null) {
+            return;
+        }
+
         diaryPageDao.delete(deleted);
     }
 

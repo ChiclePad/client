@@ -120,6 +120,8 @@ public class RegisterSceneController {
         } catch (UserAlreadyExistsException e) {
             ChiclePadDialog.show("Registration Failed!", "Email already in use.", overlay);
         }
+
+        registerButton.setDisable(true);
     }
 
 }

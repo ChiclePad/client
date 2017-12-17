@@ -111,6 +111,11 @@ public class TodoSceneController {
     @FXML
     public void deleteSelected() {
         Todo deleted = todos.deleteSelected();
+
+        if (deleted == null) {
+            return;
+        }
+
         todoDao.delete(deleted);
     }
 

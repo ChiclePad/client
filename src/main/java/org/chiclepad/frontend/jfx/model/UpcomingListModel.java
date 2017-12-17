@@ -3,6 +3,8 @@ package org.chiclepad.frontend.jfx.model;
 import com.jfoenix.controls.JFXListView;
 import org.chiclepad.backend.entity.Todo;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,11 +12,11 @@ public class UpcomingListModel {
 
     private List<Todo> todos;
 
-    private JFXListView layout;
+    private JFXListView<String> layout;
 
     private String filter = "";
 
-    public UpcomingListModel(JFXListView layout) {
+    public UpcomingListModel(JFXListView<String> layout) {
         this.layout = layout;
         this.todos = new ArrayList<>();
     }
@@ -25,7 +27,15 @@ public class UpcomingListModel {
     }
 
     private void addTodoToLayout(Todo todo) {
-        layout.getItems().add(todo);
+        long remainingHours = ChronoUnit.HOURS.between(LocalDateTime.now(), todo.getDeadline());
+        long remainingMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), todo.getDeadline());
+        long remainingDays = ChronoUnit.DAYS.between(LocalDateTime.now(), todo.getDeadline());
+
+        String shownResult = LocalDateTime.now().isAfter(todo.getDeadline()) ?
+                "Overdue: " + todo.getDescription() :
+                "In " + remainingHours + ":" + remainingMinutes + " hours and " + remainingDays + " days: " + todo.getDescription();
+
+        layout.getItems().add(shownResult);
     }
 
     public void clearUpcoming() {

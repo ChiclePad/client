@@ -205,3 +205,35 @@ tertiary: #3E5641
 .jfx-button {
     -fx-font-family: Roboto;
 }
+
+.default-color0.chart-pie {
+    -fx-pie-color: #aff25f;
+}
+
+.default-color1.chart-pie {
+    -fx-pie-color: #a6e65b;
+}
+
+.default-color2.chart-pie {
+    -fx-pie-color: #9dd956;
+}
+
+.default-color3.chart-pie {
+    -fx-pie-color: #8DC44E;
+}
+
+.default-color4.chart-pie {
+    -fx-pie-color: #84b749;
+}
+
+.default-color5.chart-pie {
+    -fx-pie-color: #7cac45;
+}
+
+.default-color6.chart-pie {
+    -fx-pie-color: #76a341;
+}
+
+.chart-bar {
+    -fx-bar-fill: #8DC44E;
+}

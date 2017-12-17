@@ -38,10 +38,10 @@ public class HomeSceneController {
     private TextField searchTextField;
 
     @FXML
-    private JFXListView upcomingListView;
+    private JFXListView<String> upcomingListView;
 
     @FXML
-    private JFXListView notificationsListView;
+    private JFXListView<String> notificationsListView;
 
     @FXML
     private VBox categoryList;
@@ -101,7 +101,8 @@ public class HomeSceneController {
     private void initializeUpcoming() {
         upcoming = new UpcomingListModel(upcomingListView);
         todoDao.getAll(loggedInUser.getId()).stream()
-                .sorted(Comparator.comparing(Todo::getDeadline))
+                .sorted(Comparator.comparing(Todo::getPriority))
+                .limit(10)
                 .forEach(todo -> upcoming.add(todo));
     }
 
@@ -111,9 +112,11 @@ public class HomeSceneController {
         noteDao.getAll(loggedInUser.getId()).stream()
                 .filter(note -> note.getReminderTime().isPresent())
                 .sorted(Comparator.comparing(note2 -> note2.getReminderTime().get()))
+                .limit(5)
                 .forEach(note -> notifications.addNote(note));
 
-        goalDao.getAllGoalsNotCompletedToday(loggedInUser.getId())
+        goalDao.getAllGoalsNotCompletedToday(loggedInUser.getId()).stream()
+                .limit(5)
                 .forEach(goal -> notifications.addGoal(goal));
     }
 

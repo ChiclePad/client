@@ -140,6 +140,7 @@ public class SettingsSceneController {
 
         } catch (Exception e) {
             ChiclePadDialog.show("Error!", "Password failed to change", dialogArea);
+            passwordButton.setDisable(true);
         }
     }
 

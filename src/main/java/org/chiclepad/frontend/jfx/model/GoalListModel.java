@@ -2,11 +2,17 @@ package org.chiclepad.frontend.jfx.model;
 
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.effects.JFXDepthManager;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconName;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.GoalDao;
 import org.chiclepad.backend.entity.Goal;
+import org.chiclepad.frontend.jfx.ChiclePadColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +45,23 @@ public class GoalListModel {
     private void addGoalToLayout(Goal goal) {
         HBox diaryPageLine = new HBox();
         JFXDepthManager.setDepth(diaryPageLine, 1);
+        diaryPageLine.getStyleClass().add("form");
+        diaryPageLine.setPadding(new Insets(10, 35, 10, 20));
+        diaryPageLine.setAlignment(Pos.CENTER_LEFT);
+        diaryPageLine.setSpacing(10);
+
+        FontAwesomeIcon checkMark = new FontAwesomeIcon();
+        checkMark.setIcon(FontAwesomeIconName.CHECK);
+        checkMark.setSize("1.65em");
 
         JFXTextField text = new JFXTextField(goal.getDescription());
+        text.getStyleClass().add("normal-text");
+        text.setPromptText("Description");
+        text.setFocusColor(ChiclePadColor.PRIMARY);
+        text.setUnFocusColor(ChiclePadColor.GREY_TEXT);
+        HBox.setHgrow(text, Priority.ALWAYS);
 
-        diaryPageLine.getChildren().add(text);
+        diaryPageLine.getChildren().addAll(checkMark, text);
         layout.getChildren().add(diaryPageLine);
     }
 

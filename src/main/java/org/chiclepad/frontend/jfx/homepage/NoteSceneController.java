@@ -126,6 +126,11 @@ public class NoteSceneController {
     @FXML
     public void deleteSelected() {
         Note deleted = notes.deleteSelected();
+
+        if (deleted == null) {
+            return;
+        }
+
         noteDao.delete(deleted);
     }
 
