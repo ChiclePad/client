@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.chiclepad.frontend.jfx.startup.LoginSceneController;
 
@@ -48,6 +49,16 @@ public class ChiclePadApp extends Application {
             System.err.println("Failed switching to scene: " + fxmlPath + "\n" + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public static String darken(String hexColor, double amount) {
+        Color color = Color.web(hexColor);
+
+        double r = color.getRed();
+        double b = color.getBlue();
+        double g = color.getGreen();
+
+        return String.format("#%02x%02x%02x", (int) (r * amount * 255), (int) (g * amount * 255), (int) (b * amount * 255));
     }
 
 }

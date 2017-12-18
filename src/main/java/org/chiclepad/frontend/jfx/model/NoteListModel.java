@@ -17,6 +17,7 @@ import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.NoteDao;
 import org.chiclepad.backend.entity.Note;
 import org.chiclepad.constants.ChiclePadColor;
+import org.chiclepad.frontend.jfx.ChiclePadApp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -217,22 +218,12 @@ public class NoteListModel {
 
     private void setHighlightOnHover(Note addedNote, VBox postIt) {
         postIt.setOnMouseEntered(event -> {
-            postIt.setStyle("-fx-background-color: " + darken(categoryColorOfNote(addedNote), 0.95));
+            postIt.setStyle("-fx-background-color: " + ChiclePadApp.darken(categoryColorOfNote(addedNote), 0.95));
         });
 
         postIt.setOnMouseExited(event -> {
             postIt.setStyle("-fx-background-color: " + categoryColorOfNote(addedNote));
         });
-    }
-
-    private String darken(String hexColor, double amount) {
-        Color color = Color.web(hexColor);
-
-        double r = color.getRed();
-        double b = color.getBlue();
-        double g = color.getGreen();
-
-        return String.format("#%02x%02x%02x", (int) (r * amount * 255), (int) (g * amount * 255), (int) (b * amount * 255));
     }
 
     public Note deleteSelected() {
