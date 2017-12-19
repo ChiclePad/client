@@ -1,6 +1,7 @@
 package org.chiclepad.frontend.jfx.model;
 
 import com.jfoenix.controls.JFXListView;
+import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.Todo;
 
 import java.time.LocalDateTime;
@@ -8,7 +9,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UpcomingListModel {
+public class UpcomingListModel implements ListModel {
 
     private List<Todo> todos;
 
@@ -57,4 +58,13 @@ public class UpcomingListModel {
                 Integer.toString(todo.getPriority()).contains(filter);
     }
 
+    @Override
+    public void filterByCategory(List<Category> categories) {
+
+    }
+
+    @Override
+    public void setCategoryToSelectedEntry(Category category) {
+
+    }
 }
