@@ -38,19 +38,15 @@ public class GoalDao extends EntryDao {
             "LEFT OUTER JOIN deleted_entry ON deleted_entry.entry_id = entry.id " +
             "WHERE deleted_entry.deleted_time IS NULL AND entry.user_id = ? ;";
 
-    private final String GET_ALL_NOT_COMPLETED_TODAY_GOAL_SQL = "SELECT * " +
-            "FROM " +
-            "( " +
-            "  SELECT * " +
-            "  FROM goal " +
-            "  EXCEPT " +
-            "  SELECT goal.id, goal.entry_id, goal.description " +
-            "  FROM goal " +
-            "  INNER JOIN completed_goal ON goal.id = completed_goal.goal_id " +
-            "  WHERE completed_goal.completed_day = CURRENT_DATE " +
-            ") not_completed " +
-            "JOIN entry ON entry.id = not_completed.entry_id " +
-            "WHERE user_id = ?; ";
+    private final String GET_ALL_NOT_COMPLETED_TODAY_GOAL_SQL = "SELECT goal.id, goal.entry_id, goal.description " +
+            "FROM goal " +
+            "INNER JOIN entry ON goal.entry_id = entry.id " +
+            "WHERE entry.user_id = ? " +
+            "EXCEPT " +
+            "SELECT goal.id, goal.entry_id, goal.description " +
+            "FROM goal " +
+            "INNER JOIN completed_goal ON goal.id = completed_goal.goal_id " +
+            "WHERE completed_goal.completed_day = CURRENT_DATE;";
 
     private final String GET_ALL_WITH_DELETED_GOAL_SQL = "SELECT * " +
             "FROM goal " +
@@ -71,7 +67,7 @@ public class GoalDao extends EntryDao {
             "GROUP BY extract(ISODOW FROM completed_goal.completed_day); ";
 
     private final String GET_FILTERED_COMPLETED_COUNT_BY_DAY_GOAL_SQL = "SELECT " +
-            "COUNT(completed_goal.id) AS count, completed_goal.completed_day AS day " +
+            "COUNT(completed_goal.goal_id) AS count, completed_goal.completed_day AS day " +
             "FROM completed_goal " +
             "JOIN goal ON completed_goal.goal_id = goal.id " +
             "JOIN entry ON goal.entry_id = entry.id " +
@@ -121,39 +117,50 @@ public class GoalDao extends EntryDao {
     }
 
     public Goal get(int id) throws EmptyResultDataAccessException {
-        return jdbcTemplate.queryForObject(
+        Goal goal = jdbcTemplate.queryForObject(
                 GET_GOAL_SQL,
                 new Object[]{id},
                 (resultSet, row) -> readGoal(resultSet)
         );
+
+        fetchAndSetCategories(goal);
+        return goal;
     }
 
     public List<Goal> getAll(int userId) throws EmptyResultDataAccessException {
-        return jdbcTemplate.query(
+        List<Goal> goals = jdbcTemplate.query(
                 GET_ALL_GOAL_SQL,
                 new Object[]{userId},
                 (resultSet, row) -> readGoal(resultSet)
         );
+
+        fetchAndSetCategories(goals);
+        return goals;
     }
 
     public List<Goal> getAllWithDeleted(int userId) throws EmptyResultDataAccessException {
-        return jdbcTemplate.query(
+        List<Goal> goals = jdbcTemplate.query(
                 GET_ALL_WITH_DELETED_GOAL_SQL,
                 new Object[]{userId},
                 (resultSet, row) -> readGoal(resultSet)
         );
+
+        fetchAndSetCategories(goals);
+        return goals;
     }
 
     public List<Goal> getAllGoalsNotCompletedToday(int userId) throws EmptyResultDataAccessException {
-        return jdbcTemplate.query(
+        List<Goal> goals = jdbcTemplate.query(
                 GET_ALL_NOT_COMPLETED_TODAY_GOAL_SQL,
                 new Object[]{userId},
                 (resultSet, row) -> readGoal(resultSet)
         );
+
+        fetchAndSetCategories(goals);
+        return goals;
     }
 
-    public WeekDayFrequency getCompletedGoalsCountByWeekDay(int userId)
-            throws EmptyResultDataAccessException {
+    public WeekDayFrequency getCompletedGoalsCountByWeekDay(int userId) throws EmptyResultDataAccessException {
         return getCompletedGoalsCountByWeekDay(userId, "");
     }
 
@@ -170,8 +177,7 @@ public class GoalDao extends EntryDao {
         return frequency;
     }
 
-    public DayFrequency getCompletedGoalsCountOnRecentDays(int userId)
-            throws EmptyResultDataAccessException {
+    public DayFrequency getCompletedGoalsCountOnRecentDays(int userId) throws EmptyResultDataAccessException {
         return getCompletedGoalsCountOnRecentDays(userId, "");
     }
 

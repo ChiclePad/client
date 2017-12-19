@@ -12,7 +12,6 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.NoteDao;
 import org.chiclepad.backend.entity.Category;
@@ -219,7 +218,7 @@ public class NoteListModel implements ListModel{
 
     private void setHighlightOnHover(Note addedNote, VBox postIt) {
         postIt.setOnMouseEntered(event -> {
-            postIt.setStyle("-fx-background-color: " + ChiclePadApp.darken(categoryColorOfNote(addedNote), 0.95));
+            postIt.setStyle("-fx-background-color: " + ChiclePadApp.darken(categoryColorOfNote(addedNote)));
         });
 
         postIt.setOnMouseExited(event -> {

@@ -65,9 +65,19 @@ abstract class EntryDao {
         );
     }
 
+    @Deprecated
     List<Entry> getAllEntries(int userId) throws EmptyResultDataAccessException {
         return jdbcTemplate.query(
                 GET_ALL_ENTRY_SQL,
+                new Object[]{userId},
+                (resultSet, row) -> new Note(resultSet.getInt("id"), resultSet.getInt("id"), "")
+        );
+    }
+
+    @Deprecated
+    List<Entry> getAllEntriesWithDeleted(int userId) throws EmptyResultDataAccessException {
+        return jdbcTemplate.query(
+                GET_ALL_WITH_DELETED_ENTRY_SQL,
                 new Object[]{userId},
                 (resultSet, row) -> new Note(resultSet.getInt("id"), resultSet.getInt("id"), "")
         );
@@ -81,12 +91,13 @@ abstract class EntryDao {
         );
     }
 
-    List<Entry> getAllEntriesWithDeleted(int userId) throws EmptyResultDataAccessException {
-        return jdbcTemplate.query(
-                GET_ALL_WITH_DELETED_ENTRY_SQL,
-                new Object[]{userId},
-                (resultSet, row) -> new Note(resultSet.getInt("id"), resultSet.getInt("id"), "")
-        );
+    void fetchAndSetCategories(List<? extends Entry> entries) throws EmptyResultDataAccessException {
+        entries.forEach(this::fetchAndSetCategories);
+    }
+
+    void fetchAndSetCategories(Entry entry) throws EmptyResultDataAccessException {
+        entry.getCategories().clear();
+        entry.getCategories().addAll(getAllCategoriesOfEntry(entry));
     }
 
     public void markDeleted(Entry entry) {
@@ -121,4 +132,5 @@ abstract class EntryDao {
 
         return new Category(id, name, icon, color);
     }
+
 }

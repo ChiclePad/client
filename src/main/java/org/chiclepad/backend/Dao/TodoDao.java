@@ -72,31 +72,41 @@ public class TodoDao extends EntryDao {
     }
 
     public Todo get(int id) throws EmptyResultDataAccessException {
-        return jdbcTemplate.queryForObject(
+        Todo todo = jdbcTemplate.queryForObject(
                 GET_TODO_SQL,
                 new Object[]{id},
                 (resultSet, row) -> readTodo(resultSet)
         );
+
+        fetchAndSetCategories(todo);
+        return todo;
     }
 
     public List<Todo> getAll(int userId) {
-        return jdbcTemplate.query(
+        List<Todo> todos = jdbcTemplate.query(
                 GET_ALL_TODO_PAGE_SQL,
                 new Object[]{userId},
                 (resultSet, row) -> readTodo(resultSet)
         );
+
+        fetchAndSetCategories(todos);
+        return todos;
     }
 
     public List<Todo> getAllWithDeleted(int userId) {
-        return jdbcTemplate.query(
+        List<Todo> todos = jdbcTemplate.query(
                 GET_ALL_WITH_DELETED_DIARY_PAGE_SQL,
                 new Object[]{userId},
                 (resultSet, row) -> readTodo(resultSet)
         );
+
+        fetchAndSetCategories(todos);
+        return todos;
     }
 
     public Todo update(Todo todo) throws DuplicateKeyException {
         Timestamp softDeadline = localDateTimeToTimestamp(todo.getSoftDeadline());
+
         jdbcTemplate.update(
                 UPDATE_DIARY_PAGE_SQL,
                 todo.getDescription(),
@@ -105,6 +115,7 @@ public class TodoDao extends EntryDao {
                 todo.getPriority(),
                 todo.getId()
         );
+
         return todo;
     }
 

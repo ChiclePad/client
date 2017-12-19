@@ -72,27 +72,36 @@ public class NoteDao extends EntryDao {
     }
 
     public Note get(int id) throws EmptyResultDataAccessException {
-        return jdbcTemplate.queryForObject(
+        Note note = jdbcTemplate.queryForObject(
                 GET_NOTE_SQL,
                 new Object[]{id},
                 (resultSet, row) -> readNote(resultSet)
         );
+
+        fetchAndSetCategories(note);
+        return note;
     }
 
     public List<Note> getAll(int userId) throws EmptyResultDataAccessException {
-        return jdbcTemplate.query(
+        List<Note> notes = jdbcTemplate.query(
                 GET_ALL_NOTE_SQL,
                 new Object[]{userId},
                 (resultSet, row) -> readNote(resultSet)
         );
+
+        fetchAndSetCategories(notes);
+        return notes;
     }
 
     public List<Note> getAllWithDeleted(int userId) throws EmptyResultDataAccessException {
-        return jdbcTemplate.query(
+        List<Note> notes = jdbcTemplate.query(
                 GET_ALL_WITH_DELETED_NOTE_SQL,
                 new Object[]{userId},
                 (resultSet, row) -> readNote(resultSet)
         );
+
+        fetchAndSetCategories(notes);
+        return notes;
     }
 
     public Note update(Note note) throws DuplicateKeyException {

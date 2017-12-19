@@ -61,4 +61,8 @@ public class ChiclePadApp extends Application {
         return String.format("#%02x%02x%02x", (int) (r * amount * 255), (int) (g * amount * 255), (int) (b * amount * 255));
     }
 
+    public static String darken(String hexColor) {
+        return darken(hexColor, 0.95);
+    }
+
 }
