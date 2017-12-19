@@ -27,11 +27,14 @@ public class CategoryListModel {
 
     private Map<HBox, Boolean> categorySelected;
 
-    public CategoryListModel(VBox categories, VBox ripplerArea) {
-        this(categories, ripplerArea, new JFXComboBox() /* Invisible combo box, to prevent needless null checking*/);
+    private ListModel listModel;
+
+    public CategoryListModel(VBox categories, VBox ripplerArea, ListModel listModel) {
+        this(categories, ripplerArea, new JFXComboBox() /* Invisible combo box, to prevent needless null checking*/,
+                listModel);
     }
 
-    public CategoryListModel(VBox categories, VBox ripplerArea, JFXComboBox categoryPicker) {
+    public CategoryListModel(VBox categories, VBox ripplerArea, JFXComboBox categoryPicker, ListModel listModel) {
         this.categories = categories;
         this.ripplerArea = ripplerArea;
         this.categoryPicker = categoryPicker;

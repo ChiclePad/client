@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.NoteDao;
+import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.Note;
 import org.chiclepad.constants.ChiclePadColor;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
@@ -25,7 +26,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NoteListModel {
+public class NoteListModel implements ListModel{
 
     private List<Note> notes;
 
@@ -257,4 +258,13 @@ public class NoteListModel {
         }
     }
 
+    @Override
+    public void filterByCategory(List<Category> categories) {
+
+    }
+
+    @Override
+    public void setCategoryToSelectedEntry(Category category) {
+
+    }
 }

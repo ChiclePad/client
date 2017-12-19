@@ -13,6 +13,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.DiaryPageDao;
+import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.DiaryPage;
 import org.chiclepad.constants.ChiclePadColor;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
@@ -20,7 +21,7 @@ import org.chiclepad.frontend.jfx.ChiclePadApp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiaryListModel {
+public class DiaryListModel implements ListModel{
 
     private List<DiaryPage> diaryPages;
 
@@ -162,4 +163,13 @@ public class DiaryListModel {
         JFXDepthManager.setDepth(selectedDiaryPageLine, 1);
     }
 
+    @Override
+    public void filterByCategory(List<Category> categories) {
+
+    }
+
+    @Override
+    public void setCategoryToSelectedEntry(Category category) {
+
+    }
 }
