@@ -5,7 +5,9 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
+import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.NoteDao;
+import org.chiclepad.backend.Dao.TodoDao;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.NoteDao;
 import org.chiclepad.backend.Dao.TodoDao;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TodoListModel implements ListModel {
+
+    private TodoDao todoDao = DaoFactory.INSTANCE.getTodoDao();
 
     private TodoDao todoDao = DaoFactory.INSTANCE.getTodoDao();
 
@@ -98,8 +102,20 @@ public class TodoListModel implements ListModel {
         this.softDeadlinePicker = softDeadlinePicker;
         this.prioritySlider = prioritySlider;
         todoList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == null) {
+            if (selectedTodo != null) {
+                todoDao.update(selectedTodo);
+            }
 
+            if (newValue == null) {
+                selectedTodoItem = null;
+                selectedTodo = null;
+
+                descriptionField.setText("");
+                deadlinePicker.setValue(null);
+                softDeadlinePicker.setValue(null);
+                prioritySlider.setValue(0);
+
+                return;
             }
 
             selectedTodoItem = newValue.getValue();
@@ -195,14 +211,7 @@ public class TodoListModel implements ListModel {
     }
 
     public Todo deleteSelected() {
-//        for (int i = 0; i < layout.getCurrentItemsCount(); i++) {
-//            layout.getTreeItem(0)
-//            tableView.getItems().clear();
-//        }
-//
-//        layout. ().removeIf(child -> child == selectedNote);
-//        notes.remove(selectedNote);
-//        return selectedNote;
+        todoItems.remove(selectedTodoItem);
         return selectedTodo;
     }
 
