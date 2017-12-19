@@ -127,7 +127,6 @@ public class DiaryListModel implements ListModel {
     @Override
     public void filterByCategory(List<Category> categories) {
         this.categoriesFilter = categories;
-        clearDiaryPages();
         this.filter();
     }
 
@@ -186,5 +185,10 @@ public class DiaryListModel implements ListModel {
         this.selectedDiaryPage.getCategories().add(category);
         this.diaryPageDao.bind(category, this.selectedDiaryPage);
         this.selectedDiaryPageLine.setStyle("-fx-background-color: " + categoryColorOfDiaryPage(this.selectedDiaryPage));
+    }
+
+    @Override
+    public void clearEntries() {
+        this.clearDiaryPages();
     }
 }

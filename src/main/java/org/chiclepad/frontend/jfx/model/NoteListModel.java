@@ -252,7 +252,6 @@ public class NoteListModel implements ListModel {
     @Override
     public void filterByCategory(List<Category> categories) {
         this.categoriesFilter = categories;
-        clearNotes();
         this.filter();
     }
 
@@ -282,5 +281,10 @@ public class NoteListModel implements ListModel {
         this.selectedNote.getCategories().add(category);
         this.selectedPostIt.setStyle("-fx-background-color: " + categoryColorOfNote(this.selectedNote));
         this.noteDao.bind(category, selectedNote);
+    }
+
+    @Override
+    public void clearEntries() {
+        this.clearNotes();
     }
 }

@@ -22,5 +22,7 @@ public interface ListModel {
 
         return entry.getCategories().stream().allMatch(category -> categoriesFilter.contains(category));
     }
+
+    void clearEntries();
 }
 

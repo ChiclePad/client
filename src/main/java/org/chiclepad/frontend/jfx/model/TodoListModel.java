@@ -171,4 +171,8 @@ public class TodoListModel implements ListModel {
         this.todoDao.bind(category, this.selectedTodo);
     }
 
+    @Override
+    public void clearEntries() {
+    }
+
 }

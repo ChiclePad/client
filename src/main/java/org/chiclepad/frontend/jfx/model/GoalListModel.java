@@ -178,7 +178,6 @@ public class GoalListModel implements ListModel {
     @Override
     public void filterByCategory(List<Category> categories) {
         this.categoriesFilter = categories;
-        clearGoals();
         this.filter();
     }
 
@@ -205,5 +204,10 @@ public class GoalListModel implements ListModel {
         this.selectedGoal.getCategories().add(category);
         this.goalDao.bind(category, this.selectedGoal);
         this.selectedGoalLine.setStyle("-fx-background-color: " + categoryColorOfGoal(this.selectedGoal));
+    }
+
+    @Override
+    public void clearEntries() {
+        this.clearGoals();
     }
 }

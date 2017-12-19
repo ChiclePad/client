@@ -113,13 +113,17 @@ public class CategoryListModel {
                 styleAsDeselectedLine(line);
             }
 
+            listModel.clearEntries();
+        });
+
+        line.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
             List<Category> selectedCategories = this.categorySelected.entrySet().stream()
                     .filter(entry -> entry.getValue())
                     .map(entry -> entry.getKey()).collect(Collectors.toList());
 
             this.listModel.filterByCategory(selectedCategories);
-
         });
+
     }
 
     private void styleAsDeselectedLine(HBox line) {

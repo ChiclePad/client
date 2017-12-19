@@ -113,4 +113,9 @@ public class NotificationsListModel implements ListModel {
     public void setCategoryToSelectedEntry(Category category) {
 
     }
+
+    @Override
+    public void clearEntries() {
+
+    }
 }
