@@ -46,6 +46,8 @@ public class NoteListModel implements ListModel {
     private String textFilter = "";
     private List<Category> categoriesFilter = new ArrayList<>();
 
+    private boolean clearedScene;
+
     public NoteListModel(
             JFXMasonryPane layout,
             JFXTextField descriptionField,
@@ -237,6 +239,7 @@ public class NoteListModel implements ListModel {
 
     public void clearNotes() {
         layout.getChildren().clear();
+        this.clearedScene = true;
     }
 
     public void setNewTextFilter(String filter) {
@@ -256,11 +259,13 @@ public class NoteListModel implements ListModel {
     }
 
     private void filter() {
-        notes.stream()
-                .filter(note -> fitsTextFilter(note))
-                .filter(note -> fitsCategoryFilter(note, this.categoriesFilter))
-                .forEach(this::addNoteToLayout);
-
+        if (this.clearedScene) {
+            notes.stream()
+                    .filter(note -> fitsTextFilter(note))
+                    .filter(note -> fitsCategoryFilter(note, this.categoriesFilter))
+                    .forEach(this::addNoteToLayout);
+            this.clearedScene = false;
+        }
     }
 
     private String categoryColorOfNote(Note note) {

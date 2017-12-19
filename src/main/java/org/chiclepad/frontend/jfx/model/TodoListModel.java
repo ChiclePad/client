@@ -41,6 +41,7 @@ public class TodoListModel implements ListModel {
     private String textFilter = "";
     private List<Category> categoriesFilter = new ArrayList<>();
 
+    private boolean clearedScene;
 
     public TodoListModel(
             JFXTreeTableView<TodoTreeItem> todoList,

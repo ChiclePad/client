@@ -37,6 +37,8 @@ public class GoalListModel implements ListModel {
     private String textFilter = "";
     private List<Category> categoriesFilter = new ArrayList<>();
 
+    private boolean clearedScene;
+
     public GoalListModel(VBox layout) {
         this.layout = layout;
         this.goals = new ArrayList<>();
@@ -153,22 +155,23 @@ public class GoalListModel implements ListModel {
     }
 
     public void clearGoals() {
-        Iterator<Node> iterator = layout.getChildren().iterator();
-
         layout.getChildren().clear();
+        this.clearedScene = true;
     }
 
     public void setNewTextFilter(String filter) {
         this.textFilter = filter;
-
         filter();
     }
 
     private void filter() {
-        goals.stream()
-                .filter(goal -> fitsTextFilter(goal))
-                .filter(goal -> fitsCategoryFilter(goal, this.categoriesFilter))
-                .forEach(this::addGoalToLayout);
+        if (this.clearedScene) {
+            goals.stream()
+                    .filter(goal -> fitsTextFilter(goal))
+                    .filter(goal -> fitsCategoryFilter(goal, this.categoriesFilter))
+                    .forEach(this::addGoalToLayout);
+            this.clearedScene = false;
+        }
     }
 
     private boolean fitsTextFilter(Goal goal) {

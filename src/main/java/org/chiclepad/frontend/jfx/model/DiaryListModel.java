@@ -37,6 +37,8 @@ public class DiaryListModel implements ListModel {
     private String textFilter = "";
     private List<Category> categoriesFilter = new ArrayList<>();
 
+    private boolean clearedScene;
+
     public DiaryListModel(VBox layout) {
         this.layout = layout;
         this.diaryPageDao = DaoFactory.INSTANCE.getDiaryPageDao();
@@ -105,6 +107,7 @@ public class DiaryListModel implements ListModel {
 
     public void clearDiaryPages() {
         layout.getChildren().clear();
+        this.clearedScene = true;
     }
 
     public void setNewTextFilter(String textFilter) {
@@ -118,10 +121,13 @@ public class DiaryListModel implements ListModel {
     }
 
     private void filter() {
-        diaryPages.stream()
-                .filter(diaryPage -> fitsTextFilter(diaryPage))
-                .filter(diaryPage -> fitsCategoryFilter(diaryPage, this.categoriesFilter))
-                .forEach(diaryPage -> addDiaryPageToLayout(diaryPage));
+        if (clearedScene) {
+            diaryPages.stream()
+                    .filter(diaryPage -> fitsTextFilter(diaryPage))
+                    .filter(diaryPage -> fitsCategoryFilter(diaryPage, this.categoriesFilter))
+                    .forEach(diaryPage -> addDiaryPageToLayout(diaryPage));
+            this.clearedScene = false;
+        }
     }
 
     @Override
