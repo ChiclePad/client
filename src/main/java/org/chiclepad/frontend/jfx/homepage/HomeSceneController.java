@@ -98,7 +98,7 @@ public class HomeSceneController {
     }
 
     private void initializeCategories() {
-        this.categories = new CategoryListModel(categoryList, categoriesRippler);
+        this.categories = new CategoryListModel(categoryList, categoriesRippler, this.upcoming);
         List<Category> categories = this.categoryDao.getAll(this.loggedInUser.getId());
         categories.forEach(category -> this.categories.add(category));
     }

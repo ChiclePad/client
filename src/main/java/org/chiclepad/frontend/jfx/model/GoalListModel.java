@@ -12,13 +12,14 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.GoalDao;
+import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.Goal;
 import org.chiclepad.constants.ChiclePadColor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GoalListModel {
+public class GoalListModel implements ListModel {
 
     private List<Goal> goals;
 
@@ -166,4 +167,13 @@ public class GoalListModel {
         }
     }
 
+    @Override
+    public void filterByCategory(List<Category> categories) {
+
+    }
+
+    @Override
+    public void setCategoryToSelectedEntry(Category category) {
+
+    }
 }

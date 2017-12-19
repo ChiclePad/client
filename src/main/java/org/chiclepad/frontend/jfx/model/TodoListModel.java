@@ -10,9 +10,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
+import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.Todo;
 
-public class TodoListModel {
+import java.util.List;
+
+public class TodoListModel implements ListModel {
 
     ObservableList<TodoTreeItem> items;
 
@@ -70,5 +73,15 @@ public class TodoListModel {
 
     public Todo deleteSelected() {
         return null;
+    }
+
+    @Override
+    public void filterByCategory(List<Category> categories) {
+
+    }
+
+    @Override
+    public void setCategoryToSelectedEntry(Category category) {
+
     }
 }

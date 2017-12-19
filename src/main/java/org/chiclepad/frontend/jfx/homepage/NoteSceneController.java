@@ -98,7 +98,7 @@ public class NoteSceneController {
     }
 
     private void initializeCategories() {
-        this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker);
+        this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker, this.notes);
         List<Category> categories = this.categoryDao.getAll(this.loggedInUser.getId());
         categories.forEach(category -> this.categories.add(category));
     }

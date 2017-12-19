@@ -1,6 +1,7 @@
 package org.chiclepad.frontend.jfx.model;
 
 import com.jfoenix.controls.JFXListView;
+import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.Goal;
 import org.chiclepad.backend.entity.Note;
 
@@ -8,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NotificationsListModel {
+public class NotificationsListModel implements ListModel {
 
     private List<Goal> goals;
 
@@ -73,4 +74,13 @@ public class NotificationsListModel {
                 note.getReminderTime().map(time -> time.toString().contains(filter)).orElse(false);
     }
 
+    @Override
+    public void filterByCategory(List<Category> categories) {
+
+    }
+
+    @Override
+    public void setCategoryToSelectedEntry(Category category) {
+
+    }
 }

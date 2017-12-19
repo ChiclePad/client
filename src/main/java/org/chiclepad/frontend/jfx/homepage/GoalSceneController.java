@@ -113,7 +113,7 @@ public class GoalSceneController {
     }
 
     private void initializeCategories() {
-        this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker);
+        this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker, this.goals);
         List<Category> categories = this.categoryDao.getAll(this.loggedInUser.getId());
         categories.forEach(category -> this.categories.add(category));
     }

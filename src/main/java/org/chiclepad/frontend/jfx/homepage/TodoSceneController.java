@@ -103,7 +103,7 @@ public class TodoSceneController {
     }
 
     private void initializeCategories() {
-        this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker);
+        this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker, this.todos);
         List<Category> categories = this.categoryDao.getAll(this.loggedInUser.getId());
         categories.forEach(category -> this.categories.add(category));
     }
@@ -140,7 +140,7 @@ public class TodoSceneController {
     public void addCategory() {
         CategoryPopup.showUnderParent(addCategoryIcon, categories);
     }
-    
+
     @FXML
     public void userClick() {
         UserPopup.showUnderParent(userArea);
