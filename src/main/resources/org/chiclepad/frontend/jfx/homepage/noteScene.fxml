@@ -192,7 +192,7 @@
                                <HBox alignment="CENTER_RIGHT" spacing="5.0">
                                    <children>
                                        <Label styleClass="large-text" text="Category:"/>
-                                       <JFXComboBox fx:id="categoryPicker1" focusColor="#8dc44e" prefWidth="150.0"
+                                       <JFXComboBox fx:id="categoryPicker" focusColor="#8dc44e" prefWidth="150.0"
                                                     styleClass="normal-text" unFocusColor="#464947"/>
                                    </children>
                                </HBox>
