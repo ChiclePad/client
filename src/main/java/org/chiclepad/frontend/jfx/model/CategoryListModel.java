@@ -57,6 +57,13 @@ public class CategoryListModel {
         categoryPicker.setCellFactory(cellFactory);
     }
 
+    private void initializeCategoryPickerCellFactory() {
+        Callback cellFactory = param -> createComboBoxLine();
+
+        categoryPicker.setButtonCell((ListCell) cellFactory.call(null));
+        categoryPicker.setCellFactory(cellFactory);
+    }
+
     private static ListCell<Category> createComboBoxLine() {
         return new ListCell<>() {
 
