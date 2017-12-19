@@ -57,12 +57,6 @@ public class GoalSceneController {
     private VBox goalList;
 
     @FXML
-    private FontAwesomeIcon loadNextButton;
-
-    @FXML
-    private FontAwesomeIcon loadPreviousButton;
-
-    @FXML
     private FontAwesomeIcon addCategoryIcon;
 
     @FXML
@@ -101,8 +95,6 @@ public class GoalSceneController {
         JFXDepthManager.setDepth(header, 1);
 
         makeIconGreenOnHover(addCategoryIcon);
-        makeIconGreenOnHover(loadNextButton);
-        makeIconGreenOnHover(loadPreviousButton);
     }
 
     private void makeIconGreenOnHover(FontAwesomeIcon icon) {
@@ -162,18 +154,8 @@ public class GoalSceneController {
     }
 
     @FXML
-    public void loadPrevious() {
-
-    }
-
-    @FXML
-    public void loadNext() {
-
-    }
-
-    @FXML
     public void addCategory() {
-        CategoryPopup.showUnderParent(addCategoryIcon, categories);
+        CategoryPopup.showAddCategoryUnderParent(addCategoryIcon, categories);
     }
 
     @FXML

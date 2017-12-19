@@ -1,7 +1,5 @@
 package org.chiclepad.backend.entity;
 
-import org.springframework.lang.NonNull;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -55,15 +53,10 @@ public class Todo extends Entry {
                 int id,
                 String description,
                 LocalDateTime deadline,
-                @NonNull LocalDateTime softDeadline,
+                LocalDateTime softDeadline,
                 int priority) {
         this(entryId, categories, id, description, deadline, priority);
-
-        if (softDeadline == null) {
-            throw new RuntimeException("Provided To-do entry (" + id + " " + description + ") soft deadline can't be null");
-        }
-
-        this.softDeadline = Optional.of(softDeadline);
+        this.softDeadline = Optional.ofNullable(softDeadline);
     }
 
     /**
@@ -84,15 +77,10 @@ public class Todo extends Entry {
                 int id,
                 String description,
                 LocalDateTime deadline,
-                @NonNull LocalDateTime softDeadline,
+                LocalDateTime softDeadline,
                 int priority) {
         this(entryId, id, description, deadline, priority);
-
-        if (softDeadline == null) {
-            throw new RuntimeException("Provided To-do entry (" + id + " " + description + ") soft deadline can't be null");
-        }
-
-        this.softDeadline = Optional.of(softDeadline);
+        this.softDeadline = Optional.ofNullable(softDeadline);
     }
 
     /**
@@ -140,12 +128,8 @@ public class Todo extends Entry {
     /**
      * @param softDeadline New deadline user set for himself
      */
-    public void setSoftDeadline(@NonNull LocalDateTime softDeadline) {
-        if (softDeadline == null) {
-            throw new RuntimeException("Provided To-do entry (" + id + " " + description + ") soft deadline can't be null");
-        }
-
-        this.softDeadline = Optional.of(softDeadline);
+    public void setSoftDeadline(LocalDateTime softDeadline) {
+        this.softDeadline = Optional.ofNullable(softDeadline);
     }
 
     /**

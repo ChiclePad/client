@@ -6,8 +6,6 @@ import javafx.beans.property.StringProperty;
 import org.chiclepad.backend.entity.Todo;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class TodoTreeItem extends RecursiveTreeObject<TodoTreeItem> {
@@ -49,12 +47,19 @@ public class TodoTreeItem extends RecursiveTreeObject<TodoTreeItem> {
 
     public void setDeadline(LocalDate newDeadline) {
         this.deadlineProperty.setValue(dateFormatter.format(newDeadline));
-        this.todo.setDeadline(LocalDateTime.of(newDeadline, LocalTime.now()));
+        this.todo.setDeadline(newDeadline.atStartOfDay());
     }
 
     public void setSoftDeadline(LocalDate newSoftDeadline) {
+        if (newSoftDeadline == null) {
+            this.softDeadlineProperty.setValue(null);
+            this.todo.setSoftDeadline(null);
+
+            return;
+        }
+
         this.softDeadlineProperty.setValue(dateFormatter.format(newSoftDeadline));
-        this.todo.setSoftDeadline(LocalDateTime.of(newSoftDeadline, LocalTime.now()));
+        this.todo.setSoftDeadline(newSoftDeadline.atStartOfDay());
     }
 
     public void setPriority(int newPriority) {

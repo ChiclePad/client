@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXRippler;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.input.MouseEvent;
@@ -13,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import org.chiclepad.backend.entity.Category;
 import org.chiclepad.constants.ChiclePadColor;
+import org.chiclepad.frontend.jfx.Popup.CategoryPopup;
 
 import java.util.HashMap;
 import java.util.List;
@@ -57,13 +59,6 @@ public class CategoryListModel {
         categoryPicker.setCellFactory(cellFactory);
     }
 
-    private void initializeCategoryPickerCellFactory() {
-        Callback cellFactory = param -> createComboBoxLine();
-
-        categoryPicker.setButtonCell((ListCell) cellFactory.call(null));
-        categoryPicker.setCellFactory(cellFactory);
-    }
-
     private static ListCell<Category> createComboBoxLine() {
         return new ListCell<>() {
 
@@ -72,24 +67,69 @@ public class CategoryListModel {
                 super.updateItem(item, empty);
                 if (item == null || empty) {
                     setGraphic(null);
-
                 } else {
-                    HBox hBox = new HBox();
-
-                    Label label = new Label(item.getName());
-
-                    FontAwesomeIcon icon = new FontAwesomeIcon();
-                    icon.setIconName(item.getIcon());
-                    icon.setSize("1.25em");
-                    icon.setFill(Color.web(item.getColor()));
-
-                    hBox.getChildren().addAll(label, icon);
-
-                    setGraphic(hBox);
+                    setGraphic(createComboBoxHboxLine(item));
                 }
             }
 
         };
+    }
+
+    private static ListCell<Category> createSelectedComboBoxLine() {
+        return new ListCell<>() {
+
+            @Override
+            protected void updateItem(Category item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(createComboBoxSelectedHboxLine(item));
+                }
+            }
+
+        };
+    }
+
+    private static HBox createComboBoxHboxLine(Category item) {
+        HBox hBox = new HBox();
+        hBox.setSpacing(10);
+
+        FontAwesomeIcon icon = new FontAwesomeIcon();
+        styleIcon(item, icon, 1.25);
+
+        Label label = new Label(item.getName());
+
+        hBox.getChildren().addAll(icon, label);
+        return hBox;
+    }
+
+    private static HBox createComboBoxSelectedHboxLine(Category item) {
+        HBox hBox = new HBox();
+        hBox.setSpacing(10);
+
+        FontAwesomeIcon icon = new FontAwesomeIcon();
+        styleIcon(item, icon, 1);
+
+        Label label = new Label(item.getName());
+        label.getStyleClass().add("text");
+
+        hBox.getChildren().addAll(icon, label);
+        return hBox;
+    }
+
+    private static void styleIcon(Category item, FontAwesomeIcon icon, double size) {
+        icon.setIconName(item.getIcon());
+        icon.setSize(size + "em");
+        icon.setFill(Color.web(item.getColor()));
+    }
+
+    private void initializeCategoryPickerCellFactory() {
+        Callback cellFactory = param -> createComboBoxLine();
+        Callback selectedCellFactory = param -> createSelectedComboBoxLine();
+
+        categoryPicker.setButtonCell((ListCell) selectedCellFactory.call(null));
+        categoryPicker.setCellFactory(cellFactory);
     }
 
     public void add(Category category) {
@@ -112,8 +152,25 @@ public class CategoryListModel {
 
     private void addMousePressListener(HBox line, Category category) {
         line.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
-            categorySelected.put(category, !categorySelected.get(category));
+            if (event.isPrimaryButtonDown()) {
+                selectCategory(line);
+                return;
+            }
 
+            if (event.isSecondaryButtonDown()) {
+                editCategory(line, category);
+            }
+        });
+    }
+
+    private void selectCategory(HBox line) {
+        categorySelected.put(category, !categorySelected.get(category));
+
+        if (categorySelected.get(line)) {
+            styleAsSelectedLine(line);
+        } else {
+            styleAsDeselectedLine(line);
+        }
             if (categorySelected.get(category)) {
                 styleAsSelectedLine(line);
             } else {
@@ -131,6 +188,10 @@ public class CategoryListModel {
             this.listModel.filterByCategory(selectedCategories);
         });
 
+    }
+
+    private void editCategory(HBox line, Category category) {
+        CategoryPopup.showEditCategoryAtPosition(line, category, this);
     }
 
     private void styleAsDeselectedLine(HBox line) {
@@ -173,6 +234,7 @@ public class CategoryListModel {
         line.setSpacing(15);
         line.setPadding(new Insets(10, 10, 10, 40));
         line.getStyleClass().addAll("highlighted", "grey-dark-background", "grey-dark-background-hover");
+        line.setAlignment(Pos.CENTER_LEFT);
     }
 
 }

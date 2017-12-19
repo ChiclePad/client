@@ -52,23 +52,22 @@ public class DiaryListModel implements ListModel {
 
     private void addDiaryPageToLayout(DiaryPage diaryPage) {
         VBox diaryPageLine = new VBox();
+        styleDiaryPageLine(diaryPageLine);
+        setHighlightOnHover(diaryPageLine, diaryPage);
         diaryPageLine.addEventFilter(MouseEvent.MOUSE_PRESSED, this.selectDiaryPage(diaryPageLine, diaryPage));
 
-        // Hbox containing date and button to display textarea
         HBox headline = new HBox();
-        Label dateLabel = new Label(diaryPage.getRecordedDay().toString());
+        Label dateLabel = createDateLabel(diaryPage);
+
         FontAwesomeIcon dropdownIcon = new FontAwesomeIcon();
         dropdownIcon.setIcon(FontAwesomeIconName.CARET_DOWN);
-        diaryPageLine.getStyleClass().add("form");
-        diaryPageLine.setPadding(new Insets(15, 15, 15, 15));
-        JFXDepthManager.setDepth(diaryPageLine, 1);
+        dropdownIcon.setSize("1.75em");
 
         dropdownIcon.setOnMousePressed(event -> {
-            if (diaryPageLine.getChildren().size() == 2) {
-                // Remove textarea
+            if (isExpanded(diaryPageLine)) {
                 diaryPageLine.getChildren().remove(1);
-            } else if (diaryPageLine.getChildren().size() == 1) {
-                // Add textarea
+
+            } else {
 
                 // TextArea
                 JFXTextArea text = new JFXTextArea(diaryPage.getText());
@@ -99,17 +98,22 @@ public class DiaryListModel implements ListModel {
 
         headline.getChildren().addAll(dateLabel, dropdownIcon);
         headline.setSpacing(10);
+
         diaryPageLine.getChildren().add(headline);
-        setHighlightOnHover(diaryPageLine, diaryPage);
+
         layout.getChildren().add(diaryPageLine);
         diaryPageLine.setStyle("-fx-background-color: " + categoryColorOfDiaryPage(diaryPage));
     }
 
-    public void clearDiaryPages() {
-        layout.getChildren().clear();
+    private boolean isExpanded(VBox diaryPageLine) {
+        return diaryPageLine.getChildren().size() > 1;
         this.clearedScene = true;
     }
 
+    private void styleDiaryPageLine(VBox diaryPageLine) {
+        diaryPageLine.getStyleClass().add("form");
+        diaryPageLine.setPadding(new Insets(15, 15, 15, 15));
+        JFXDepthManager.setDepth(diaryPageLine, 1);
     public void setNewTextFilter(String textFilter) {
         this.textFilter = textFilter;
         this.filter();
@@ -130,19 +134,17 @@ public class DiaryListModel implements ListModel {
         }
     }
 
+    private Label createDateLabel(DiaryPage diaryPage) {
+        Label dateLabel = new Label(diaryPage.getRecordedDay().toString());
+        dateLabel.getStyleClass().add("normal-text");
+        return dateLabel;
     @Override
     public void filterByCategory(List<Category> categories) {
         this.categoriesFilter = categories;
         this.filter();
     }
 
-    public DiaryPage deleteSelected() {
-        layout.getChildren().removeIf(child -> child == selectedDiaryPageLine);
-        diaryPages.remove(selectedDiaryPage);
-        return selectedDiaryPage;
-    }
-
-    public EventHandler<MouseEvent> selectDiaryPage(VBox selectedDiaryPageLine, DiaryPage selectedDiaryPage) {
+    private EventHandler<MouseEvent> selectDiaryPage(VBox selectedDiaryPageLine, DiaryPage selectedDiaryPage) {
         return event -> {
             this.deselectPreviousDiaryPage();
             setSelectedDiaryPage(selectedDiaryPageLine, selectedDiaryPage);
@@ -182,6 +184,29 @@ public class DiaryListModel implements ListModel {
         JFXDepthManager.setDepth(selectedDiaryPageLine, 1);
     }
 
+    public void clearDiaryPages() {
+        layout.getChildren().clear();
+    }
+
+    public DiaryPage deleteSelected() {
+        layout.getChildren().removeIf(child -> child == selectedDiaryPageLine);
+        diaryPages.remove(selectedDiaryPage);
+        return selectedDiaryPage;
+    }
+
+    public void setNewFilter(String filter) {
+        this.filter = filter;
+
+        diaryPages.stream()
+                .filter(diaryPage -> fitsFilter(diaryPage, filter))
+                .forEach(this::addDiaryPageToLayout);
+    }
+
+    private boolean fitsFilter(DiaryPage diaryPage, String filter) {
+        return diaryPage.getText().contains(filter) ||
+                diaryPage.getRecordedDay().toString().contains(filter);
+    }
+
     @Override
     public void setCategoryToSelectedEntry(Category category) {
         this.selectedDiaryPage.getCategories().forEach(unboundCategory -> {
@@ -197,4 +222,5 @@ public class DiaryListModel implements ListModel {
     public void clearEntries() {
         this.clearDiaryPages();
     }
+
 }

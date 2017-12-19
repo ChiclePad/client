@@ -137,7 +137,7 @@ public class HomeSceneController {
 
     @FXML
     public void addCategory() {
-        CategoryPopup.showUnderParent(addCategoryIcon, categories);
+        CategoryPopup.showAddCategoryUnderParent(addCategoryIcon, categories);
     }
 
     @FXML

@@ -25,7 +25,7 @@ import org.chiclepad.frontend.jfx.model.CategoryListModel;
 import org.chiclepad.frontend.jfx.model.TodoListModel;
 import org.chiclepad.frontend.jfx.model.TodoTreeItem;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 public class TodoSceneController {
@@ -121,7 +121,12 @@ public class TodoSceneController {
 
     @FXML
     public void addTodo() {
-        Todo created = todoDao.create(loggedInUser.getId(), "", LocalDateTime.now(), 0);
+        Todo created = todoDao.create(
+                loggedInUser.getId(),
+                "Description",
+                LocalDate.now().plusDays(1).atStartOfDay(),
+                0
+        );
         todos.add(created);
     }
 
@@ -138,7 +143,7 @@ public class TodoSceneController {
 
     @FXML
     public void addCategory() {
-        CategoryPopup.showUnderParent(addCategoryIcon, categories);
+        CategoryPopup.showAddCategoryUnderParent(addCategoryIcon, categories);
     }
 
     @FXML

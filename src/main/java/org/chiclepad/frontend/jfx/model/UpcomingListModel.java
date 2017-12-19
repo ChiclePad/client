@@ -29,7 +29,7 @@ public class UpcomingListModel implements ListModel {
 
     private void addTodoToLayout(Todo todo) {
         long remainingHours = ChronoUnit.HOURS.between(LocalDateTime.now(), todo.getDeadline());
-        long remainingMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), todo.getDeadline());
+        long remainingMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), todo.getDeadline()) - 60 * remainingHours;
         long remainingDays = ChronoUnit.DAYS.between(LocalDateTime.now(), todo.getDeadline());
 
         String shownResult = LocalDateTime.now().isAfter(todo.getDeadline()) ?
