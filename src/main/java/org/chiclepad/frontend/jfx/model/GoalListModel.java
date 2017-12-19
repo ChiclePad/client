@@ -7,9 +7,11 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconName;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.GoalDao;
@@ -39,10 +41,15 @@ public class GoalListModel implements ListModel {
 
     private boolean clearedScene;
 
-    public GoalListModel(VBox layout) {
+    public GoalListModel(VBox layout, ScrollPane goalScrollPane) {
         this.layout = layout;
         this.goals = new ArrayList<>();
         this.goalDao = DaoFactory.INSTANCE.getGoalDao();
+
+
+        goalScrollPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+            layout.setPrefWidth(newValue.doubleValue() - 15);
+        });
     }
 
     public void add(Goal goal) {
@@ -122,6 +129,7 @@ public class GoalListModel implements ListModel {
         goalLine.getStyleClass().add("form");
 
         goalLine.setAlignment(Pos.CENTER_LEFT);
+        VBox.setVgrow(goalLine, Priority.ALWAYS);
 
         goalLine.setPadding(new Insets(10, 35, 10, 20));
         goalLine.setSpacing(10);
