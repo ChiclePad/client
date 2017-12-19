@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.effects.JFXDepthManager;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconName;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -21,7 +22,7 @@ import org.chiclepad.frontend.jfx.ChiclePadApp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiaryListModel implements ListModel{
+public class DiaryListModel implements ListModel {
 
     private List<DiaryPage> diaryPages;
 
@@ -33,7 +34,10 @@ public class DiaryListModel implements ListModel{
 
     private DiaryPageDao diaryPageDao;
 
-    private String filter = "";
+    private String textFilter = "";
+    private List<Category> categoriesFilter = new ArrayList<>();
+
+    private boolean clearedScene;
 
     public DiaryListModel(VBox layout) {
         this.layout = layout;
@@ -98,23 +102,38 @@ public class DiaryListModel implements ListModel{
         diaryPageLine.getChildren().add(headline);
         setHighlightOnHover(diaryPageLine, diaryPage);
         layout.getChildren().add(diaryPageLine);
+        diaryPageLine.setStyle("-fx-background-color: " + categoryColorOfDiaryPage(diaryPage));
     }
 
     public void clearDiaryPages() {
         layout.getChildren().clear();
+        this.clearedScene = true;
     }
 
-    public void setNewFilter(String filter) {
-        this.filter = filter;
-
-        diaryPages.stream()
-                .filter(diaryPage -> fitsFilter(diaryPage, filter))
-                .forEach(this::addDiaryPageToLayout);
+    public void setNewTextFilter(String textFilter) {
+        this.textFilter = textFilter;
+        this.filter();
     }
 
-    private boolean fitsFilter(DiaryPage diaryPage, String filter) {
-        return diaryPage.getText().contains(filter) ||
-                diaryPage.getRecordedDay().toString().contains(filter);
+    private boolean fitsTextFilter(DiaryPage diaryPage) {
+        return diaryPage.getText().contains(this.textFilter) ||
+                diaryPage.getRecordedDay().toString().contains(this.textFilter);
+    }
+
+    private void filter() {
+        if (clearedScene) {
+            diaryPages.stream()
+                    .filter(diaryPage -> fitsTextFilter(diaryPage))
+                    .filter(diaryPage -> fitsCategoryFilter(diaryPage, this.categoriesFilter))
+                    .forEach(diaryPage -> addDiaryPageToLayout(diaryPage));
+            this.clearedScene = false;
+        }
+    }
+
+    @Override
+    public void filterByCategory(List<Category> categories) {
+        this.categoriesFilter = categories;
+        this.filter();
     }
 
     public DiaryPage deleteSelected() {
@@ -164,12 +183,18 @@ public class DiaryListModel implements ListModel{
     }
 
     @Override
-    public void filterByCategory(List<Category> categories) {
-
+    public void setCategoryToSelectedEntry(Category category) {
+        this.selectedDiaryPage.getCategories().forEach(unboundCategory -> {
+            this.diaryPageDao.unbind(unboundCategory, this.selectedDiaryPage);
+        });
+        this.selectedDiaryPage.getCategories().clear();
+        this.selectedDiaryPage.getCategories().add(category);
+        this.diaryPageDao.bind(category, this.selectedDiaryPage);
+        this.selectedDiaryPageLine.setStyle("-fx-background-color: " + categoryColorOfDiaryPage(this.selectedDiaryPage));
     }
 
     @Override
-    public void setCategoryToSelectedEntry(Category category) {
-
+    public void clearEntries() {
+        this.clearDiaryPages();
     }
 }

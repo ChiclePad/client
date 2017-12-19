@@ -2,19 +2,26 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
-<?import de.jensd.fx.glyphs.fontawesome.*?>
-<?import javafx.geometry.*?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import java.lang.*?>
-<AnchorPane prefHeight="800.0" prefWidth="1280.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
+
+<AnchorPane prefHeight="800.0" prefWidth="1280.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <VBox prefWidth="254.0" styleClass="grey-dark-background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="45.0">
             <children>
@@ -153,17 +160,16 @@
                 <Pane prefHeight="1.0" styleClass="grey-dark" />
                 <HBox alignment="CENTER_LEFT" spacing="15.0">
                     <VBox.margin>
-                        <Insets bottom="10.0" left="50.0" right="10.0" top="10.0"/>
+                        <Insets bottom="10.0" left="50.0" right="10.0" top="10.0" />
                     </VBox.margin>
                     <children>
                         <Label opacity="0.8" text="Categories">
                             <styleClass>
-                                <String fx:value="large-text"/>
-                                <String fx:value="text-on-grey"/>
+                                <String fx:value="large-text" />
+                                <String fx:value="text-on-grey" />
                             </styleClass>
                         </Label>
-                        <FontAwesomeIcon fx:id="addCategoryIcon" fill="#464947" iconName="PLUS_CIRCLE"
-                                         onMousePressed="#addCategory" size="1.5em"/>
+                        <FontAwesomeIcon fx:id="addCategoryIcon" fill="#464947" iconName="PLUS_CIRCLE" onMousePressed="#addCategory" size="1.5em" />
                     </children>
                 </HBox>
             <VBox fx:id="categoryList" VBox.vgrow="ALWAYS" />
@@ -174,8 +180,7 @@
                 <String fx:value="grey-background" />
             </styleClass>
             <children>
-                <VBox fx:id="contentPanel1" layoutX="-78.0" spacing="20.0" AnchorPane.bottomAnchor="30.0"
-                      AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="67.0" AnchorPane.topAnchor="30.0">
+                <VBox fx:id="contentPanel1" layoutX="-78.0" spacing="20.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="67.0" AnchorPane.topAnchor="30.0">
                <children>
                   <HBox>
                      <children>
@@ -195,35 +200,34 @@
                              <children>
                                  <HBox alignment="CENTER_RIGHT" spacing="5.0">
                                      <children>
-                                         <Label styleClass="large-text" text="Category:"/>
-                                         <JFXComboBox fx:id="categoryPicker" focusColor="#8dc44e" prefWidth="150.0"
-                                                      styleClass="normal-text" unFocusColor="#464947"/>
+                                         <Label styleClass="large-text" text="Category:" />
+                                         <JFXComboBox fx:id="categoryPicker" focusColor="#8dc44e" prefWidth="150.0" styleClass="normal-text" unFocusColor="#464947" />
                                      </children>
                                  </HBox>
                                  <JFXButton onAction="#deleteSelected" text="Remove x">
                                      <HBox.margin>
-                                         <Insets/>
+                                         <Insets />
                                      </HBox.margin>
                                      <padding>
-                                         <Insets bottom="10.0" left="20.0" right="20.0" top="10.0"/>
+                                         <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                                      </padding>
                                      <styleClass>
-                                         <String fx:value="normal-text"/>
-                                         <String fx:value="secondary-background"/>
-                                         <String fx:value="white-text"/>
+                                         <String fx:value="normal-text" />
+                                         <String fx:value="secondary-background" />
+                                         <String fx:value="white-text" />
                                      </styleClass>
                                  </JFXButton>
                                  <JFXButton onAction="#addGoal" text="Add +">
                                      <padding>
-                                         <Insets bottom="10.0" left="20.0" right="20.0" top="10.0"/>
+                                         <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                                      </padding>
                                      <styleClass>
-                                         <String fx:value="normal-text"/>
-                                         <String fx:value="green-background"/>
-                                         <String fx:value="white-text"/>
+                                         <String fx:value="normal-text" />
+                                         <String fx:value="green-background" />
+                                         <String fx:value="white-text" />
                                      </styleClass>
                                      <HBox.margin>
-                                         <Insets right="20.0"/>
+                                         <Insets right="20.0" />
                                      </HBox.margin>
                                  </JFXButton>
                              </children>
@@ -232,40 +236,44 @@
                   </HBox>
                    <HBox spacing="30.0" VBox.vgrow="ALWAYS">
                        <children>
-                           <VBox fx:id="goalList" spacing="15.0" HBox.hgrow="ALWAYS"/>
+                        <ScrollPane fx:id="goalScrollPane" hbarPolicy="NEVER" hmax="0.0" styleClass="grey-background" HBox.hgrow="ALWAYS">
+                           <content>
+                                 <VBox fx:id="goalList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="15.0">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                              </VBox>
+                           </content>
+                           <HBox.margin>
+                              <Insets top="48.0" />
+                           </HBox.margin>
+                        </ScrollPane>
                            <VBox spacing="15.0">
                                <children>
-                                   <BarChart fx:id="successChart" barGap="1.0" categoryGap="5.0" legendVisible="false"
-                                             prefWidth="350.0" styleClass="normal-text" title="Day Statistics"
-                                             verticalGridLinesVisible="false" verticalZeroLineVisible="false">
+                                   <BarChart fx:id="successChart" barGap="1.0" categoryGap="5.0" legendVisible="false" prefWidth="350.0" styleClass="normal-text" title="Day Statistics" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
                                        <xAxis>
-                                           <CategoryAxis side="BOTTOM"/>
+                                           <CategoryAxis side="BOTTOM" />
                                        </xAxis>
                                        <yAxis>
-                                           <NumberAxis minorTickCount="2" side="RIGHT" upperBound="10.0"/>
+                                           <NumberAxis minorTickCount="2" side="RIGHT" upperBound="10.0" />
                                        </yAxis>
                                    </BarChart>
-                                   <PieChart fx:id="dayChart" labelLineLength="10.0" legendVisible="false"
-                                             prefWidth="350.0" styleClass="small-normal-text"/>
+                                   <PieChart fx:id="dayChart" labelLineLength="10.0" legendVisible="false" prefWidth="350.0" styleClass="small-normal-text" />
                                </children>
                            </VBox>
                        </children>
                    </HBox>
                    <HBox alignment="CENTER_LEFT">
                        <children>
-                           <FontAwesomeIcon fx:id="loadPreviousButton" fill="#464947" iconName="ARROW_LEFT"
-                                            onMousePressed="#loadPrevious" selectionEnd="1" selectionStart="1"
-                                            size="2em" styleClass="link"/>
+                           <FontAwesomeIcon fx:id="loadPreviousButton" fill="#464947" iconName="ARROW_LEFT" onMousePressed="#loadPrevious" selectionEnd="1" selectionStart="1" size="2em" styleClass="link" />
                            <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
                                <children>
-                                   <FontAwesomeIcon fx:id="loadNextButton" fill="#464947" iconName="ARROW_RIGHT"
-                                                    onMousePressed="#loadNext" selectionEnd="1" selectionStart="1"
-                                                    size="2em" styleClass="link"/>
+                                   <FontAwesomeIcon fx:id="loadNextButton" fill="#464947" iconName="ARROW_RIGHT" onMousePressed="#loadNext" selectionEnd="1" selectionStart="1" size="2em" styleClass="link" />
                                </children>
                            </HBox>
                        </children>
                        <padding>
-                           <Insets left="150.0" right="150.0"/>
+                           <Insets left="150.0" right="150.0" />
                        </padding>
                    </HBox>
                </children>
@@ -318,9 +326,7 @@
                                         <Insets left="50.0" right="50.0" />
                                     </VBox.margin>
                                     <children>
-                                        <TextField fx:id="searchTextField" onKeyPressed="#clearScene"
-                                                   onKeyReleased="#refreshFilter" promptText="Search"
-                                                   HBox.hgrow="ALWAYS">
+                                        <TextField fx:id="searchTextField" onKeyPressed="#clearScene" onKeyReleased="#refreshFilter" promptText="Search" HBox.hgrow="ALWAYS">
                                             <styleClass>
                                                 <String fx:value="text" />
                                                 <String fx:value="raised-slight" />

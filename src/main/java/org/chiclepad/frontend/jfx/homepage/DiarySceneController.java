@@ -90,8 +90,8 @@ public class DiarySceneController {
     public void initialize() {
         initializeAdditionalStyles();
         initializeUser();
-        initializeCategories();
         initializeDiaryPages();
+        initializeCategories();
     }
 
     private void initializeAdditionalStyles() {
@@ -140,7 +140,7 @@ public class DiarySceneController {
     @FXML
     public void refreshFilter() {
         String filter = searchTextField.getText();
-        diaryPages.setNewFilter(filter);
+        diaryPages.setNewTextFilter(filter);
     }
 
     @FXML

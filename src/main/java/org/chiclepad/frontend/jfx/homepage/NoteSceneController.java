@@ -80,8 +80,8 @@ public class NoteSceneController {
     public void initialize() {
         initializeAdditionalStyles();
         initializeUser();
-        initializeCategories();
         initializeNotes();
+        initializeCategories();
     }
 
     private void initializeAdditionalStyles() {
@@ -116,7 +116,7 @@ public class NoteSceneController {
     @FXML
     public void refreshFilter() {
         String filter = searchTextField.getText();
-        notes.setNewFilter(filter);
+        notes.setNewTextFilter(filter);
     }
 
     @FXML

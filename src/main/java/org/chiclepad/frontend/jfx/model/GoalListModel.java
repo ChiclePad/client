@@ -6,9 +6,12 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconName;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.GoalDao;
@@ -18,6 +21,7 @@ import org.chiclepad.constants.ChiclePadColor;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class GoalListModel implements ListModel {
@@ -32,12 +36,20 @@ public class GoalListModel implements ListModel {
 
     private GoalDao goalDao;
 
-    private String filter = "";
+    private String textFilter = "";
+    private List<Category> categoriesFilter = new ArrayList<>();
 
-    public GoalListModel(VBox layout) {
+    private boolean clearedScene;
+
+    public GoalListModel(VBox layout, ScrollPane goalScrollPane) {
         this.layout = layout;
         this.goals = new ArrayList<>();
         this.goalDao = DaoFactory.INSTANCE.getGoalDao();
+
+
+        goalScrollPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+            layout.setPrefWidth(newValue.doubleValue() - 15);
+        });
     }
 
     public void add(Goal goal) {
@@ -117,6 +129,7 @@ public class GoalListModel implements ListModel {
         goalLine.getStyleClass().add("form");
 
         goalLine.setAlignment(Pos.CENTER_LEFT);
+        VBox.setVgrow(goalLine, Priority.ALWAYS);
 
         goalLine.setPadding(new Insets(10, 35, 10, 20));
         goalLine.setSpacing(10);
@@ -151,18 +164,32 @@ public class GoalListModel implements ListModel {
 
     public void clearGoals() {
         layout.getChildren().clear();
+        this.clearedScene = true;
     }
 
-    public void setNewFilter(String filter) {
-        this.filter = filter;
-
-        goals.stream()
-                .filter(goal -> fitsFilter(goal, filter))
-                .forEach(this::addGoalToLayout);
+    public void setNewTextFilter(String filter) {
+        this.textFilter = filter;
+        filter();
     }
 
-    private boolean fitsFilter(Goal goal, String filter) {
-        return goal.getDescription().contains(filter);
+    private void filter() {
+        if (this.clearedScene) {
+            goals.stream()
+                    .filter(goal -> fitsTextFilter(goal))
+                    .filter(goal -> fitsCategoryFilter(goal, this.categoriesFilter))
+                    .forEach(this::addGoalToLayout);
+            this.clearedScene = false;
+        }
+    }
+
+    private boolean fitsTextFilter(Goal goal) {
+        return goal.getDescription().contains(this.textFilter);
+    }
+
+    @Override
+    public void filterByCategory(List<Category> categories) {
+        this.categoriesFilter = categories;
+        this.filter();
     }
 
     public Goal deleteSelected() {
@@ -180,12 +207,18 @@ public class GoalListModel implements ListModel {
     }
 
     @Override
-    public void filterByCategory(List<Category> categories) {
-
+    public void setCategoryToSelectedEntry(Category category) {
+        this.selectedGoal.getCategories().forEach(unboundCategory -> {
+            this.goalDao.unbind(unboundCategory, this.selectedGoal);
+        });
+        this.selectedGoal.getCategories().clear();
+        this.selectedGoal.getCategories().add(category);
+        this.goalDao.bind(category, this.selectedGoal);
+        this.selectedGoalLine.setStyle("-fx-background-color: " + categoryColorOfGoal(this.selectedGoal));
     }
 
     @Override
-    public void setCategoryToSelectedEntry(Category category) {
-
+    public void clearEntries() {
+        this.clearGoals();
     }
 }

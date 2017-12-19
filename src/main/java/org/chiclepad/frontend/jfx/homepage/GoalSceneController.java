@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -70,6 +71,9 @@ public class GoalSceneController {
     @FXML
     private PieChart dayChart;
 
+    @FXML
+    private ScrollPane goalScrollPane;
+
     private GoalListModel goals;
 
     private GoalChartModel goalCharts;
@@ -88,9 +92,9 @@ public class GoalSceneController {
     public void initialize() {
         initializeAdditionalStyles();
         initializeUser();
-        initializeCategories();
         initializeGoals();
         initializeGoalCharts();
+        initializeCategories();
     }
 
     private void initializeAdditionalStyles() {
@@ -119,7 +123,7 @@ public class GoalSceneController {
     }
 
     private void initializeGoals() {
-        goals = new GoalListModel(goalList);
+        goals = new GoalListModel(goalList, goalScrollPane);
         goalDao.getAllGoalsNotCompletedToday(loggedInUser.getId()).forEach(goal -> goals.add(goal));
     }
 
@@ -136,7 +140,7 @@ public class GoalSceneController {
     @FXML
     public void refreshFilter() {
         String filter = searchTextField.getText();
-        goals.setNewFilter(filter);
+        goals.setNewTextFilter(filter);
         goalCharts.refreshWithFilter(filter);
     }
 

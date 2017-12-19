@@ -15,7 +15,9 @@ import org.chiclepad.backend.entity.Category;
 import org.chiclepad.constants.ChiclePadColor;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CategoryListModel {
 
@@ -25,7 +27,7 @@ public class CategoryListModel {
 
     private VBox categories;
 
-    private Map<HBox, Boolean> categorySelected;
+    private Map<Category, Boolean> categorySelected;
 
     private ListModel listModel;
 
@@ -38,9 +40,14 @@ public class CategoryListModel {
         this.categories = categories;
         this.ripplerArea = ripplerArea;
         this.categoryPicker = categoryPicker;
+        this.listModel = listModel;
         categorySelected = new HashMap<>();
 
         initializeCategoryPickerCellFactory();
+
+        categoryPicker.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            listModel.setCategoryToSelectedEntry((Category) newValue);
+        });
     }
 
     private void initializeCategoryPickerCellFactory() {
@@ -80,7 +87,7 @@ public class CategoryListModel {
 
     public void add(Category category) {
         HBox line = createCategoryListLine(category);
-        categorySelected.put(line, false);
+        categorySelected.put(category, false);
         categories.getChildren().add(line);
 
         categoryPicker.getItems().add(category);
@@ -92,20 +99,31 @@ public class CategoryListModel {
         addLineRippler(line);
         addLineIcon(line, category);
         addLineName(line, category);
-        addMousePressListener(line);
+        addMousePressListener(line, category);
         return line;
     }
 
-    private void addMousePressListener(HBox line) {
+    private void addMousePressListener(HBox line, Category category) {
         line.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
-            categorySelected.put(line, !categorySelected.get(line));
+            categorySelected.put(category, !categorySelected.get(category));
 
-            if (categorySelected.get(line)) {
+            if (categorySelected.get(category)) {
                 styleAsSelectedLine(line);
             } else {
                 styleAsDeselectedLine(line);
             }
+
+            listModel.clearEntries();
         });
+
+        line.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
+            List<Category> selectedCategories = this.categorySelected.entrySet().stream()
+                    .filter(entry -> entry.getValue())
+                    .map(entry -> entry.getKey()).collect(Collectors.toList());
+
+            this.listModel.filterByCategory(selectedCategories);
+        });
+
     }
 
     private void styleAsDeselectedLine(HBox line) {
