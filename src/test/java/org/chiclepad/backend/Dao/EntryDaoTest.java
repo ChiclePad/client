@@ -63,6 +63,11 @@ class EntryDaoTest {
         dao.bind(category1, entry1);
         dao.bind(category3, entry3);
 
+        dao.getAll(user1.getId()).stream()
+                .filter(note -> note.getEntryId() == entry1.getEntryId())
+                .findFirst()
+                .ifPresent(note -> assertThat(note.getCategories()).containsExactlyInAnyOrder(category1));
+
         assertThat(dao.getAllCategoriesOfEntry(entry1)).containsExactlyInAnyOrder(category1);
         assertThat(dao.getAllCategoriesOfEntry(entry2)).isNotNull().isEmpty();
         assertThat(dao.getAllCategoriesOfEntry(entry3)).containsExactlyInAnyOrder(category3);

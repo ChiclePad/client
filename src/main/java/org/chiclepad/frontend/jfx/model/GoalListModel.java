@@ -15,6 +15,7 @@ import org.chiclepad.backend.Dao.GoalDao;
 import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.Goal;
 import org.chiclepad.constants.ChiclePadColor;
+import org.chiclepad.frontend.jfx.ChiclePadApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,7 @@ public class GoalListModel implements ListModel {
         HBox goalLine = new HBox();
         setGoalLineStyle(goalLine, goal);
         setSelectionListener(goal, goalLine);
+        setHighlightOnHover(goal, goalLine);
 
         FontAwesomeIcon checkMark = new FontAwesomeIcon();
         setCheckMarkStyle(checkMark);
@@ -59,6 +61,16 @@ public class GoalListModel implements ListModel {
 
         goalLine.getChildren().addAll(checkMark, descriptionField);
         layout.getChildren().add(goalLine);
+    }
+
+    private void setHighlightOnHover(Goal addedGoal, HBox goalLine) {
+        goalLine.setOnMouseEntered(event -> {
+            goalLine.setStyle("-fx-background-color: " + ChiclePadApp.darken(categoryColorOfGoal(addedGoal)));
+        });
+
+        goalLine.setOnMouseExited(event -> {
+            goalLine.setStyle("-fx-background-color: " + categoryColorOfGoal(addedGoal));
+        });
     }
 
     private void setDescriptionChangeListener(Goal goal, JFXTextField descriptionField) {

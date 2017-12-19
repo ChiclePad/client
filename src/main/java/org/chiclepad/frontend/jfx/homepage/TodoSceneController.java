@@ -109,7 +109,7 @@ public class TodoSceneController {
     }
 
     private void initializeTodos() {
-        todos = new TodoListModel(todoList);
+        todos = new TodoListModel(todoList, descriptionField, deadlinePicker, softDeadlinePicker, prioritySlider);
         this.todoDao.getAll(this.loggedInUser.getId()).forEach(todo -> this.todos.add(todo));
     }
 

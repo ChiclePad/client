@@ -106,8 +106,7 @@ public class HomeSceneController {
     private void initializeUpcoming() {
         upcoming = new UpcomingListModel(upcomingListView);
         todoDao.getAll(loggedInUser.getId()).stream()
-                .sorted(Comparator.comparing(Todo::getPriority))
-                .limit(6)
+                .sorted(Comparator.comparing(Todo::getDeadline))
                 .forEach(todo -> upcoming.add(todo));
     }
 
@@ -117,11 +116,9 @@ public class HomeSceneController {
         noteDao.getAll(loggedInUser.getId()).stream()
                 .filter(note -> note.getReminderTime().isPresent())
                 .sorted(Comparator.comparing(note2 -> note2.getReminderTime().get()))
-                .limit(3)
                 .forEach(note -> notifications.addNote(note));
 
-        goalDao.getAllGoalsNotCompletedToday(loggedInUser.getId()).stream()
-                .limit(3)
+        goalDao.getAllGoalsNotCompletedToday(loggedInUser.getId())
                 .forEach(goal -> notifications.addGoal(goal));
     }
 

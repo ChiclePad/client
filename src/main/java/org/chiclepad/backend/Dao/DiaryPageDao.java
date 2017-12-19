@@ -57,27 +57,36 @@ public class DiaryPageDao extends EntryDao {
     }
 
     public DiaryPage get(int id) throws EmptyResultDataAccessException {
-        return jdbcTemplate.queryForObject(
+        DiaryPage diaryPage = jdbcTemplate.queryForObject(
                 GET_DIARY_PAGE_SQL,
                 new Object[]{id},
                 (resultSet, row) -> readDiaryPage(resultSet)
         );
+
+        fetchAndSetCategories(diaryPage);
+        return diaryPage;
     }
 
     public List<DiaryPage> getAll(int userId) throws EmptyResultDataAccessException {
-        return jdbcTemplate.query(
+        List<DiaryPage> diaryPages = jdbcTemplate.query(
                 GET_ALL_DIARY_PAGE_SQL,
                 new Object[]{userId},
                 (resultSet, row) -> readDiaryPage(resultSet)
         );
+
+        fetchAndSetCategories(diaryPages);
+        return diaryPages;
     }
 
     public List<DiaryPage> getAllWithDeleted(int userId) throws EmptyResultDataAccessException {
-        return jdbcTemplate.query(
+        List<DiaryPage> diaryPages = jdbcTemplate.query(
                 GET_ALL_WITH_DELETED_DIARY_PAGE_SQL,
                 new Object[]{userId},
                 (resultSet, row) -> readDiaryPage(resultSet)
         );
+
+        fetchAndSetCategories(diaryPages);
+        return diaryPages;
     }
 
     public DiaryPage update(DiaryPage diaryPage) throws DuplicateKeyException {

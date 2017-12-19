@@ -43,6 +43,13 @@ public class CategoryListModel {
         initializeCategoryPickerCellFactory();
     }
 
+    private void initializeCategoryPickerCellFactory() {
+        Callback cellFactory = param -> createComboBoxLine();
+
+        categoryPicker.setButtonCell((ListCell) cellFactory.call(null));
+        categoryPicker.setCellFactory(cellFactory);
+    }
+
     private static ListCell<Category> createComboBoxLine() {
         return new ListCell<>() {
 
@@ -69,13 +76,6 @@ public class CategoryListModel {
             }
 
         };
-    }
-
-    private void initializeCategoryPickerCellFactory() {
-        Callback cellFactory = param -> createComboBoxLine();
-
-        categoryPicker.setButtonCell((ListCell) cellFactory.call(null));
-        categoryPicker.setCellFactory(cellFactory);
     }
 
     public void add(Category category) {
@@ -110,12 +110,18 @@ public class CategoryListModel {
 
     private void styleAsDeselectedLine(HBox line) {
         line.setStyle("");
-        line.getStyleClass().removeIf(styleClass -> styleClass.equals("bold") || styleClass.equals("white-text"));
+        line.getChildren()
+                .get(1)
+                .getStyleClass()
+                .removeIf(styleClass -> styleClass.equals("bold") || styleClass.equals("white-text"));
     }
 
     private void styleAsSelectedLine(HBox line) {
         line.setStyle("-fx-background-color: " + ChiclePadColor.toHex(ChiclePadColor.PRIMARY));
-        line.getStyleClass().addAll("white-text", "bold");
+        line.getChildren()
+                .get(1)
+                .getStyleClass()
+                .addAll("white-text", "bold");
     }
 
     private void addLineIcon(HBox line, Category category) {
