@@ -88,9 +88,9 @@ public class GoalSceneController {
     public void initialize() {
         initializeAdditionalStyles();
         initializeUser();
-        initializeCategories();
         initializeGoals();
         initializeGoalCharts();
+        initializeCategories();
     }
 
     private void initializeAdditionalStyles() {
@@ -136,7 +136,7 @@ public class GoalSceneController {
     @FXML
     public void refreshFilter() {
         String filter = searchTextField.getText();
-        goals.setNewFilter(filter);
+        goals.setNewTextFilter(filter);
         goalCharts.refreshWithFilter(filter);
     }
 

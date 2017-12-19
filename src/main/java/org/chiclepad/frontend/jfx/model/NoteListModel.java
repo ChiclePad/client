@@ -25,7 +25,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NoteListModel implements ListModel{
+public class NoteListModel implements ListModel {
 
     private List<Note> notes;
 
@@ -43,7 +43,8 @@ public class NoteListModel implements ListModel{
 
     private NoteDao noteDao;
 
-    private String filter = "";
+    private String textFilter = "";
+    private List<Category> categoriesFilter = new ArrayList<>();
 
     public NoteListModel(
             JFXMasonryPane layout,
@@ -76,6 +77,8 @@ public class NoteListModel implements ListModel{
         postIt.getChildren().add(bodyText);
 
         layout.getChildren().add(postIt);
+        postIt.setStyle("-fx-background-color: " + categoryColorOfNote(addedNote));
+
     }
 
     private EventHandler<MouseEvent> selectNote(Note selectedNote, VBox postIt) {
@@ -236,17 +239,29 @@ public class NoteListModel implements ListModel{
         layout.getChildren().clear();
     }
 
-    public void setNewFilter(String filter) {
-        this.filter = filter;
-
-        notes.stream()
-                .filter(note -> fitsFilter(note, filter))
-                .forEach(this::addNoteToLayout);
+    public void setNewTextFilter(String filter) {
+        this.textFilter = filter;
+        this.filter();
     }
 
-    private boolean fitsFilter(Note note, String filter) {
-        return note.getContent().contains(filter) ||
-                note.getReminderTime().map(time -> time.toString().contains(filter)).orElse(false);
+    private boolean fitsTextFilter(Note note) {
+        return note.getContent().contains(this.textFilter) ||
+                note.getReminderTime().map(time -> time.toString().contains(this.textFilter)).orElse(false);
+    }
+
+    @Override
+    public void filterByCategory(List<Category> categories) {
+        this.categoriesFilter = categories;
+        clearNotes();
+        this.filter();
+    }
+
+    private void filter() {
+        notes.stream()
+                .filter(note -> fitsTextFilter(note))
+                .filter(note -> fitsCategoryFilter(note, this.categoriesFilter))
+                .forEach(this::addNoteToLayout);
+
     }
 
     private String categoryColorOfNote(Note note) {
@@ -258,12 +273,14 @@ public class NoteListModel implements ListModel{
     }
 
     @Override
-    public void filterByCategory(List<Category> categories) {
-
-    }
-
-    @Override
     public void setCategoryToSelectedEntry(Category category) {
+        this.selectedNote.getCategories().forEach(unboundCategory -> {
+            this.noteDao.unbind(unboundCategory, this.selectedNote);
+        });
 
+        this.selectedNote.getCategories().clear();
+        this.selectedNote.getCategories().add(category);
+        this.selectedPostIt.setStyle("-fx-background-color: " + categoryColorOfNote(this.selectedNote));
+        this.noteDao.bind(category, selectedNote);
     }
 }

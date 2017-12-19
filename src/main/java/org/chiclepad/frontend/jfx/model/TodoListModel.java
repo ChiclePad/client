@@ -13,6 +13,7 @@ import org.chiclepad.backend.entity.Todo;
 import org.chiclepad.constants.ChiclePadColor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TodoListModel implements ListModel {
@@ -37,7 +38,9 @@ public class TodoListModel implements ListModel {
 
     private NoteDao noteDao;
 
-    private String filter = "";
+    private String textFilter = "";
+    private List<Category> categoriesFilter = new ArrayList<>();
+
 
     public TodoListModel(
             JFXTreeTableView<TodoTreeItem> todoList,
@@ -145,6 +148,11 @@ public class TodoListModel implements ListModel {
                 Integer.toString(todo.getPriority()).contains(filter);
     }
 
+    @Override
+    public void filterByCategory(List<Category> categories) {
+
+    }
+
     private String categoryColorOfTodo(Todo todo) {
         if (!todo.getCategories().isEmpty()) {
             return todo.getCategories().get(0).getColor();
@@ -154,13 +162,13 @@ public class TodoListModel implements ListModel {
     }
 
     @Override
-    public void filterByCategory(List<Category> categories) {
-
-    }
-
-    @Override
     public void setCategoryToSelectedEntry(Category category) {
-
+        this.selectedTodo.getCategories().forEach(unboundCategory -> {
+            this.todoDao.unbind(unboundCategory, this.selectedTodo);
+        });
+        this.selectedTodo.getCategories().clear();
+        this.selectedTodo.getCategories().add(category);
+        this.todoDao.bind(category, this.selectedTodo);
     }
 
 }

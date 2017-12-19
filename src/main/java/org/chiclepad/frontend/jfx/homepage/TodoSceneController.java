@@ -85,8 +85,8 @@ public class TodoSceneController {
     public void initialize() {
         initializeAdditionalStyles();
         initializeUser();
-        initializeCategories();
         initializeTodos();
+        initializeCategories();
     }
 
     private void initializeAdditionalStyles() {

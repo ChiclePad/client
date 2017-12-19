@@ -6,6 +6,7 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconName;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -18,6 +19,7 @@ import org.chiclepad.constants.ChiclePadColor;
 import org.chiclepad.frontend.jfx.ChiclePadApp;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class GoalListModel implements ListModel {
@@ -32,7 +34,8 @@ public class GoalListModel implements ListModel {
 
     private GoalDao goalDao;
 
-    private String filter = "";
+    private String textFilter = "";
+    private List<Category> categoriesFilter = new ArrayList<>();
 
     public GoalListModel(VBox layout) {
         this.layout = layout;
@@ -150,19 +153,33 @@ public class GoalListModel implements ListModel {
     }
 
     public void clearGoals() {
+        Iterator<Node> iterator = layout.getChildren().iterator();
+
         layout.getChildren().clear();
     }
 
-    public void setNewFilter(String filter) {
-        this.filter = filter;
+    public void setNewTextFilter(String filter) {
+        this.textFilter = filter;
 
+        filter();
+    }
+
+    private void filter() {
         goals.stream()
-                .filter(goal -> fitsFilter(goal, filter))
+                .filter(goal -> fitsTextFilter(goal))
+                .filter(goal -> fitsCategoryFilter(goal, this.categoriesFilter))
                 .forEach(this::addGoalToLayout);
     }
 
-    private boolean fitsFilter(Goal goal, String filter) {
-        return goal.getDescription().contains(filter);
+    private boolean fitsTextFilter(Goal goal) {
+        return goal.getDescription().contains(this.textFilter);
+    }
+
+    @Override
+    public void filterByCategory(List<Category> categories) {
+        this.categoriesFilter = categories;
+        clearGoals();
+        this.filter();
     }
 
     public Goal deleteSelected() {
@@ -180,12 +197,13 @@ public class GoalListModel implements ListModel {
     }
 
     @Override
-    public void filterByCategory(List<Category> categories) {
-
-    }
-
-    @Override
     public void setCategoryToSelectedEntry(Category category) {
-
+        this.selectedGoal.getCategories().forEach(unboundCategory -> {
+            this.goalDao.unbind(unboundCategory, this.selectedGoal);
+        });
+        this.selectedGoal.getCategories().clear();
+        this.selectedGoal.getCategories().add(category);
+        this.goalDao.bind(category, this.selectedGoal);
+        this.selectedGoalLine.setStyle("-fx-background-color: " + categoryColorOfGoal(this.selectedGoal));
     }
 }
