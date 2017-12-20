@@ -82,7 +82,7 @@ CREATE TABLE todo (
   entry_id      INT REFERENCES entry ON DELETE CASCADE,
   description   VARCHAR(240) NOT NULL,
   deadline      TIMESTAMP    NOT NULL,
-  soft_deadline TIMESTAMP CHECK (deadline > soft_deadline),
+  soft_deadline TIMESTAMP,
   priority      INT DEFAULT 0
 );
 CREATE UNIQUE INDEX todo_entry

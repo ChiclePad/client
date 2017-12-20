@@ -26,37 +26,7 @@ public class NotificationsListModel implements ListModel {
         this.goals = new ArrayList<>();
         this.notes = new ArrayList<>();
         this.dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm dd-MM");
-
-//        this.layout.setCellFactory(param -> createLine());
     }
-
-//    private ListCell<Entry> createLine() {
-//        return new ListCell<>() {
-//
-//            @Override
-//            protected void updateItem(Entry item, boolean empty) {
-//                super.updateItem(item, empty);
-//                if (item == null || empty) {
-//                    setGraphic(null);
-//
-//                } else {
-//                    HBox hBox = new HBox();
-//
-//                    Label label = new Label(item.getName());
-//
-//                    FontAwesomeIcon icon = new FontAwesomeIcon();
-//                    icon.setIconName(item.getIcon());
-//                    icon.setSize("1.25em");
-//                    icon.setFill(Color.web(item.getColor()));
-//
-//                    hBox.getChildren().addAll(label, icon);
-//
-//                    setGraphic(hBox);
-//                }
-//            }
-//
-//        };
-//    }
 
     public void addNote(Note note) {
         notes.add(note);
@@ -118,4 +88,5 @@ public class NotificationsListModel implements ListModel {
     public void clearEntries() {
 
     }
+
 }

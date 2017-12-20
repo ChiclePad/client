@@ -6,19 +6,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import org.chiclepad.backend.Dao.DaoFactory;
-import org.chiclepad.backend.Dao.NoteDao;
 import org.chiclepad.backend.Dao.TodoDao;
 import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.Todo;
 import org.chiclepad.constants.ChiclePadColor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TodoListModel implements ListModel {
-
-    private TodoDao todoDao = DaoFactory.INSTANCE.getTodoDao();
 
     private ObservableList<TodoTreeItem> todoItems;
 
@@ -36,12 +34,11 @@ public class TodoListModel implements ListModel {
 
     private JFXSlider prioritySlider;
 
-    private NoteDao noteDao;
+    private TodoDao todoDao = DaoFactory.INSTANCE.getTodoDao();
 
     private String textFilter = "";
-    private List<Category> categoriesFilter = new ArrayList<>();
 
-    private boolean clearedScene;
+    private List<Category> categoriesFilter = new ArrayList<>();
 
     public TodoListModel(
             JFXTreeTableView<TodoTreeItem> todoList,
@@ -57,47 +54,81 @@ public class TodoListModel implements ListModel {
         this.softDeadlinePicker = softDeadlinePicker;
         this.prioritySlider = prioritySlider;
 
-        JFXTreeTableColumn<TodoTreeItem, String> descriptionColumn = createDescriptionColumn();
-        JFXTreeTableColumn<TodoTreeItem, String> deadlineColumn = createDeadlineColumn();
-        JFXTreeTableColumn<TodoTreeItem, String> softDeadlineColumn = createSoftDeadlineColumn();
-        JFXTreeTableColumn<TodoTreeItem, String> priorityColumn = createPriorityColumn();
+        initializeTable();
+    }
 
-        todoList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (selectedTodo != null) {
-                todoDao.update(selectedTodo);
-            }
+    private void initializeTable() {
+        setDescriptionCallback();
+        setDeadlineCallback();
+        setSoftDeadlineCallback();
+        setPrioritySliderCallback();
 
-            if (newValue == null) {
-                selectedTodoItem = null;
-                selectedTodo = null;
+        setSelectionCallback();
 
-                descriptionField.setText("");
-                deadlinePicker.setValue(null);
-                softDeadlinePicker.setValue(null);
-                prioritySlider.setValue(0);
+        addColumnsAndDisplay();
+    }
 
-                return;
-            }
+    private void setSelectionCallback() {
+        layout.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            updatePreviousTodo();
+            setNewSelection(newValue);
+            setAddSelectedDataToFields();
+        });
+    }
 
+    private void updatePreviousTodo() {
+        if (selectedTodo != null) {
+            todoDao.update(selectedTodo);
+        }
+    }
+
+    private void setNewSelection(TreeItem<TodoTreeItem> newValue) {
+        if (newValue == null || isGroupedCell(newValue)) {
+            selectedTodoItem = null;
+            selectedTodo = null;
+        } else {
             selectedTodoItem = newValue.getValue();
             selectedTodo = newValue.getValue().todo;
+        }
+    }
 
-            descriptionField.setText(selectedTodo.getDescription());
-            deadlinePicker.setValue(selectedTodo.getDeadline().toLocalDate());
-            softDeadlinePicker.setValue(selectedTodo.getSoftDeadline().map(LocalDateTime::toLocalDate).orElse(null));
-            prioritySlider.setValue(selectedTodo.getPriority());
-        });
+    private boolean isGroupedCell(TreeItem<TodoTreeItem> newValue) {
+        return !(newValue.getValue() instanceof TodoTreeItem);
+    }
 
+    private void setAddSelectedDataToFields() {
+        String description = selectedTodo != null ? selectedTodo.getDescription() : null;
+        LocalDate deadline = selectedTodo != null ? selectedTodo.getDeadline().toLocalDate() : null;
+        LocalDate softDeadline = selectedTodo != null ? selectedTodo.getSoftDeadline().map(LocalDateTime::toLocalDate)
+                .orElse(null) : null;
+        int priority = selectedTodo != null ? selectedTodo.getPriority() : 0;
+
+        descriptionField.setText(description);
+        deadlinePicker.setValue(deadline);
+        softDeadlinePicker.setValue(softDeadline);
+        prioritySlider.setValue(priority);
+    }
+
+    private void addColumnsAndDisplay() {
         final TreeItem<TodoTreeItem> root = new RecursiveTreeItem<>(todoItems, RecursiveTreeObject::getChildren);
-        todoList.setRoot(root);
-        todoList.getColumns().setAll(descriptionColumn, deadlineColumn, softDeadlineColumn, priorityColumn);
+        this.layout.setRoot(root);
+        this.layout.getColumns().setAll(
+                createDescriptionColumn(),
+                createDeadlineColumn(),
+                createSoftDeadlineColumn(),
+                createPriorityColumn()
+        );
     }
 
     private JFXTreeTableColumn<TodoTreeItem, String> createDescriptionColumn() {
         JFXTreeTableColumn<TodoTreeItem, String> descriptionColumn = new JFXTreeTableColumn<>("Description");
-        descriptionColumn.setPrefWidth(475);
+        descriptionColumn.setPrefWidth(500);
         descriptionColumn.setCellValueFactory(cellDataFeatures -> {
-            return cellDataFeatures.getValue().getValue().getDescriptionProperty();
+            if (descriptionColumn.validateValue(cellDataFeatures)) {
+                return cellDataFeatures.getValue().getValue().getDescriptionProperty();
+            } else {
+                return descriptionColumn.getComputedValue(cellDataFeatures);
+            }
         });
         return descriptionColumn;
     }
@@ -106,7 +137,11 @@ public class TodoListModel implements ListModel {
         JFXTreeTableColumn<TodoTreeItem, String> deadlineColumn = new JFXTreeTableColumn<>("Deadline");
         deadlineColumn.setPrefWidth(150);
         deadlineColumn.setCellValueFactory(cellDataFeatures -> {
-            return cellDataFeatures.getValue().getValue().getDeadlineProperty();
+            if (deadlineColumn.validateValue(cellDataFeatures)) {
+                return cellDataFeatures.getValue().getValue().getDeadlineProperty();
+            } else {
+                return deadlineColumn.getComputedValue(cellDataFeatures);
+            }
         });
         return deadlineColumn;
     }
@@ -115,7 +150,11 @@ public class TodoListModel implements ListModel {
         JFXTreeTableColumn<TodoTreeItem, String> softDeadlineColumn = new JFXTreeTableColumn<>("SoftDeadline");
         softDeadlineColumn.setPrefWidth(150);
         softDeadlineColumn.setCellValueFactory(cellDataFeatures -> {
-            return cellDataFeatures.getValue().getValue().getSoftDeadlineProperty();
+            if (softDeadlineColumn.validateValue(cellDataFeatures)) {
+                return cellDataFeatures.getValue().getValue().getSoftDeadlineProperty();
+            } else {
+                return softDeadlineColumn.getComputedValue(cellDataFeatures);
+            }
         });
         return softDeadlineColumn;
     }
@@ -124,13 +163,77 @@ public class TodoListModel implements ListModel {
         JFXTreeTableColumn<TodoTreeItem, String> priorityColumn = new JFXTreeTableColumn<>("Priority");
         priorityColumn.setPrefWidth(100);
         priorityColumn.setCellValueFactory(cellDataFeatures -> {
-            return cellDataFeatures.getValue().getValue().getPriorityProperty();
+            if (priorityColumn.validateValue(cellDataFeatures)) {
+                return cellDataFeatures.getValue().getValue().getPriorityProperty();
+            } else {
+                return priorityColumn.getComputedValue(cellDataFeatures);
+            }
         });
         return priorityColumn;
     }
 
+    private void setDescriptionCallback() {
+        descriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (selectedTodo == null) {
+                return;
+            }
+
+            selectedTodo.setDescription(newValue);
+            selectedTodoItem.setDescription(newValue);
+        });
+
+        descriptionField.focusedProperty().addListener((observable, oldValue, newValue) -> updateSelected());
+    }
+
+    private void setDeadlineCallback() {
+        deadlinePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (selectedTodo == null) {
+                return;
+            }
+
+            selectedTodo.setDeadline(newValue.atStartOfDay());
+            selectedTodoItem.setDeadline(newValue);
+        });
+
+        deadlinePicker.focusedProperty().addListener((observable, oldValue, newValue) -> updateSelected());
+    }
+
+    private void setSoftDeadlineCallback() {
+        softDeadlinePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (selectedTodo == null) {
+                return;
+            }
+
+            selectedTodo.setSoftDeadline(newValue != null ? newValue.atStartOfDay() : null);
+            selectedTodoItem.setSoftDeadline(newValue);
+        });
+
+        softDeadlinePicker.focusedProperty().addListener((observable, oldValue, newValue) -> updateSelected());
+    }
+
+    private void setPrioritySliderCallback() {
+        prioritySlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (selectedTodo == null) {
+                return;
+            }
+
+            selectedTodo.setPriority(newValue.intValue());
+            selectedTodoItem.setPriority(newValue.intValue());
+        });
+
+        prioritySlider.focusedProperty().addListener((observable, oldValue, newValue) -> updateSelected());
+    }
+
     public void add(Todo todo) {
         todoItems.add(new TodoTreeItem(todo));
+    }
+
+    private void updateSelected() {
+        if (selectedTodo == null) {
+            return;
+        }
+
+        todoDao.update(selectedTodo);
     }
 
     public Todo deleteSelected() {
@@ -138,28 +241,32 @@ public class TodoListModel implements ListModel {
         return selectedTodo;
     }
 
-    public void setNewFilter(String filter) {
-        layout.setPredicate(todo -> fitsFilter(todo.getValue().todo, filter));
+    @Override
+    public void clearEntries() {
+        /* Use native filtering using `setPredicate` instead */
     }
 
-    private boolean fitsFilter(Todo todo, String filter) {
-        return todo.getDescription().contains(filter) ||
-                todo.getDeadline().toString().contains(filter) ||
-                todo.getSoftDeadline().map(time -> time.toString().contains(filter)).orElse(false) ||
-                Integer.toString(todo.getPriority()).contains(filter);
+    public void setNewFilter(String filter) {
+        this.textFilter = filter;
+        filter();
     }
 
     @Override
     public void filterByCategory(List<Category> categories) {
-
+        this.categoriesFilter = categories;
+        filter();
     }
 
-    private String categoryColorOfTodo(Todo todo) {
-        if (!todo.getCategories().isEmpty()) {
-            return todo.getCategories().get(0).getColor();
-        } else {
-            return ChiclePadColor.toHex(ChiclePadColor.WHITE);
-        }
+    private void filter() {
+        layout.setPredicate(todo -> fitsTextFilter(todo.getValue().todo, textFilter) &&
+                fitsCategoryFilter(todo.getValue().todo, categoriesFilter));
+    }
+
+    private boolean fitsTextFilter(Todo todo, String filter) {
+        return todo.getDescription().contains(filter) ||
+                todo.getDeadline().toString().contains(filter) ||
+                todo.getSoftDeadline().map(time -> time.toString().contains(filter)).orElse(false) ||
+                Integer.toString(todo.getPriority()).contains(filter);
     }
 
     @Override
@@ -172,8 +279,12 @@ public class TodoListModel implements ListModel {
         this.todoDao.bind(category, this.selectedTodo);
     }
 
-    @Override
-    public void clearEntries() {
+    private String categoryColorOfTodo(Todo todo) {
+        if (!todo.getCategories().isEmpty()) {
+            return todo.getCategories().get(0).getColor();
+        } else {
+            return ChiclePadColor.toHex(ChiclePadColor.WHITE);
+        }
     }
 
 }

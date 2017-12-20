@@ -41,7 +41,8 @@ public class GoalDao extends EntryDao {
     private final String GET_ALL_NOT_COMPLETED_TODAY_GOAL_SQL = "SELECT goal.id, goal.entry_id, goal.description " +
             "FROM goal " +
             "INNER JOIN entry ON goal.entry_id = entry.id " +
-            "WHERE entry.user_id = ? " +
+            "LEFT OUTER JOIN deleted_entry ON deleted_entry.entry_id = entry.id " +
+            "WHERE deleted_entry.deleted_time IS NULL AND entry.user_id = ? " +
             "EXCEPT " +
             "SELECT goal.id, goal.entry_id, goal.description " +
             "FROM goal " +

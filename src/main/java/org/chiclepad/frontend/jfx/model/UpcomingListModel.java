@@ -15,7 +15,11 @@ public class UpcomingListModel implements ListModel {
 
     private JFXListView<String> layout;
 
-    private String filter = "";
+    private String textFilter = "";
+
+    private List<Category> categoriesFilter = new ArrayList<>();
+
+    private boolean clearedScene;
 
     public UpcomingListModel(JFXListView<String> layout) {
         this.layout = layout;
@@ -29,7 +33,7 @@ public class UpcomingListModel implements ListModel {
 
     private void addTodoToLayout(Todo todo) {
         long remainingHours = ChronoUnit.HOURS.between(LocalDateTime.now(), todo.getDeadline());
-        long remainingMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), todo.getDeadline());
+        long remainingMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), todo.getDeadline()) - 60 * remainingHours;
         long remainingDays = ChronoUnit.DAYS.between(LocalDateTime.now(), todo.getDeadline());
 
         String shownResult = LocalDateTime.now().isAfter(todo.getDeadline()) ?
@@ -41,35 +45,47 @@ public class UpcomingListModel implements ListModel {
 
     public void clearUpcoming() {
         layout.getItems().clear();
-    }
-
-    public void setNewFilter(String filter) {
-        this.filter = filter;
-
-        todos.stream()
-                .filter(todo -> fitsFilter(todo, filter))
-                .forEach(this::addTodoToLayout);
-    }
-
-    private boolean fitsFilter(Todo todo, String filter) {
-        return todo.getDescription().contains(filter) ||
-                todo.getDeadline().toString().contains(filter) ||
-                todo.getSoftDeadline().map(softDeadline -> softDeadline.toString().contains(filter)).orElse(false) ||
-                Integer.toString(todo.getPriority()).contains(filter);
+        this.clearedScene = true;
     }
 
     @Override
     public void filterByCategory(List<Category> categories) {
+        this.categoriesFilter = categories;
+        this.filter();
+    }
 
+    public void filterByText(String textFilter) {
+        this.textFilter = textFilter;
+        this.filter();
+    }
+
+    private boolean fitsTextFilter(Todo todo) {
+        return todo.getDescription().contains(textFilter) ||
+                todo.getDeadline().toString().contains(textFilter) ||
+                todo.getSoftDeadline().map(softDeadline -> softDeadline.toString().contains(textFilter))
+                        .orElse(false) ||
+                Integer.toString(todo.getPriority()).contains(textFilter);
+    }
+
+    private void filter() {
+        if (clearedScene) {
+            todos.stream()
+                    .filter(this::fitsTextFilter)
+                    .filter(diaryPage -> fitsCategoryFilter(diaryPage, this.categoriesFilter))
+                    .forEach(this::addTodoToLayout);
+
+            this.clearedScene = false;
+        }
     }
 
     @Override
     public void setCategoryToSelectedEntry(Category category) {
-
+        /* Can't select here */
     }
 
     @Override
     public void clearEntries() {
-
+        clearUpcoming();
     }
+
 }

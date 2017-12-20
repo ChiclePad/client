@@ -22,7 +22,14 @@ public class CategoryPopup {
 
     private static CategoryDao categoryDao = DaoFactory.INSTANCE.getCategoryDao();
 
-    public static void showUnderParent(Node parent, CategoryListModel categoryListModel) {
+    public static void showEditCategoryAtPosition(HBox line, Category category, CategoryListModel categoryListModel) {
+        JFXPopup popup = new JFXPopup();
+        VBox layout = createPopupLayout(popup, categoryListModel);
+        popup.setPopupContent(layout);
+        popup.show(layout, 20, 40);
+    }
+
+    public static void showAddCategoryUnderParent(Node parent, CategoryListModel categoryListModel) {
         JFXPopup popup = new JFXPopup();
         VBox layout = createPopupLayout(popup, categoryListModel);
         popup.setPopupContent(layout);

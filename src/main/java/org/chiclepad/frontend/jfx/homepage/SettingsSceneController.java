@@ -55,9 +55,9 @@ public class SettingsSceneController {
 
     private boolean verifyPasswordValid;
 
-    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
-
     private ChiclePadUser loggedInUser;
+
+    private ChiclePadUserDao userDao = DaoFactory.INSTANCE.getChiclePadUserDao();
 
     @FXML
     public void initialize() {

@@ -44,6 +44,7 @@ public class NoteListModel implements ListModel {
     private NoteDao noteDao;
 
     private String textFilter = "";
+
     private List<Category> categoriesFilter = new ArrayList<>();
 
     private boolean clearedScene;
@@ -208,9 +209,9 @@ public class NoteListModel implements ListModel {
 
     private void stylePostIt(Note addedNote, VBox postIt) {
         JFXDepthManager.setDepth(postIt, 1);
-        postIt.setMinSize(215, 130);
-        postIt.setPrefSize(215, 130);
-        postIt.setMaxSize(215, 130);
+        postIt.setMinSize(210, 130);
+        postIt.setPrefSize(210, 130);
+        postIt.setMaxSize(210, 130);
 
         postIt.setPadding(new Insets(15, 15, 15, 15));
 
@@ -237,6 +238,11 @@ public class NoteListModel implements ListModel {
         return selectedNote;
     }
 
+    @Override
+    public void clearEntries() {
+        this.clearNotes();
+    }
+
     public void clearNotes() {
         layout.getChildren().clear();
         this.clearedScene = true;
@@ -261,9 +267,10 @@ public class NoteListModel implements ListModel {
     private void filter() {
         if (this.clearedScene) {
             notes.stream()
-                    .filter(note -> fitsTextFilter(note))
+                    .filter(this::fitsTextFilter)
                     .filter(note -> fitsCategoryFilter(note, this.categoriesFilter))
                     .forEach(this::addNoteToLayout);
+
             this.clearedScene = false;
         }
     }
@@ -288,8 +295,4 @@ public class NoteListModel implements ListModel {
         this.noteDao.bind(category, selectedNote);
     }
 
-    @Override
-    public void clearEntries() {
-        this.clearNotes();
-    }
 }

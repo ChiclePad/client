@@ -192,7 +192,7 @@
                                <HBox alignment="CENTER_RIGHT" spacing="5.0">
                                    <children>
                                        <Label styleClass="large-text" text="Category:"/>
-                                       <JFXComboBox fx:id="categoryPicker" focusColor="#8dc44e" prefWidth="150.0"
+                                       <JFXComboBox fx:id="categoryPicker" focusColor="#8dc44e" prefWidth="200.0"
                                                     styleClass="normal-text" unFocusColor="#464947"/>
                                    </children>
                                </HBox>
@@ -236,11 +236,15 @@
                          <Insets/>
                      </VBox.margin>
                    </HBox>
-                   <JFXMasonryPane fx:id="noteMasonry" cellHeight="130.0" cellWidth="215.0" VBox.vgrow="ALWAYS">
+                   <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                          <Insets/>
                      </VBox.margin>
-                   </JFXMasonryPane>
+                       <content>
+                           <JFXMasonryPane fx:id="noteMasonry" cellHeight="130.0" cellWidth="210.0"
+                                           maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"/>
+                       </content>
+                   </ScrollPane>
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
