@@ -32,7 +32,7 @@ CREATE TABLE category (
 
 -- N : M table connecting categories to entries
 CREATE TABLE registered_category (
-  entry_id    INT REFERENCES entry ON DELETE CASCADE,
+  entry_id    INT NOT NULL REFERENCES entry ON DELETE CASCADE,
   category_id INT REFERENCES category ON DELETE CASCADE,
   CONSTRAINT registered_category_id PRIMARY KEY (entry_id, category_id)
 );
@@ -40,7 +40,7 @@ CREATE TABLE registered_category (
 -- Goals that need to be achieved each day
 CREATE TABLE goal (
   id          SERIAL PRIMARY KEY,
-  entry_id    INT REFERENCES entry ON DELETE CASCADE,
+  entry_id    INT          NOT NULL REFERENCES entry ON DELETE CASCADE,
   description VARCHAR(500) NOT NULL
 );
 CREATE UNIQUE INDEX goal_entry
@@ -59,7 +59,7 @@ CREATE UNIQUE INDEX completed_goal_day
 -- Pages of user's diary
 CREATE TABLE diary_page (
   id           SERIAL PRIMARY KEY,
-  entry_id     INT REFERENCES entry ON DELETE CASCADE,
+  entry_id     INT  NOT NULL REFERENCES entry ON DELETE CASCADE,
   text         TEXT,
   recorded_day DATE NOT NULL
 );
@@ -69,7 +69,7 @@ CREATE UNIQUE INDEX diary_page_entry
 -- Smart board of postit notes with reminders
 CREATE TABLE note (
   id            SERIAL PRIMARY KEY,
-  entry_id      INT REFERENCES entry ON DELETE CASCADE,
+  entry_id      INT           NOT NULL REFERENCES entry ON DELETE CASCADE,
   content       VARCHAR(1000) NOT NULL,
   reminder_time TIMESTAMP
 );
@@ -79,7 +79,7 @@ CREATE UNIQUE INDEX note_entry
 -- One line of a To-do list with interval created by deadlines
 CREATE TABLE todo (
   id            SERIAL PRIMARY KEY,
-  entry_id      INT REFERENCES entry ON DELETE CASCADE,
+  entry_id      INT          NOT NULL REFERENCES entry ON DELETE CASCADE,
   description   VARCHAR(240) NOT NULL,
   deadline      TIMESTAMP    NOT NULL,
   soft_deadline TIMESTAMP,
@@ -91,6 +91,6 @@ CREATE UNIQUE INDEX todo_entry
 -- Table representing entries that the user already completed
 CREATE TABLE deleted_entry (
   id           SERIAL PRIMARY KEY,
-  entry_id     INT REFERENCES entry ON DELETE CASCADE,
+  entry_id     INT       NOT NULL REFERENCES entry ON DELETE CASCADE,
   deleted_time TIMESTAMP NOT NULL
 );
