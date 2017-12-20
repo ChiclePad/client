@@ -87,6 +87,8 @@ public class TodoSceneController {
         initializeUser();
         initializeTodos();
         initializeCategories();
+
+        categories.subscribeListModel(todos);
     }
 
     private void initializeAdditionalStyles() {
@@ -103,7 +105,7 @@ public class TodoSceneController {
     }
 
     private void initializeCategories() {
-        this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker, this.todos);
+        this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker);
         List<Category> categories = this.categoryDao.getAll(this.loggedInUser.getId());
         categories.forEach(category -> this.categories.add(category));
     }

@@ -1,5 +1,6 @@
 package org.chiclepad.frontend.jfx.homepage;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.effects.JFXDepthManager;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -74,6 +75,9 @@ public class DiarySceneController {
     @FXML
     private FontAwesomeIcon addCategoryIcon;
 
+    @FXML
+    private JFXButton addDiaryPageButton;
+
     private DiaryListModel diaryPages;
 
     private CategoryListModel categories;
@@ -86,14 +90,14 @@ public class DiarySceneController {
 
     private DiaryPageDao diaryPageDao = DaoFactory.INSTANCE.getDiaryPageDao();
 
-    private int currentPage = 0;
-
     @FXML
     public void initialize() {
         initializeAdditionalStyles();
         initializeUser();
         initializeDiaryPages();
         initializeCategories();
+
+        categories.subscribeListModel(diaryPages);
     }
 
     private void initializeAdditionalStyles() {
@@ -125,12 +129,16 @@ public class DiarySceneController {
 
     private void initializeDiaryPages() {
         diaryPages = new DiaryListModel(diaryPagesList, loadPreviousText.textProperty(), loadNextText.textProperty());
-        this.diaryPageDao.getAll(this.loggedInUser.getId()).forEach(diaryPage -> this.diaryPages.add(diaryPage));
-        diaryPages.refreshPageDates();
+        List<DiaryPage> diaryPages = this.diaryPageDao.getAll(this.loggedInUser.getId());
+        diaryPages.forEach(diaryPage -> this.diaryPages.add(diaryPage));
+        this.diaryPages.refreshPageDates();
+
+        Boolean addingDisabled = diaryPages.size() != 0 && diaryPages.get(0).getRecordedDay().isEqual(LocalDate.now());
+        addDiaryPageButton.setDisable(addingDisabled);
     }
 
     private void initializeCategories() {
-        this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker, this.diaryPages);
+        this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker);
         List<Category> categories = this.categoryDao.getAll(this.loggedInUser.getId());
         categories.forEach(category -> this.categories.add(category));
     }
@@ -150,6 +158,8 @@ public class DiarySceneController {
     public void addDiaryPage() {
         DiaryPage created = diaryPageDao.create(loggedInUser.getId(), "", LocalDate.now());
         diaryPages.add(created);
+
+        addDiaryPageButton.setDisable(true);
     }
 
     @FXML
@@ -161,6 +171,10 @@ public class DiarySceneController {
         }
 
         diaryPageDao.markDeleted(deleted);
+
+        List<DiaryPage> diaryPages = this.diaryPageDao.getAll(this.loggedInUser.getId());
+        Boolean addingDisabled = diaryPages.size() != 0 && diaryPages.get(0).getRecordedDay().isEqual(LocalDate.now());
+        addDiaryPageButton.setDisable(addingDisabled);
     }
 
     @FXML

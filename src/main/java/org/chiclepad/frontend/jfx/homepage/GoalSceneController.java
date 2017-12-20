@@ -85,6 +85,9 @@ public class GoalSceneController {
         initializeGoals();
         initializeGoalCharts();
         initializeCategories();
+
+        categories.subscribeListModel(goals);
+        categories.subscribeListModel(goalCharts);
     }
 
     private void initializeAdditionalStyles() {
@@ -105,7 +108,7 @@ public class GoalSceneController {
     }
 
     private void initializeCategories() {
-        this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker, this.goals);
+        this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker);
         List<Category> categories = this.categoryDao.getAll(this.loggedInUser.getId());
         categories.forEach(category -> this.categories.add(category));
     }
@@ -117,7 +120,6 @@ public class GoalSceneController {
 
     private void initializeGoalCharts() {
         this.goalCharts = new GoalChartModel(successChart, dayChart);
-        goalCharts.initialize();
     }
 
     @FXML

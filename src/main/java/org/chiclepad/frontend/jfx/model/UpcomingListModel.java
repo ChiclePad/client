@@ -38,7 +38,7 @@ public class UpcomingListModel implements ListModel {
 
         String shownResult = LocalDateTime.now().isAfter(todo.getDeadline()) ?
                 "Overdue: " + todo.getDescription() :
-                "In " + remainingHours + ":" + remainingMinutes + " hours and " + remainingDays + " days: " + todo.getDescription();
+                "In " + remainingHours + ":" + remainingMinutes + " and " + remainingDays + " days: " + todo.getDescription();
 
         layout.getItems().add(shownResult);
     }
@@ -90,7 +90,7 @@ public class UpcomingListModel implements ListModel {
 
     @Override
     public void deleteCategoriesForEntry() {
-
+        /* Can't select here */
     }
 
 }

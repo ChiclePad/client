@@ -79,6 +79,9 @@ public class HomeSceneController {
         initializeUpcoming();
         initializeNotifications();
         initializeCategories();
+
+        categories.subscribeListModel(notifications);
+        categories.subscribeListModel(upcoming);
     }
 
     private void initializeAdditionalStyles() {
@@ -98,7 +101,7 @@ public class HomeSceneController {
     }
 
     private void initializeCategories() {
-        this.categories = new CategoryListModel(categoryList, categoriesRippler, upcoming);
+        this.categories = new CategoryListModel(categoryList, categoriesRippler);
         List<Category> categories = this.categoryDao.getAll(this.loggedInUser.getId());
         categories.forEach(category -> this.categories.add(category));
     }
@@ -132,7 +135,7 @@ public class HomeSceneController {
     public void refreshFilter() {
         String filter = searchTextField.getText();
         upcoming.filterByText(filter);
-        notifications.setNewFilter(filter);
+        notifications.filterByText(filter);
     }
 
     @FXML

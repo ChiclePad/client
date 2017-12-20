@@ -116,13 +116,14 @@ public class TodoListModel implements ListModel {
                 createDescriptionColumn(),
                 createDeadlineColumn(),
                 createSoftDeadlineColumn(),
-                createPriorityColumn()
+                createPriorityColumn(),
+                createCategoryColumn()
         );
     }
 
     private JFXTreeTableColumn<TodoTreeItem, String> createDescriptionColumn() {
         JFXTreeTableColumn<TodoTreeItem, String> descriptionColumn = new JFXTreeTableColumn<>("Description");
-        descriptionColumn.setPrefWidth(500);
+        descriptionColumn.setPrefWidth(375);
         descriptionColumn.setCellValueFactory(cellDataFeatures -> {
             if (descriptionColumn.validateValue(cellDataFeatures)) {
                 return cellDataFeatures.getValue().getValue().getDescriptionProperty();
@@ -135,7 +136,7 @@ public class TodoListModel implements ListModel {
 
     private JFXTreeTableColumn<TodoTreeItem, String> createDeadlineColumn() {
         JFXTreeTableColumn<TodoTreeItem, String> deadlineColumn = new JFXTreeTableColumn<>("Deadline");
-        deadlineColumn.setPrefWidth(150);
+        deadlineColumn.setPrefWidth(125);
         deadlineColumn.setCellValueFactory(cellDataFeatures -> {
             if (deadlineColumn.validateValue(cellDataFeatures)) {
                 return cellDataFeatures.getValue().getValue().getDeadlineProperty();
@@ -147,7 +148,7 @@ public class TodoListModel implements ListModel {
     }
 
     private JFXTreeTableColumn<TodoTreeItem, String> createSoftDeadlineColumn() {
-        JFXTreeTableColumn<TodoTreeItem, String> softDeadlineColumn = new JFXTreeTableColumn<>("SoftDeadline");
+        JFXTreeTableColumn<TodoTreeItem, String> softDeadlineColumn = new JFXTreeTableColumn<>("Soft Deadline");
         softDeadlineColumn.setPrefWidth(150);
         softDeadlineColumn.setCellValueFactory(cellDataFeatures -> {
             if (softDeadlineColumn.validateValue(cellDataFeatures)) {
@@ -170,6 +171,19 @@ public class TodoListModel implements ListModel {
             }
         });
         return priorityColumn;
+    }
+
+    private JFXTreeTableColumn<TodoTreeItem, String> createCategoryColumn() {
+        JFXTreeTableColumn<TodoTreeItem, String> categoryColumn = new JFXTreeTableColumn<>("Category");
+        categoryColumn.setPrefWidth(150);
+        categoryColumn.setCellValueFactory(cellDataFeatures -> {
+            if (categoryColumn.validateValue(cellDataFeatures)) {
+                return cellDataFeatures.getValue().getValue().getCategoryProperty();
+            } else {
+                return categoryColumn.getComputedValue(cellDataFeatures);
+            }
+        });
+        return categoryColumn;
     }
 
     private void setDescriptionCallback() {
@@ -279,6 +293,7 @@ public class TodoListModel implements ListModel {
     public void setCategoryToSelectedEntry(Category category) {
         if (category == CategoryListModel.DESELECT_CATEGORY) {
             this.deleteCategoriesForEntry();
+            this.selectedTodoItem.setCategory(null);
             return;
         }
         this.selectedTodo.getCategories().forEach(unboundCategory -> {
@@ -287,6 +302,7 @@ public class TodoListModel implements ListModel {
         this.selectedTodo.getCategories().clear();
         this.selectedTodo.getCategories().add(category);
         this.todoDao.bind(category, this.selectedTodo);
+        this.selectedTodoItem.setCategory(category);
     }
 
     private String categoryColorOfTodo(Todo todo) {

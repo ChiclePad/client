@@ -26,7 +26,7 @@ public class ChiclePadUserDao {
     private final String GET_USER_BY_EMAIL_SQL = "SELECT * " +
             "FROM chiclepad_user " +
             "LEFT OUTER JOIN chiclepad_user_details ON user_id = chiclepad_user.id " +
-            "WHERE email = ? ;";
+            "WHERE lower(email) = lower(?) ;";
 
     private final String GET_ALL_USERS_SQL = "SELECT * " +
             "FROM chiclepad_user " +

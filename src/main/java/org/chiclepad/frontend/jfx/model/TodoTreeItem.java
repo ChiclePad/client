@@ -3,6 +3,7 @@ package org.chiclepad.frontend.jfx.model;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.Todo;
 
 import java.time.LocalDate;
@@ -22,18 +23,22 @@ public class TodoTreeItem extends RecursiveTreeObject<TodoTreeItem> {
 
     private StringProperty priorityProperty;
 
+    private StringProperty categoryProperty;
+
     TodoTreeItem(Todo todo) {
         this.todo = todo;
 
         this.descriptionProperty = new SimpleStringProperty();
         this.deadlineProperty = new SimpleStringProperty();
         this.softDeadlineProperty = new SimpleStringProperty();
-        this.priorityProperty = new SimpleStringProperty(Integer.toString(todo.getPriority()));
+        this.priorityProperty = new SimpleStringProperty();
+        this.categoryProperty = new SimpleStringProperty();
 
         setDescription(todo.getDescription());
         setDeadline(todo.getDeadline().toLocalDate());
         todo.getSoftDeadline().ifPresent(time -> setSoftDeadline(time.toLocalDate()));
         setPriority(todo.getPriority());
+        setCategory(todo.getCategories().size() == 0 ? null : todo.getCategories().get(0));
     }
 
     public static DateTimeFormatter getDateFormatter() {
@@ -71,6 +76,10 @@ public class TodoTreeItem extends RecursiveTreeObject<TodoTreeItem> {
         this.todo.setPriority(newPriority);
     }
 
+    public void setCategory(Category category) {
+        this.categoryProperty.setValue(category == null ? "" : category.getName());
+    }
+
     public StringProperty getDescriptionProperty() {
         return descriptionProperty;
     }
@@ -85,6 +94,10 @@ public class TodoTreeItem extends RecursiveTreeObject<TodoTreeItem> {
 
     public StringProperty getPriorityProperty() {
         return priorityProperty;
+    }
+
+    public StringProperty getCategoryProperty() {
+        return categoryProperty;
     }
 
 }
