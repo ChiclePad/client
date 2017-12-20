@@ -10,12 +10,16 @@ import java.time.format.DateTimeFormatter;
 
 public class TodoTreeItem extends RecursiveTreeObject<TodoTreeItem> {
 
+    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
     public Todo todo;
 
-    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private StringProperty descriptionProperty;
+
     private StringProperty deadlineProperty;
+
     private StringProperty softDeadlineProperty;
+
     private StringProperty priorityProperty;
 
     TodoTreeItem(Todo todo) {

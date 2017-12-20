@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -65,9 +64,6 @@ public class GoalSceneController {
     @FXML
     private PieChart dayChart;
 
-    @FXML
-    private ScrollPane goalScrollPane;
-
     private GoalListModel goals;
 
     private GoalChartModel goalCharts;
@@ -115,7 +111,7 @@ public class GoalSceneController {
     }
 
     private void initializeGoals() {
-        goals = new GoalListModel(goalList, goalScrollPane);
+        goals = new GoalListModel(goalList);
         goalDao.getAllGoalsNotCompletedToday(loggedInUser.getId()).forEach(goal -> goals.add(goal));
     }
 

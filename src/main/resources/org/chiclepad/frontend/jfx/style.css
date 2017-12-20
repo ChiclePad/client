@@ -388,3 +388,16 @@ tertiary: #3E5641
 .tree-table-view .menu-item .label {
     -fx-padding: 5 0 5 0;
 }
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.my-scroll-pane {
+    -fx-fit-to-height: true;
+    -fx-fit-to-width: true;
+}

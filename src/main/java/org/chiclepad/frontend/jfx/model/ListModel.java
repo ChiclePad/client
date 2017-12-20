@@ -2,11 +2,11 @@ package org.chiclepad.frontend.jfx.model;
 
 import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.Entry;
-import org.chiclepad.backend.entity.Goal;
 
 import java.util.List;
 
 public interface ListModel {
+
     void filterByCategory(List<Category> categories);
 
     void setCategoryToSelectedEntry(Category category);
@@ -16,13 +16,11 @@ public interface ListModel {
             return true;
         }
 
-        if (entry.getCategories().isEmpty()) {
-            return false;
-        }
-
-        return entry.getCategories().stream().allMatch(category -> categoriesFilter.contains(category));
+        List<Category> categories = entry.getCategories();
+        return !categories.isEmpty() && categories.stream().allMatch(categoriesFilter::contains);
     }
 
     void clearEntries();
+
 }
 

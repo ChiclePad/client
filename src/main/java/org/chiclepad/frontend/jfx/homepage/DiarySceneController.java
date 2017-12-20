@@ -140,7 +140,7 @@ public class DiarySceneController {
     @FXML
     public void refreshFilter() {
         String filter = searchTextField.getText();
-        diaryPages.setNewTextFilter(filter);
+        diaryPages.filterByText(filter);
     }
 
     @FXML

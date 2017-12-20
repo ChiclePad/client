@@ -88,4 +88,5 @@ public class NotificationsListModel implements ListModel {
     public void clearEntries() {
 
     }
+
 }

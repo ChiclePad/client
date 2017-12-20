@@ -33,9 +33,15 @@ public class CategoryListModel {
 
     private ListModel listModel;
 
+    private boolean lastClickWasPrimaryButton;
+
     public CategoryListModel(VBox categories, VBox ripplerArea, ListModel listModel) {
-        this(categories, ripplerArea, new JFXComboBox() /* Invisible combo box, to prevent needless null checking*/,
-                listModel);
+        this(
+                categories,
+                ripplerArea,
+                new JFXComboBox() /* Invisible combo box, to prevent needless null checking*/,
+                listModel
+        );
     }
 
     public CategoryListModel(VBox categories, VBox ripplerArea, JFXComboBox categoryPicker, ListModel listModel) {
@@ -46,16 +52,14 @@ public class CategoryListModel {
         categorySelected = new HashMap<>();
 
         initializeCategoryPickerCellFactory();
-
-        categoryPicker.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            listModel.setCategoryToSelectedEntry((Category) newValue);
-        });
+        setSelectionCallback(categoryPicker, listModel);
     }
 
     private void initializeCategoryPickerCellFactory() {
         Callback cellFactory = param -> createComboBoxLine();
+        Callback selectedCellFactory = param -> createSelectedComboBoxLine();
 
-        categoryPicker.setButtonCell((ListCell) cellFactory.call(null));
+        categoryPicker.setButtonCell((ListCell) selectedCellFactory.call(null));
         categoryPicker.setCellFactory(cellFactory);
     }
 
@@ -118,18 +122,16 @@ public class CategoryListModel {
         return hBox;
     }
 
+    private void setSelectionCallback(JFXComboBox categoryPicker, ListModel listModel) {
+        categoryPicker.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            listModel.setCategoryToSelectedEntry((Category) newValue);
+        });
+    }
+
     private static void styleIcon(Category item, FontAwesomeIcon icon, double size) {
         icon.setIconName(item.getIcon());
         icon.setSize(size + "em");
         icon.setFill(Color.web(item.getColor()));
-    }
-
-    private void initializeCategoryPickerCellFactory() {
-        Callback cellFactory = param -> createComboBoxLine();
-        Callback selectedCellFactory = param -> createSelectedComboBoxLine();
-
-        categoryPicker.setButtonCell((ListCell) selectedCellFactory.call(null));
-        categoryPicker.setCellFactory(cellFactory);
     }
 
     public void add(Category category) {
@@ -152,8 +154,11 @@ public class CategoryListModel {
 
     private void addMousePressListener(HBox line, Category category) {
         line.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+            lastClickWasPrimaryButton = event.isPrimaryButtonDown();
+
             if (event.isPrimaryButtonDown()) {
-                selectCategory(line);
+                selectCategory(line, category);
+                listModel.clearEntries();
                 return;
             }
 
@@ -161,33 +166,31 @@ public class CategoryListModel {
                 editCategory(line, category);
             }
         });
+
+        line.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
+            if (!lastClickWasPrimaryButton) {
+                return;
+            }
+
+            List<Category> selectedCategories = this.categorySelected.entrySet().stream()
+                    .filter(Map.Entry::getValue)
+                    .map(Map.Entry::getKey)
+                    .collect(Collectors.toList());
+
+            this.listModel.filterByCategory(selectedCategories);
+        });
     }
 
-    private void selectCategory(HBox line) {
+    private void selectCategory(HBox line, Category category) {
         categorySelected.put(category, !categorySelected.get(category));
 
-        if (categorySelected.get(line)) {
+        if (categorySelected.get(category)) {
             styleAsSelectedLine(line);
         } else {
             styleAsDeselectedLine(line);
         }
-            if (categorySelected.get(category)) {
-                styleAsSelectedLine(line);
-            } else {
-                styleAsDeselectedLine(line);
-            }
 
-            listModel.clearEntries();
-        });
-
-        line.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
-            List<Category> selectedCategories = this.categorySelected.entrySet().stream()
-                    .filter(entry -> entry.getValue())
-                    .map(entry -> entry.getKey()).collect(Collectors.toList());
-
-            this.listModel.filterByCategory(selectedCategories);
-        });
-
+        listModel.clearEntries();
     }
 
     private void editCategory(HBox line, Category category) {
@@ -233,6 +236,7 @@ public class CategoryListModel {
     private void styleCategoryLine(HBox line) {
         line.setSpacing(15);
         line.setPadding(new Insets(10, 10, 10, 40));
+
         line.getStyleClass().addAll("highlighted", "grey-dark-background", "grey-dark-background-hover");
         line.setAlignment(Pos.CENTER_LEFT);
     }
