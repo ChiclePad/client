@@ -51,7 +51,9 @@ public class GoalChartModel implements ListModel {
     }
 
     public void refreshWithFilter(String filter) {
-        successChartData.getData().clear();
+        this.successChartData = new XYChart.Series();
+        this.successChart.setData(FXCollections.observableArrayList(successChartData));
+
         dayChartData.clear();
 
         DayFrequency recentDays = goalDao.getCompletedGoalsCountOnRecentDays(userId, filter);

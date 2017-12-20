@@ -13,7 +13,7 @@ import java.util.List;
 
 abstract class EntryDao {
 
-    private final String CREATE_ENTRY_SQL = "INSERT INTO entry(user_id, created) VALUES (?, NOW()) RETURNING id";
+    private final String CREATE_ENTRY_SQL = "INSERT INTO entry(user_id, created) VALUES (?, NOW()) RETURNING id;";
 
     private final String BIND_CATEGORY_TO_ENTRY_SQL = "INSERT INTO registered_category (category_id, entry_id) " +
             "VALUES (?, ?);";
