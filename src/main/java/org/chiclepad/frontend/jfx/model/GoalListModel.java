@@ -213,4 +213,11 @@ public class GoalListModel implements ListModel {
     public void clearEntries() {
         this.clearGoals();
     }
+
+    @Override
+    public void deleteCategoriesForEntry() {
+        this.selectedGoal.getCategories().forEach(category -> this.goalDao.unbind(category, this.selectedGoal));
+        this.selectedGoal.getCategories().clear();
+        this.selectedGoalLine.setStyle("-fx-background-color: " + categoryColorOfGoal(this.selectedGoal));
+    }
 }

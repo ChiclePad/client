@@ -89,4 +89,9 @@ public class NotificationsListModel implements ListModel {
 
     }
 
+    @Override
+    public void deleteCategoriesForEntry() {
+
+    }
+
 }

@@ -299,4 +299,13 @@ public class DiaryListModel implements ListModel {
         }
     }
 
+    @Override
+    public void deleteCategoriesForEntry() {
+        System.out.println("Deleting category");
+        this.selectedDiaryPage.getCategories().forEach(category -> this.diaryPageDao.unbind(category, this.selectedDiaryPage));
+        System.out.println("Category deleted");
+        this.selectedDiaryPage.getCategories().clear();
+        this.selectedDiaryPageLine.setStyle("-fx-background-color: " + categoryColorOfDiaryPage(this.selectedDiaryPage));
+    }
+
 }

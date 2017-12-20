@@ -295,4 +295,11 @@ public class NoteListModel implements ListModel {
         this.noteDao.bind(category, selectedNote);
     }
 
+    @Override
+    public void deleteCategoriesForEntry() {
+        this.selectedNote.getCategories().forEach(category -> this.noteDao.unbind(category, this.selectedNote));
+        this.selectedNote.getCategories().clear();
+        this.selectedPostIt.setStyle("-fx-background-color: " + categoryColorOfNote(this.selectedNote));
+    }
+
 }

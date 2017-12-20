@@ -88,4 +88,9 @@ public class UpcomingListModel implements ListModel {
         clearUpcoming();
     }
 
+    @Override
+    public void deleteCategoriesForEntry() {
+
+    }
+
 }

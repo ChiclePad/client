@@ -246,6 +246,11 @@ public class TodoListModel implements ListModel {
         /* Use native filtering using `setPredicate` instead */
     }
 
+    @Override
+    public void deleteCategoriesForEntry() {
+
+    }
+
     public void setNewFilter(String filter) {
         this.textFilter = filter;
         filter();
