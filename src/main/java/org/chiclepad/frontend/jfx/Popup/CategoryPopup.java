@@ -10,6 +10,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import org.chiclepad.backend.Dao.CategoryDao;
 import org.chiclepad.backend.Dao.DaoFactory;
@@ -22,21 +23,73 @@ public class CategoryPopup {
 
     private static CategoryDao categoryDao = DaoFactory.INSTANCE.getCategoryDao();
 
-    public static void showEditCategoryAtPosition(HBox line, Category category, CategoryListModel categoryListModel) {
+    public static void showEditCategoryAtPosition(HBox parent, Category category, CategoryListModel categoryListModel) {
         JFXPopup popup = new JFXPopup();
-        VBox layout = createPopupLayout(popup, categoryListModel);
+        VBox layout = createEditPopupLayout(popup, category, categoryListModel);
         popup.setPopupContent(layout);
-        popup.show(layout, 20, 40);
+        popup.show(parent, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, 50, 25);
+    }
+
+    private static VBox createEditPopupLayout(JFXPopup popup, Category category, CategoryListModel categoryListModel) {
+        JFXTextField categoryNameField = new JFXTextField(category.getName());
+        styleCategoryName(categoryNameField);
+
+        HBox categoryDetails = new HBox();
+        styleCategoryDetails(categoryDetails);
+
+        JFXColorPicker categoryColorPicker = new JFXColorPicker();
+        styleCategoryColorPicker(categoryColorPicker);
+        categoryColorPicker.valueProperty().setValue(Color.web(category.getColor()));
+
+        JFXComboBox<FontAwesomeIconName> categoryIconChooser = new JFXComboBox<>();
+        fillCategoryIconChooser(categoryIconChooser);
+        styleCategoryIconChooser(categoryIconChooser);
+        categoryIconChooser.getSelectionModel().select(FontAwesomeIconName.valueOf(category.getIcon()));
+
+        categoryDetails.getChildren().addAll(categoryColorPicker, categoryIconChooser);
+
+        HBox buttons = new HBox();
+        buttons.setSpacing(10);
+
+        JFXButton updateButton = new JFXButton("Update");
+        updateButton.getStyleClass().addAll("green-background", "small-normal-text", "white-text");
+        updateButton.setPrefWidth(10000);
+
+        updateButton.setOnAction(event -> {
+            category.setName(categoryNameField.getText());
+            category.setColor(ChiclePadColor.toHex(categoryColorPicker.getValue()));
+            category.setIcon(categoryIconChooser.getSelectionModel().getSelectedItem().name());
+
+            categoryDao.update(category);
+            popup.hide();
+        });
+
+
+        JFXButton removeButton = new JFXButton("Remove");
+        removeButton.getStyleClass().addAll("secondary-background", "small-normal-text", "white-text");
+        removeButton.setPrefWidth(10000);
+
+        removeButton.setOnAction(event -> {
+            categoryDao.delete(category);
+            popup.hide();
+        });
+
+        buttons.getChildren().addAll(updateButton, removeButton);
+
+        VBox layout = new VBox(categoryNameField, categoryDetails, buttons);
+        styleLayout(layout);
+
+        return layout;
     }
 
     public static void showAddCategoryUnderParent(Node parent, CategoryListModel categoryListModel) {
         JFXPopup popup = new JFXPopup();
-        VBox layout = createPopupLayout(popup, categoryListModel);
+        VBox layout = createAddPopupLayout(popup, categoryListModel);
         popup.setPopupContent(layout);
         popup.show(parent, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, 0, 5);
     }
 
-    private static VBox createPopupLayout(JFXPopup popup, CategoryListModel categoryListModel) {
+    private static VBox createAddPopupLayout(JFXPopup popup, CategoryListModel categoryListModel) {
         JFXTextField categoryNameField = new JFXTextField();
         styleCategoryName(categoryNameField);
 
@@ -101,8 +154,6 @@ public class CategoryPopup {
     private static void styleCreateButton(JFXButton createButton) {
         createButton.getStyleClass().addAll("green-background", "small-normal-text", "white-text");
         createButton.setPrefWidth(10000);
-
-        VBox.setVgrow(createButton, Priority.ALWAYS);
     }
 
     private static void styleCategoryName(JFXTextField categoryNameField) {

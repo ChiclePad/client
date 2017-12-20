@@ -86,6 +86,8 @@ public class DiarySceneController {
 
     private DiaryPageDao diaryPageDao = DaoFactory.INSTANCE.getDiaryPageDao();
 
+    private int currentPage = 0;
+
     @FXML
     public void initialize() {
         initializeAdditionalStyles();
@@ -121,15 +123,16 @@ public class DiarySceneController {
         loggedInUser.getName().ifPresent(name -> usernameLabel.setText(name));
     }
 
+    private void initializeDiaryPages() {
+        diaryPages = new DiaryListModel(diaryPagesList, loadPreviousText.textProperty(), loadNextText.textProperty());
+        this.diaryPageDao.getAll(this.loggedInUser.getId()).forEach(diaryPage -> this.diaryPages.add(diaryPage));
+        diaryPages.refreshPageDates();
+    }
+
     private void initializeCategories() {
         this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker, this.diaryPages);
         List<Category> categories = this.categoryDao.getAll(this.loggedInUser.getId());
         categories.forEach(category -> this.categories.add(category));
-    }
-
-    private void initializeDiaryPages() {
-        diaryPages = new DiaryListModel(diaryPagesList);
-        this.diaryPageDao.getAll(this.loggedInUser.getId()).forEach(diaryPage -> this.diaryPages.add(diaryPage));
     }
 
     @FXML
@@ -162,12 +165,14 @@ public class DiarySceneController {
 
     @FXML
     public void loadPrevious() {
-
+        diaryPages.goToPreviousPage();
+        diaryPages.refreshPageDates();
     }
 
     @FXML
     public void loadNext() {
-
+        diaryPages.goToNextPage();
+        diaryPages.refreshPageDates();
     }
 
     @FXML
