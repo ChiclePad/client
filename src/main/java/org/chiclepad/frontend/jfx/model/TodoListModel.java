@@ -246,6 +246,12 @@ public class TodoListModel implements ListModel {
         /* Use native filtering using `setPredicate` instead */
     }
 
+    @Override
+    public void deleteCategoriesForEntry() {
+        this.selectedTodo.getCategories().forEach(category -> this.todoDao.unbind(category, this.selectedTodo));
+        this.selectedTodo.getCategories().clear();
+    }
+
     public void setNewFilter(String filter) {
         this.textFilter = filter;
         filter();
@@ -271,6 +277,10 @@ public class TodoListModel implements ListModel {
 
     @Override
     public void setCategoryToSelectedEntry(Category category) {
+        if (category == CategoryListModel.DESELECT_CATEGORY) {
+            this.deleteCategoriesForEntry();
+            return;
+        }
         this.selectedTodo.getCategories().forEach(unboundCategory -> {
             this.todoDao.unbind(unboundCategory, this.selectedTodo);
         });

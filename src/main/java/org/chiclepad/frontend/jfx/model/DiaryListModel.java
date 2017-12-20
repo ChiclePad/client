@@ -211,6 +211,11 @@ public class DiaryListModel implements ListModel {
 
     @Override
     public void setCategoryToSelectedEntry(Category category) {
+        if (category == CategoryListModel.DESELECT_CATEGORY) {
+            this.deleteCategoriesForEntry();
+            return;
+        }
+
         this.selectedDiaryPage.getCategories().forEach(unboundCategory -> {
             this.diaryPageDao.unbind(unboundCategory, this.selectedDiaryPage);
         });
@@ -297,6 +302,13 @@ public class DiaryListModel implements ListModel {
         } else {
             loadNextText.setValue("");
         }
+    }
+
+    @Override
+    public void deleteCategoriesForEntry() {
+        this.selectedDiaryPage.getCategories().forEach(category -> this.diaryPageDao.unbind(category, this.selectedDiaryPage));
+        this.selectedDiaryPage.getCategories().clear();
+        this.selectedDiaryPageLine.setStyle("-fx-background-color: " + categoryColorOfDiaryPage(this.selectedDiaryPage));
     }
 
 }

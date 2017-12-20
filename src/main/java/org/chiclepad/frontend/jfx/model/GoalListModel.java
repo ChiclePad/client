@@ -200,6 +200,11 @@ public class GoalListModel implements ListModel {
 
     @Override
     public void setCategoryToSelectedEntry(Category category) {
+        if (category == CategoryListModel.DESELECT_CATEGORY) {
+            this.deleteCategoriesForEntry();
+            return;
+        }
+
         this.selectedGoal.getCategories().forEach(unboundCategory -> {
             this.goalDao.unbind(unboundCategory, this.selectedGoal);
         });
@@ -212,5 +217,12 @@ public class GoalListModel implements ListModel {
     @Override
     public void clearEntries() {
         this.clearGoals();
+    }
+
+    @Override
+    public void deleteCategoriesForEntry() {
+        this.selectedGoal.getCategories().forEach(category -> this.goalDao.unbind(category, this.selectedGoal));
+        this.selectedGoal.getCategories().clear();
+        this.selectedGoalLine.setStyle("-fx-background-color: " + categoryColorOfGoal(this.selectedGoal));
     }
 }

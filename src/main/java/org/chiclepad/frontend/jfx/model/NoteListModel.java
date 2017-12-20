@@ -285,6 +285,10 @@ public class NoteListModel implements ListModel {
 
     @Override
     public void setCategoryToSelectedEntry(Category category) {
+        if (category == CategoryListModel.DESELECT_CATEGORY) {
+            this.deleteCategoriesForEntry();
+            return;
+        }
         this.selectedNote.getCategories().forEach(unboundCategory -> {
             this.noteDao.unbind(unboundCategory, this.selectedNote);
         });
@@ -293,6 +297,13 @@ public class NoteListModel implements ListModel {
         this.selectedNote.getCategories().add(category);
         this.selectedPostIt.setStyle("-fx-background-color: " + categoryColorOfNote(this.selectedNote));
         this.noteDao.bind(category, selectedNote);
+    }
+
+    @Override
+    public void deleteCategoriesForEntry() {
+        this.selectedNote.getCategories().forEach(category -> this.noteDao.unbind(category, this.selectedNote));
+        this.selectedNote.getCategories().clear();
+        this.selectedPostIt.setStyle("-fx-background-color: " + categoryColorOfNote(this.selectedNote));
     }
 
 }
