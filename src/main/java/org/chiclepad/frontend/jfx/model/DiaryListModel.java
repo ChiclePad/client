@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.effects.JFXDepthManager;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconName;
+import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -23,6 +24,10 @@ import java.util.List;
 
 public class DiaryListModel implements ListModel {
 
+    private StringProperty loadPreviousText;
+
+    private StringProperty loadNextText;
+
     private List<DiaryPage> diaryPages;
 
     private VBox layout;
@@ -39,8 +44,14 @@ public class DiaryListModel implements ListModel {
 
     private boolean clearedScene;
 
-    public DiaryListModel(VBox layout) {
+    private int currentPage = 0;
+
+    private int pageSize = 8;
+
+    public DiaryListModel(VBox layout, StringProperty loadPreviousText, StringProperty loadNextText) {
         this.layout = layout;
+        this.loadPreviousText = loadPreviousText;
+        this.loadNextText = loadNextText;
         this.diaryPageDao = DaoFactory.INSTANCE.getDiaryPageDao();
         this.diaryPages = new ArrayList<>();
     }
@@ -51,6 +62,10 @@ public class DiaryListModel implements ListModel {
     }
 
     private void addDiaryPageToLayout(DiaryPage diaryPage) {
+        if (layout.getChildren().size() >= pageSize) {
+            return;
+        }
+
         VBox diaryPageLine = new VBox();
         styleDiaryPageLine(diaryPageLine, diaryPage);
         setHighlightOnHover(diaryPageLine, diaryPage);
@@ -184,6 +199,8 @@ public class DiaryListModel implements ListModel {
     public void clearDiaryPages() {
         layout.getChildren().clear();
         this.clearedScene = true;
+
+        this.currentPage = 0;
     }
 
     public DiaryPage deleteSelected() {
@@ -229,6 +246,7 @@ public class DiaryListModel implements ListModel {
             diaryPages.stream()
                     .filter(this::fitsTextFilter)
                     .filter(diaryPage -> fitsCategoryFilter(diaryPage, this.categoriesFilter))
+                    .skip(currentPage * pageSize)
                     .forEach(this::addDiaryPageToLayout);
 
             this.clearedScene = false;
@@ -240,6 +258,44 @@ public class DiaryListModel implements ListModel {
             return diaryPage.getCategories().get(0).getColor();
         } else {
             return ChiclePadColor.toHex(ChiclePadColor.WHITE);
+        }
+    }
+
+    public void goToPreviousPage() {
+        if (currentPage == 0) {
+            return;
+        }
+
+        currentPage--;
+        loadPage();
+    }
+
+    public void goToNextPage() {
+        if (currentPage >= diaryPages.size() / pageSize) {
+            return;
+        }
+
+        currentPage++;
+        loadPage();
+    }
+
+    private void loadPage() {
+        layout.getChildren().clear();
+        clearedScene = true;
+        filter();
+    }
+
+    public void refreshPageDates() {
+        if (currentPage * pageSize - 1 >= 0) {
+            loadPreviousText.setValue(diaryPages.get(currentPage * pageSize - 1).getRecordedDay().toString());
+        } else {
+            loadPreviousText.setValue("");
+        }
+
+        if (currentPage * pageSize + pageSize < diaryPages.size()) {
+            loadNextText.setValue(diaryPages.get(currentPage * pageSize + pageSize).getRecordedDay().toString());
+        } else {
+            loadNextText.setValue("");
         }
     }
 

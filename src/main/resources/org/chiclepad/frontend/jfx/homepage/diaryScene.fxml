@@ -240,7 +240,7 @@
                                <children>
                                    <FontAwesomeIcon fx:id="loadPreviousIcon" fill="#464947" iconName="ARROW_LEFT"
                                                     selectionEnd="1" selectionStart="1" size="2em"/>
-                                   <Label fx:id="loadPreviousText" text="12.2.2017">
+                                   <Label fx:id="loadPreviousText">
                                        <styleClass>
                                            <String fx:value="large-text"/>
                                            <String fx:value="bold"/>
@@ -253,7 +253,7 @@
                                    <HBox fx:id="loadNextButton" alignment="CENTER_RIGHT" onMousePressed="#loadNext"
                                          spacing="10.0" styleClass="link">
                                        <children>
-                                           <Label fx:id="loadNextText" text="12.4.2017">
+                                           <Label fx:id="loadNextText">
                                                <styleClass>
                                                    <String fx:value="large-text"/>
                                                    <String fx:value="bold"/>
