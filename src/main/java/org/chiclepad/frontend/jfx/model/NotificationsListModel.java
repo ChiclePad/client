@@ -19,7 +19,11 @@ public class NotificationsListModel implements ListModel {
 
     private DateTimeFormatter dateTimeFormatter;
 
-    private String filter = "";
+    private String textFilter = "";
+
+    private List<Category> categoriesFilter = new ArrayList<>();
+
+    private boolean clearedScene;
 
     public NotificationsListModel(JFXListView layout) {
         this.layout = layout;
@@ -52,46 +56,58 @@ public class NotificationsListModel implements ListModel {
 
     public void clearNotifications() {
         layout.getItems().clear();
-    }
-
-    public void setNewFilter(String filter) {
-        this.filter = filter;
-
-        goals.stream()
-                .filter(goal -> fitsFilter(goal, filter))
-                .forEach(this::addGoalToLayout);
-        notes.stream()
-                .filter(note -> fitsFilter(note, filter))
-                .forEach(this::addNoteToLayout);
-    }
-
-    private boolean fitsFilter(Goal goal, String filter) {
-        return goal.getDescription().contains(filter);
-    }
-
-    private boolean fitsFilter(Note note, String filter) {
-        return note.getContent().contains(filter) ||
-                note.getReminderTime().map(time -> time.toString().contains(filter)).orElse(false);
+        this.clearedScene = true;
     }
 
     @Override
     public void filterByCategory(List<Category> categories) {
+        this.categoriesFilter = categories;
+        this.filter();
+    }
 
+    public void filterByText(String textFilter) {
+        this.textFilter = textFilter;
+        this.filter();
+    }
+
+    private boolean fitsTextFilter(Goal goal) {
+        return goal.getDescription().contains(textFilter);
+    }
+
+    private boolean fitsTextFilter(Note note) {
+        return note.getContent().contains(textFilter) ||
+                note.getReminderTime().map(time -> time.toString().contains(textFilter)).orElse(false);
+    }
+
+    private void filter() {
+        if (clearedScene) {
+            notes.stream()
+                    .filter(this::fitsTextFilter)
+                    .filter(diaryPage -> fitsCategoryFilter(diaryPage, this.categoriesFilter))
+                    .forEach(this::addNoteToLayout);
+
+            goals.stream()
+                    .filter(this::fitsTextFilter)
+                    .filter(diaryPage -> fitsCategoryFilter(diaryPage, this.categoriesFilter))
+                    .forEach(this::addGoalToLayout);
+
+            this.clearedScene = false;
+        }
     }
 
     @Override
     public void setCategoryToSelectedEntry(Category category) {
-
+        /* Can't select here */
     }
 
     @Override
     public void clearEntries() {
-
+        clearNotifications();
     }
 
     @Override
     public void deleteCategoriesForEntry() {
-
+        /* Can't select here */
     }
 
 }

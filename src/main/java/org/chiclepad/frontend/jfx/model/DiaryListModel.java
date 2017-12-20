@@ -54,6 +54,15 @@ public class DiaryListModel implements ListModel {
         this.loadNextText = loadNextText;
         this.diaryPageDao = DaoFactory.INSTANCE.getDiaryPageDao();
         this.diaryPages = new ArrayList<>();
+
+        setResizeCallback(layout);
+    }
+
+    private void setResizeCallback(VBox layout) {
+        layout.heightProperty().addListener((observable, oldValue, newValue) -> {
+            pageSize = (int) (newValue.doubleValue() / 75);
+            loadPage();
+        });
     }
 
     public void add(DiaryPage diaryPage) {
@@ -211,6 +220,10 @@ public class DiaryListModel implements ListModel {
 
     @Override
     public void setCategoryToSelectedEntry(Category category) {
+        if (category == null) {
+            return;
+        }
+
         if (category == CategoryListModel.DESELECT_CATEGORY) {
             this.deleteCategoriesForEntry();
             return;

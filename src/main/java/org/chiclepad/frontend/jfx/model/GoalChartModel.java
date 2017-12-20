@@ -8,14 +8,16 @@ import javafx.scene.chart.XYChart;
 import org.chiclepad.backend.Dao.DaoFactory;
 import org.chiclepad.backend.Dao.GoalDao;
 import org.chiclepad.backend.business.session.UserSessionManager;
+import org.chiclepad.backend.entity.Category;
 import org.chiclepad.backend.entity.DayFrequency;
 import org.chiclepad.backend.entity.WeekDayFrequency;
 import org.chiclepad.constants.DayOfWeek;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.List;
 
-public class GoalChartModel {
+public class GoalChartModel implements ListModel {
 
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM");
 
@@ -40,9 +42,11 @@ public class GoalChartModel {
 
         this.successChart.setData(FXCollections.observableArrayList(successChartData));
         this.dayChart.setData(dayChartData);
+
+        initialize();
     }
 
-    public void initialize() {
+    private void initialize() {
         refreshWithFilter("");
     }
 
@@ -62,6 +66,26 @@ public class GoalChartModel {
             PieChart.Data data = new PieChart.Data(dayOfWeek.toString(), weekDays.getFrequency(dayOfWeek));
             dayChartData.add(data);
         });
+    }
+
+    @Override
+    public void filterByCategory(List<Category> categories) {
+
+    }
+
+    @Override
+    public void setCategoryToSelectedEntry(Category category) {
+
+    }
+
+    @Override
+    public void clearEntries() {
+
+    }
+
+    @Override
+    public void deleteCategoriesForEntry() {
+
     }
 
 }

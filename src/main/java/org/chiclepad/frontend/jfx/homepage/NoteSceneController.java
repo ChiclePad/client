@@ -82,6 +82,8 @@ public class NoteSceneController {
         initializeUser();
         initializeNotes();
         initializeCategories();
+
+        categories.subscribeListModel(notes);
     }
 
     private void initializeAdditionalStyles() {
@@ -98,7 +100,7 @@ public class NoteSceneController {
     }
 
     private void initializeCategories() {
-        this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker, this.notes);
+        this.categories = new CategoryListModel(categoryList, categoriesRippler, categoryPicker);
         List<Category> categories = this.categoryDao.getAll(this.loggedInUser.getId());
         categories.forEach(category -> this.categories.add(category));
     }
