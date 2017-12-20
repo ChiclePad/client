@@ -41,6 +41,7 @@ public class CategoryListModel {
             "#808080");
 
     private boolean lastClickWasPrimaryButton;
+
     private List<ListModel> listModels;
 
     public CategoryListModel(VBox categories, VBox ripplerArea) {
