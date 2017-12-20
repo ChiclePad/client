@@ -200,6 +200,11 @@ public class GoalListModel implements ListModel {
 
     @Override
     public void setCategoryToSelectedEntry(Category category) {
+        if (category == CategoryListModel.DESELECT_CATEGORY) {
+            this.deleteCategoriesForEntry();
+            return;
+        }
+
         this.selectedGoal.getCategories().forEach(unboundCategory -> {
             this.goalDao.unbind(unboundCategory, this.selectedGoal);
         });

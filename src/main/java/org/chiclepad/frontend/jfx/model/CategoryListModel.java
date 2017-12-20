@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXRippler;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconName;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -36,7 +37,7 @@ public class CategoryListModel {
 
     private boolean lastClickWasPrimaryButton;
 
-    private final static Category DESELECT_CATEGORY = new Category(-1, "Remove category",
+    public final static Category DESELECT_CATEGORY = new Category(-1, "Remove category",
             FontAwesomeIconName.EXCLAMATION_CIRCLE.name(), "#808080");
 
     public CategoryListModel(VBox categories, VBox ripplerArea, ListModel listModel) {
@@ -129,7 +130,13 @@ public class CategoryListModel {
 
     private void setSelectionCallback(JFXComboBox categoryPicker, ListModel listModel) {
         categoryPicker.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                return;
+            }
             listModel.setCategoryToSelectedEntry((Category) newValue);
+            Platform.runLater(() -> {
+                this.categoryPicker.setValue(null);
+            });
         });
     }
 
@@ -140,15 +147,16 @@ public class CategoryListModel {
     }
 
     public void add(Category category) {
+
+        categoryPicker.getItems().add(category);
+
         if (category == CategoryListModel.DESELECT_CATEGORY) {
-            listModel.deleteCategoriesForEntry();
             return;
         }
 
         HBox line = createCategoryListLine(category);
         categorySelected.put(category, false);
         categories.getChildren().add(line);
-        categoryPicker.getItems().add(category);
     }
 
     private HBox createCategoryListLine(Category category) {

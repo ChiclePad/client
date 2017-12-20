@@ -285,6 +285,10 @@ public class NoteListModel implements ListModel {
 
     @Override
     public void setCategoryToSelectedEntry(Category category) {
+        if (category == CategoryListModel.DESELECT_CATEGORY) {
+            this.deleteCategoriesForEntry();
+            return;
+        }
         this.selectedNote.getCategories().forEach(unboundCategory -> {
             this.noteDao.unbind(unboundCategory, this.selectedNote);
         });
