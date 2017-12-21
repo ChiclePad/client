@@ -1,6 +1,10 @@
 # ChiclePad backend
 Java backend for the ChiclePad application. 
 
+#Demo
+![Presentation](demo/presentation.gif)
+![Category presentation](demo/category-utiities.gif)
+
 ## Tech Stack
 In order to run the backend you need these:
 - [Oracle Java 9](http://www.oracle.com/technetwork/java/javase/downloads/index.html)

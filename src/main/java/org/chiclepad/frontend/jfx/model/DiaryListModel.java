@@ -8,6 +8,7 @@ import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -23,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DiaryListModel implements ListModel {
+
+    private ScrollPane root;
 
     private StringProperty loadPreviousText;
 
@@ -46,23 +49,29 @@ public class DiaryListModel implements ListModel {
 
     private int currentPage = 0;
 
-    private int pageSize = 8;
+    private int pageSize;
 
-    public DiaryListModel(VBox layout, StringProperty loadPreviousText, StringProperty loadNextText) {
+    public DiaryListModel(VBox layout, StringProperty loadPreviousText, StringProperty loadNextText, ScrollPane root) {
         this.layout = layout;
+        this.root = root;
         this.loadPreviousText = loadPreviousText;
         this.loadNextText = loadNextText;
         this.diaryPageDao = DaoFactory.INSTANCE.getDiaryPageDao();
         this.diaryPages = new ArrayList<>();
 
-        setResizeCallback(layout);
+        setResizeCallback();
     }
 
-    private void setResizeCallback(VBox layout) {
-        layout.heightProperty().addListener((observable, oldValue, newValue) -> {
-            pageSize = (int) (newValue.doubleValue() / 75);
-            loadPage();
+    private void setResizeCallback() {
+        root.heightProperty().addListener((observable, oldValue, newValue) -> {
+            refreshPageSize(newValue.doubleValue());
+            clearDiaryPages();
+            filter();
         });
+    }
+
+    private void refreshPageSize(double containerSize) {
+        pageSize = Math.max(1, (int) (containerSize / 75));
     }
 
     public void add(DiaryPage diaryPage) {
@@ -208,8 +217,6 @@ public class DiaryListModel implements ListModel {
     public void clearDiaryPages() {
         layout.getChildren().clear();
         this.clearedScene = true;
-
-        this.currentPage = 0;
     }
 
     public DiaryPage deleteSelected() {
@@ -246,11 +253,13 @@ public class DiaryListModel implements ListModel {
     @Override
     public void filterByCategory(List<Category> categories) {
         this.categoriesFilter = categories;
+        currentPage = 0;
         this.filter();
     }
 
     public void filterByText(String textFilter) {
         this.textFilter = textFilter;
+        currentPage = 0;
         this.filter();
     }
 
@@ -261,6 +270,8 @@ public class DiaryListModel implements ListModel {
 
     private void filter() {
         if (clearedScene) {
+            refreshPageDates();
+
             diaryPages.stream()
                     .filter(this::fitsTextFilter)
                     .filter(diaryPage -> fitsCategoryFilter(diaryPage, this.categoriesFilter))
@@ -285,7 +296,9 @@ public class DiaryListModel implements ListModel {
         }
 
         currentPage--;
-        loadPage();
+
+        this.clearDiaryPages();
+        this.filter();
     }
 
     public void goToNextPage() {
@@ -294,16 +307,12 @@ public class DiaryListModel implements ListModel {
         }
 
         currentPage++;
-        loadPage();
+
+        this.clearDiaryPages();
+        this.filter();
     }
 
-    private void loadPage() {
-        layout.getChildren().clear();
-        clearedScene = true;
-        filter();
-    }
-
-    public void refreshPageDates() {
+    private void refreshPageDates() {
         if (currentPage * pageSize - 1 >= 0) {
             loadPreviousText.setValue(diaryPages.get(currentPage * pageSize - 1).getRecordedDay().toString());
         } else {

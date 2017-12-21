@@ -10,7 +10,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import java.lang.*?>
-<AnchorPane prefHeight="800.0" prefWidth="1280.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="root" prefHeight="800.0" prefWidth="1280.0"
+            stylesheets="@../style.css" xmlns="http://javafx.com/javafx/9">
     <children>
         <VBox prefWidth="254.0" styleClass="grey-dark-background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="45.0">
             <children>
@@ -232,7 +233,8 @@
                            <Insets/>
                        </VBox.margin>
                    </HBox>
-                   <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+                   <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER"
+                               VBox.vgrow="ALWAYS">
                        <content>
                            <VBox fx:id="diaryPagesList" spacing="15.0">
                                <padding>

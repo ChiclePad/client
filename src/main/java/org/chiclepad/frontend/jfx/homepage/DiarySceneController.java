@@ -6,6 +6,7 @@ import com.jfoenix.effects.JFXDepthManager;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -29,6 +30,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class DiarySceneController {
+
+    @FXML
+    private ScrollPane scrollPane;
 
     @FXML
     private BorderPane header;
@@ -128,12 +132,20 @@ public class DiarySceneController {
     }
 
     private void initializeDiaryPages() {
-        diaryPages = new DiaryListModel(diaryPagesList, loadPreviousText.textProperty(), loadNextText.textProperty());
-        List<DiaryPage> diaryPages = this.diaryPageDao.getAll(this.loggedInUser.getId());
-        diaryPages.forEach(diaryPage -> this.diaryPages.add(diaryPage));
-        this.diaryPages.refreshPageDates();
+        diaryPages = new DiaryListModel(
+                diaryPagesList,
+                loadPreviousText.textProperty(),
+                loadNextText.textProperty(),
+                scrollPane
+        );
 
-        Boolean addingDisabled = diaryPages.size() != 0 && diaryPages.get(0).getRecordedDay().isEqual(LocalDate.now());
+        List<DiaryPage> diaryPagesList = this.diaryPageDao.getAll(this.loggedInUser.getId());
+        diaryPagesList.forEach(diaryPage -> this.diaryPages.add(diaryPage));
+
+        diaryPages.filterByText("");
+
+        Boolean addingDisabled = diaryPagesList.size() != 0 &&
+                diaryPagesList.get(0).getRecordedDay().isEqual(LocalDate.now());
         addDiaryPageButton.setDisable(addingDisabled);
     }
 
@@ -180,13 +192,11 @@ public class DiarySceneController {
     @FXML
     public void loadPrevious() {
         diaryPages.goToPreviousPage();
-        diaryPages.refreshPageDates();
     }
 
     @FXML
     public void loadNext() {
         diaryPages.goToNextPage();
-        diaryPages.refreshPageDates();
     }
 
     @FXML
