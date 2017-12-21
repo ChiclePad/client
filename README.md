@@ -1,7 +1,7 @@
 # ChiclePad backend
 Java backend for the ChiclePad application. 
 
-#Demo
+## Demo
 
 ![Presentation](demo/presentation.gif)
 
