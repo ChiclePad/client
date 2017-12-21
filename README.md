@@ -2,7 +2,9 @@
 Java backend for the ChiclePad application. 
 
 #Demo
+
 ![Presentation](demo/presentation.gif)
+
 ![Category presentation](demo/category-utiities.gif)
 
 ## Tech Stack
@@ -13,7 +15,7 @@ In order to run the backend you need these:
 
 And some knowledge of [JUnit 5](http://junit.org/junit5/) and 
 [JavaFX](http://www.oracle.com/technetwork/java/javase/overview/javafx-overview-2158620.html) is required.  
-Additional dependencies can be found in `pom.xml` file. Such as [Logback](https://logback.qos.ch/),
+Additional dependencies can be found in `pom.xml` file. Such as 
 [AssertJ](http://joel-costigliola.github.io/assertj/), [Spring](https://spring.io/), 
 [JFoenix](http://www.jfoenix.com/).
 
