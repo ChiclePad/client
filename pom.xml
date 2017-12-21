@@ -7,6 +7,37 @@
    <groupId>org.chiclepad</groupId>
    <artifactId>backend</artifactId>
    <version>1.0-SNAPSHOT</version>
+   <packaging>jar</packaging>
+
+   <name>ChiclePad</name>
+   <url>https://github.com/ChiclePad/backend</url>
+   <description>Backend with simple UI for testing and offline usage</description>
+
+   <issueManagement>
+      <system>github</system>
+      <url>https://github.com/ChiclePad/backend/issues</url>
+   </issueManagement>
+
+   <licenses>
+      <license>
+         <name>GNU General Public License, version 3</name>
+         <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+         <distribution>repo</distribution>
+      </license>
+   </licenses>
+
+   <developers>
+      <developer>
+         <name>Mária Babčankská</name>
+         <email>m.babcanska@gmail.com</email>
+         <url>https://github.com/SquattingPenguin</url>
+      </developer>
+      <developer>
+         <name>Šimon Kocúrek</name>
+         <email>simon.kocurek@gmail.com</email>
+         <url>https://github.com/justmesr</url>
+      </developer>
+   </developers>
 
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -14,4 +45,59 @@
       <maven.compiler.target>9</maven.compiler.target>
    </properties>
 
+   <dependencies>
+      <!--testing-->
+      <dependency>
+         <groupId>org.junit.jupiter</groupId>
+         <artifactId>junit-jupiter-api</artifactId>
+         <version>RELEASE</version>
+         <scope>test</scope>
+      </dependency>
+
+      <!--easier asserts-->
+      <dependency>
+         <groupId>org.assertj</groupId>
+         <artifactId>assertj-core</artifactId>
+         <version>3.8.0</version>
+         <scope>test</scope>
+      </dependency>
+
+      <!--database-->
+      <dependency>
+         <groupId>org.postgresql</groupId>
+         <artifactId>postgresql</artifactId>
+         <version>LATEST</version>
+      </dependency>
+
+      <!--better jdbc-->
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-jdbc</artifactId>
+         <version>RELEASE</version>
+      </dependency>
+
+      <!--hashing and salting-->
+      <dependency>
+         <groupId>org.springframework.security</groupId>
+         <artifactId>spring-security-crypto</artifactId>
+         <version>5.0.0.RELEASE</version>
+      </dependency>
+
+      <!--material theme-->
+      <dependency>
+         <groupId>com.jfoenix</groupId>
+         <artifactId>jfoenix</artifactId>
+         <version>9.0.0</version>
+         <systemPath>${project.basedir}/src/main/resources/jfoenix-9.0.0.jar</systemPath>
+         <scope>system</scope>
+      </dependency>
+
+      <!--Font-Awesome-->
+      <dependency>
+         <groupId>de.jensd</groupId>
+         <artifactId>fontawesomefx</artifactId>
+         <version>8.1</version>
+      </dependency>
+
+   </dependencies>
 </project>
